@@ -1,4 +1,4 @@
-#tutor-smith
+# tutor-smith
 
 Name still to be defined
 
@@ -7,7 +7,7 @@ Start the server:
 ~$ python3 manage.py runserver
 ````
 ---
-###Setting up
+### Setting up
 Requirements:  
 * python3 >= 3.8
 * pip3
@@ -18,7 +18,7 @@ Requirements:
 ````
 ---
 
-###Adding new content
+### Adding new content
 1. add the new site to the *app_name*/views.py
 ````python
 def view_name(request):
@@ -33,7 +33,7 @@ urlpatterns = [
 ]
 ````
 ---
-###Additional Information
+### Additional Information
 * A simple "Hello World" view can be found under *localhost:8000/hello/*  
 A "Hello World" view with templates can be found at *localhost:8000/hello-template/*
 * The secret key has to be generated or is given by an Administrator.  
