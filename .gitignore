@@ -1,0 +1,6 @@
+SECRET_KEY.txt
+/user_management/migrations
+/.idea
+/__pycache__
+/tutor_smith/__pycache__
+/user_management/__pycache__
