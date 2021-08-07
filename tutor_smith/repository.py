@@ -1,11 +1,19 @@
 import abc
+
 # Implement repository pattern with "abtract" classes
 class Repository(abc.ABC):
-
     @abc.abstractmethod
-    def add(self):
+    def __init__(self):
+        self.__items = []
+
+    # Add all class attributes
+    @property
+    def items(self):
+        raise NotImplementedError
+
+    def add(self, item):
         pass
-    
+
     @abc.abstractmethod
     def remove(self):
         pass
