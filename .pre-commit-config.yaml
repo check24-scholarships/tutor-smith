@@ -12,3 +12,4 @@ repos:
     -   id: trailing-whitespace
     -   id: debug-statements
     -   id: requirements-txt-fixer
+    -   id: double-quote-string-fixer
