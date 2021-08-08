@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
-from django.db.models.fields.related import ForeignKey
 from django.utils.translation import ugettext_lazy as _
 
 from .choices import *
@@ -102,7 +101,7 @@ class User(models.Model):
 class Info(models.Model):
     subject = models.CharField(max_length=20, choices=choice_subject)
     description = models.TextField()
-    author = ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     level_class = models.IntegerField()
     difficulity = models.IntegerField(choices=choice_difficulity)
