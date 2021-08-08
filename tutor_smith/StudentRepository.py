@@ -13,7 +13,7 @@ class StudentRepository(Repository.Repository):
 
     def update(self):
         raise NotImplementedError(
-            "This method is not implemented for the student repository, please refer to the ...repository for this functionality!"
+            'This method is not implemented for the student repository, please refer to the ...repository for this functionality!'
         )
 
 

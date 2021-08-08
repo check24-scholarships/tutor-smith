@@ -11,38 +11,38 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="User",
+            name='User',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.AutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
                 (
-                    "password",
-                    models.CharField(max_length=128, verbose_name="password"),
+                    'password',
+                    models.CharField(max_length=128, verbose_name='password'),
                 ),
                 (
-                    "last_login",
+                    'last_login',
                     models.DateTimeField(
-                        blank=True, null=True, verbose_name="last login"
+                        blank=True, null=True, verbose_name='last login'
                     ),
                 ),
                 (
-                    "email",
+                    'email',
                     models.EmailField(
                         max_length=255,
                         unique=True,
-                        verbose_name="email address",
+                        verbose_name='email address',
                     ),
                 ),
             ],
             options={
-                "abstract": False,
+                'abstract': False,
             },
         ),
     ]

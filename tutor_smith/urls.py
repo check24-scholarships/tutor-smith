@@ -19,7 +19,7 @@ from django.urls import path
 from user_management import views as user_views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("hello/", user_views.hello_world),
-    path("hello-template/", user_views.hello_world_temp),
+    path('admin/', admin.site.urls),
+    path('hello/', user_views.hello_world),
+    path('hello-template/', user_views.hello_world_temp),
 ]

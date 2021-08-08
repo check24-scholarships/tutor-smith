@@ -5,10 +5,10 @@ import datetime
 
 # Create your views here.
 def hello_world(request):
-    return HttpResponse("Hello, World!")
+    return HttpResponse('Hello, World!')
 
 
 def hello_world_temp(request):
     return render(
-        request, "hello.html", context={"time": datetime.datetime.now()}
+        request, 'hello.html', context={'time': datetime.datetime.now()}
     )
