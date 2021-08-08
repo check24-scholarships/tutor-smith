@@ -42,21 +42,21 @@ class User(AbstractBaseUser):
     user_class = models.IntegerField(default=11)
     description = models.TextField(default="")
     birth_date = models.DateField()
-
+    
     created_on = models.DateTimeField()
-
+    
     ip = models.GenericIPAddressField(blank=True, null=True)
     certificate = models.BinaryField(blank=True, null=True)
     profile_pic = models.BinaryField(blank=True, null=True)
-
+    
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-
+    
     USERNAME_FIELD='email'
-
+    
     objects = CustomUserManager()
-
+    
     def __str__(self) -> str:
         return self.email
 '''
