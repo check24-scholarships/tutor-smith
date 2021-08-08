@@ -1,12 +1,17 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    AbstractUser,
+)
 from django.utils.translation import ugettext_lazy as _
 
 from .choices import *
 
 
-#User model
+# User model
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -27,8 +32,9 @@ class CustomUserManager(BaseUserManager):
 
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_('Superuser must have is_superuser=True.'))
-        
+
         return self.create_user(email, password, **extra_fields)
+
 
 '''
 class User(AbstractBaseUser):
@@ -42,24 +48,26 @@ class User(AbstractBaseUser):
     user_class = models.IntegerField(default=11)
     description = models.TextField(default="")
     birth_date = models.DateField()
-    
+
     created_on = models.DateTimeField()
-    
+
     ip = models.GenericIPAddressField(blank=True, null=True)
     certificate = models.BinaryField(blank=True, null=True)
     profile_pic = models.BinaryField(blank=True, null=True)
-    
+
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    
+
     USERNAME_FIELD='email'
-    
+
     objects = CustomUserManager()
-    
+
     def __str__(self) -> str:
         return self.email
 '''
+
+
 class UserAuth(AbstractUser):
     username = None
     email = models.EmailField(
@@ -67,10 +75,11 @@ class UserAuth(AbstractUser):
         max_length=255,
         unique=True,
     )
-    USERNAME_FIELD='email'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
 
 # Create your models here.
 class User(models.Model):
@@ -80,9 +89,9 @@ class User(models.Model):
         unique=True,
     )
     name = models.SlugField()
-    adress = models.CharField(max_length=64, blank=True,  null=True)
+    adress = models.CharField(max_length=64, blank=True, null=True)
     user_class = models.IntegerField(default=11)
-    description = models.TextField(default="")
+    description = models.TextField(default='')
     birth_date = models.DateField()
 
     created_on = models.DateTimeField()
@@ -97,6 +106,7 @@ class User(models.Model):
 
     def __str__(self) -> str:
         return self.email
+
 
 class Info(models.Model):
     subject = models.CharField(max_length=20, choices=choice_subject)
