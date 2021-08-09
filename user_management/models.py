@@ -89,6 +89,8 @@ class User(models.Model):
         unique=True,
     )
     name = models.SlugField()
+    password = models.CharField(max_length=265)
+    gender = models.IntegerField(choices=choice_gender)
     adress = models.CharField(max_length=64, blank=True, null=True)
     user_class = models.IntegerField(default=11)
     description = models.TextField(default='')
@@ -106,6 +108,7 @@ class User(models.Model):
 
     def __str__(self) -> str:
         return self.email
+
 
 
 class Info(models.Model):

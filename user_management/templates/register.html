@@ -7,7 +7,7 @@
         {% if error_msg %}
             <p class="error">{{ error_msg }}</p>
         {% endif %}
-        <input type="email" name="email" id="email_inp">
-        <button type="submit">Submit</button>
+        {{form}}
+        <input type="submit" value="Submit">
     </form>
 {% endblock content %}

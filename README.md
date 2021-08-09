@@ -34,7 +34,5 @@ urlpatterns = [
 ````
 ---
 ### Additional Information
-* A simple "Hello World" view can be found under *localhost:8000/hello/*
-A "Hello World" view with templates can be found at *localhost:8000/hello-template/*
 * The secret key has to be generated or is given by an Administrator.
 Store it in the base directory as **SECRET_KEY.txt**
