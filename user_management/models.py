@@ -6,6 +6,9 @@ from django.contrib.auth.models import (
     AbstractUser,
 )
 from django.utils.translation import ugettext_lazy as _
+from django.utils.text import slugify
+from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 from .choices import *
 
@@ -35,39 +38,6 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-
-'''
-class User(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name='email address',
-        max_length=255,
-        unique=True,
-    )
-    name = models.SlugField()
-    adress = models.CharField(max_length=64, blank=True,  null=True)
-    user_class = models.IntegerField(default=11)
-    description = models.TextField(default="")
-    birth_date = models.DateField()
-
-    created_on = models.DateTimeField()
-
-    ip = models.GenericIPAddressField(blank=True, null=True)
-    certificate = models.BinaryField(blank=True, null=True)
-    profile_pic = models.BinaryField(blank=True, null=True)
-
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-
-    USERNAME_FIELD='email'
-
-    objects = CustomUserManager()
-
-    def __str__(self) -> str:
-        return self.email
-'''
-
-
 class UserAuth(AbstractUser):
     username = None
     email = models.EmailField(
@@ -92,6 +62,7 @@ class User(models.Model):
     password = models.CharField(max_length=265)
     gender = models.IntegerField(choices=choice_gender)
     adress = models.CharField(max_length=64, blank=True, null=True)
+    phone = PhoneNumberField(unique=True, null=True, blank=True)
     user_class = models.IntegerField(default=11)
     description = models.TextField(default='')
     birth_date = models.DateField()
@@ -109,6 +80,9 @@ class User(models.Model):
     def __str__(self) -> str:
         return self.email
 
+    def save(self, *args, **kwargs):
+        self.created_on = timezone.now()
+        super().save(*args, **kwargs)
 
 
 class Info(models.Model):
@@ -132,8 +106,8 @@ class Review(models.Model):
     title = models.CharField(max_length=24)
     text = models.TextField()
     stars = models.IntegerField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    for_user = models.ForeignKey(Info, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name='Author', on_delete=models.CASCADE)
+    for_user = models.ForeignKey(User, related_name='for_user', on_delete=models.CASCADE)
 
     created_on = models.DateTimeField()
 

@@ -12,6 +12,7 @@ Requirements:
 * python3 >= 3.8
 * pip3
 * packages from requirements.txt
+* **new package needed! Please run the pip install**
 
 ````console
 ~$ pip install -r requirements.txt
