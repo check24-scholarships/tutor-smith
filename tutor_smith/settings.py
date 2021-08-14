@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    #required
+    'phonenumber_field',
+
     #own
     'user_management',
 ]
@@ -129,3 +132,5 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user_management.UserAuth'
+
+PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'

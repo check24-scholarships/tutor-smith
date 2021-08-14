@@ -58,7 +58,8 @@ class User(models.Model):
         max_length=255,
         unique=True,
     )
-    name = models.SlugField()
+    first_name = models.CharField(max_length=32)
+    last_name = models.CharField(max_length=32)
     password = models.CharField(max_length=265)
     gender = models.IntegerField(choices=choice_gender)
     adress = models.CharField(max_length=64, blank=True, null=True)
