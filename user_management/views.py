@@ -5,6 +5,11 @@ from django.utils import timezone
 
 # Auth Handler
 from django.contrib.auth.hashers import make_password, check_password
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+
 from django.contrib.auth.password_validation import (
     validate_password,
     password_changed,
@@ -38,7 +43,24 @@ def recover_form(request):
             data = password_reset_form.cleaned_data['email']
             # Send email...
             print(data)
+            """associated_users = User.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:"""
+            # get users
+            subject = 'Password Reset Requested'
+            email_template_name = 'main/password/password_reset_email.txt'
+            """c = {
+                "email": "test@gmail.com",
+                'domain': '127.0.0.1:8000',
+                'site_name': 'Website',
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "user": "test",
+                'token': default_token_generator.make_token(user),
+                'protocol': 'http',
+            }"""
+            # *email = render_to_string(email_template_name, c)
             return redirect('/password_reset/done/')
+
     password_reset_form = PasswordResetForm()
     return render(
         request,
