@@ -1,5 +1,6 @@
 from typing import List
 from django.contrib.auth.password_validation import validate_password, password_changed, ValidationError
+from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from .models import User, Info, Review
 
@@ -28,6 +29,23 @@ def validate_register(request, form):
             display_errors(request, 'Passwords don\'t match')
             return False
     else:
-        display_errors(request, 'Form is invalid')
+        display_errors(request, form.errors)
+        return False
+
+# XXX: DELETE ME
+def validate_login(request, form):
+    if form.is_valid():
+        try:
+            if check_password(form.cleaned_data["password"], User.objects.get(email=form.cleaned_data["email"]).password):
+                return True
+            else:
+                display_errors(request, 'Wrong password')
+                return False
+        except Exception as e:
+            display_errors(request, 'No matching User')
+            return False
+            print(e)
+    else:
+        display_errors(request, form.errors)
         return False
     

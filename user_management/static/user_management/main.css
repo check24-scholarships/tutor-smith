@@ -1,6 +1,56 @@
+/* Ideas:
+Colors: #F97E72
+*/
+*{
+    --header-color: hsl(180, 28%, 32%);
+    color: hsl(180, 25%, 5%);
+}
 body, html{
     font-size: 15px;
+    margin:0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}
+header{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--header-color);
+    height: 70px;
+    width: 100%;
+}
+header a, header p{
+    margin:2rem;
+}
+a{
+    color:rgb(230, 3, 71);
+    text-decoration: none;
+}
+a:hover{
+    color:orangered;
 }
 .error{
     color:red;
+}
+.success{
+    color:green;
+}
+form{
+    display:inline;
+}
+input{
+    outline: none;
+    border:2px var(--header-color) solid;
+    border-radius: 25px;
+    margin:0.2rem;
+    padding: 2px 8px;
+}
+
+@media screen and (max-width:800px) {
+    head, body{
+        font-size: 20px;
+    }
+    header{
+        background-color: blue;
+    }
 }

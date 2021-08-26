@@ -14,12 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, register_converter
 
 from user_management import views as user_views
+from .converters import HashIdConverter
+
+register_converter(HashIdConverter, 'hashid')
 
 urlpatterns = [
+    # TODO: Remove admin when finished
     path('admin/', admin.site.urls),
-    path('hello-template/', user_views.hello_world_temp),
-    path('register/', user_views.register)
+    path('', user_views.index),
+    path('register/', user_views.register),
+    path('login/', user_views.login),
+    path('users/<hashid:user_id>/', user_views.user_profile)
 ]

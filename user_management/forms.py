@@ -27,3 +27,12 @@ class UserForm(forms.Form):
             'class': '',
             'type':'date'
             }, format=['%d/%m/%Y']), required=True)
+
+# XXX: DELETE ME
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        max_length=255,
+        label="Email Adresse",
+        required=True
+    )
+    password = forms.CharField(widget=forms.PasswordInput(), label='Password', required=True)

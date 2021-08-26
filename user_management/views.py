@@ -1,5 +1,5 @@
 #HTML Handeling
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
 
@@ -13,7 +13,8 @@ from random import randint
 
 from .forms import *
 from .models import User, Info, Review
-from .validators import validate_register
+from .validators import validate_login, validate_register
+from .choices import *
 
 # TODO: Write functional Ipgrabber eg. with django-ipware
 def get_client_ip(request):
@@ -26,10 +27,11 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-def hello_world_temp(request):
-    return render(
-        request, 'hello.html', context={'time': timezone.now(), 'ip':get_client_ip(request)}
-    )
+dict_gender = dict(choice_gender)
+
+def index(request):
+    __context={"users":User.objects.all()}
+    return render(request, "index.html", __context)
 
 # Handels incoming GET & POST requests on the register view. 
 def register(request):
@@ -57,7 +59,8 @@ def register(request):
             is_admin=False,
 
             certificate=None,
-            profile_pic=None
+            profile_pic=None,
+            created_on=timezone.now()
             )
             # TODO: Create Context
             request.session["user"] = user.id
@@ -67,3 +70,24 @@ def register(request):
     form = UserForm()
     __context['form'] = form
     return render(request, 'register.html', context=__context)
+
+# XXX: DELETE THIS NOT MY JOB
+def login(request):
+    __context = {"form": None}
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if validate_login(request, form):
+            # return redirect("/dashboard")
+            return HttpResponse("Login!")
+    form = LoginForm()
+    __context['form'] = form
+    return render(request, 'login.html', __context)
+
+
+def user_profile(request, user_id):
+    __context = {'user':None}
+    # TODO: use Hashid to hide Primary key
+    print(user_id)
+    __context['user']= get_object_or_404(User, id=user_id)
+    __context['gender']=dict_gender[__context['user'].gender]
+    return render(request, "profile.html", __context)

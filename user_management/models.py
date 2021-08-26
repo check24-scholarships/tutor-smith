@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -7,10 +6,10 @@ from django.contrib.auth.models import (
 )
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
-from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .choices import *
+from tutor_smith.converters import h_encode
 
 
 # User model
@@ -81,13 +80,19 @@ class User(models.Model):
     def __str__(self) -> str:
         return self.email
 
+    
     def save(self, *args, **kwargs):
-        self.created_on = timezone.now()
+        self.email = self.email.lower()
         super().save(*args, **kwargs)
+    
+    def get_hashid(self):
+        return h_encode(self.id)
+    
+    
 
 
 class Info(models.Model):
-    subject = models.CharField(max_length=20, choices=choice_subject)
+    subject = models.IntegerField(choices=choice_subject)
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 

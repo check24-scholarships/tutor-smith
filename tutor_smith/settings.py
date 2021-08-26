@@ -38,10 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     #required
     'phonenumber_field',
-
     #own
     'user_management',
 ]
@@ -134,3 +132,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user_management.UserAuth'
 
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
+
+HASHIDS_SALT = '20122415029319303781'
