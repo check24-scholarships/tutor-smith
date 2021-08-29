@@ -38,9 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms',
-    # own
+
+    #required
+    'phonenumber_field',
+
+    #own
     'user_management',
+  
+    'crispy_forms',
 ]
 
 crispy_template_pack = 'bootstrap 4'
@@ -131,6 +136,8 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user_management.UserAuth'
-# Django development email server
+
+PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
+
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))

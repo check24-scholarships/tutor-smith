@@ -2,12 +2,16 @@
 {% load static %}
 {% block title %}Register{% endblock title %}
 {% block content %}
-    <form action="/register/" method="post">
-        {% csrf_token %}
-        {% if error_msg %}
-            <p class="error">{{ error_msg }}</p>
-        {% endif %}
-        {{form}}
-        <input type="submit" value="Submit">
-    </form>
+<form action="/register/" method="post">
+    {% csrf_token %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {{form}}
+    <input type="submit" value="Submit">
+</form>
 {% endblock content %}
