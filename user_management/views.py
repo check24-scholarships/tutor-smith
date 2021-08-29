@@ -64,7 +64,7 @@ def recover_form(request):
                         'token': default_token_generator.make_token(user),
                         'protocol': 'http',
                     }"""
-            # *email = render_to_string(email_template_name, c)
+            # email = render_to_string(email_template_name, c)
             return redirect('/password_reset/done/')
 
     password_reset_form = PasswordResetForm()
