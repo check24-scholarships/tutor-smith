@@ -42,7 +42,11 @@ INSTALLED_APPS = [
     'phonenumber_field',
     #own
     'user_management',
+  
+    'crispy_forms',
 ]
+
+crispy_template_pack = 'bootstrap 4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -134,3 +138,6 @@ AUTH_USER_MODEL = 'user_management.UserAuth'
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 
 HASHIDS_SALT = '20122415029319303781'
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
