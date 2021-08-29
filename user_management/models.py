@@ -9,7 +9,7 @@ from django.utils.text import slugify
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .choices import *
-from tutor_smith.converters import h_encode
+from tutor_smith.converters import h_encode, user_hasher
 
 
 # User model
@@ -86,7 +86,7 @@ class User(models.Model):
         super().save(*args, **kwargs)
     
     def get_hashid(self):
-        return h_encode(self.id)
+        return h_encode(user_hasher, self.id)
     
     
 

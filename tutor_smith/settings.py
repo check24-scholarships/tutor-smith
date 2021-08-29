@@ -138,6 +138,7 @@ AUTH_USER_MODEL = 'user_management.UserAuth'
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 
 HASHIDS_SALT = '20122415029319303781'
+RESET_HASHIDS_SALT = '3592838404'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
