@@ -6,7 +6,7 @@ from .choices import *
 
 classes = [[i, i] for i in range(5, 13)]
 
-#Creates Forms for validation and rendering. The Structure is simmilar to the Model
+# Creates Forms for validation and rendering. The Structure is simmilar to the Model
 class UserForm(forms.Form):
     email = forms.EmailField(
         max_length=255,

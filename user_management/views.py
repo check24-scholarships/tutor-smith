@@ -11,6 +11,11 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.password_validation import validate_password, password_changed
 from random import randint
 
+from django.contrib.auth.forms import PasswordResetForm
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+
 from .forms import *
 from .models import User, Info, Review
 from .validators import validate_register
@@ -26,12 +31,57 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
+def recover_form(request):
+    if request.method == 'POST':
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            # Send email...
+            print(data)
+            """associated_users = User.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:"""
+            # get users
+            users = User.objects.filter(email=data)
+            if users is not None:
+                for user in users:
+                    print(user)
+                    subject = 'Password Reset Requested'
+                    email_template_name = (
+                        'main/password/password_reset_email.txt'
+                    )
+                    """c = {
+                        "email": "test@gmail.com",
+                        'domain': '127.0.0.1:8000',
+                        'site_name': 'Website',
+                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                        "user": "test",
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http',
+                    }"""
+            # email = render_to_string(email_template_name, c)
+            return redirect('/password_reset/done/')
+
+    password_reset_form = PasswordResetForm()
+    return render(
+        request,
+        'password/password_reset_form.html',
+        context={'password_reset_form': password_reset_form},
+    )
+
+
+def recover_form_sent(request):
+    return render(request, 'password/password_reset_sent.html')
+
+
 def hello_world_temp(request):
     return render(
         request, 'hello.html', context={'time': timezone.now(), 'ip':get_client_ip(request)}
     )
 
-# Handels incoming GET & POST requests on the register view. 
+
+# Handels incoming GET & POST requests on the register view.
 def register(request):
     #All context gets initialized
     __context = {'form':None}
