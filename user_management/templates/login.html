@@ -1,0 +1,19 @@
+<!-- XXX: DELETE ME -->
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Login{% endblock title %}
+{% block content %}
+<form action="/login/" method="post">
+    {% csrf_token %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {{form}}
+    <input type="submit" value="Login">
+</form>
+<p>Dont have an Account? <a href="/register/">Register</a></p>
+{% endblock content %}

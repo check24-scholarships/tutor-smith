@@ -11,7 +11,10 @@
     <title>{% block title %}Template Error{% endblock %}</title>
 </head>
 <body>
-    <header><p>Logo</p></header>
+    <header>
+        <p>Logo</p>
+        <a href="/login/">Login</a>
+    </header>
     {% block content %}
         <h1 class="error">Template Error</h1>
     {% endblock %}
