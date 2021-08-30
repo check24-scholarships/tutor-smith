@@ -55,23 +55,19 @@ def recover_form(request):
             if associated_users.exists():
                 for user in associated_users:"""
             # get users
-            users = User.objects.filter(email=data)
-            if users is not None:
-                for user in users:
-                    print(user)
-                    subject = 'Password Reset Requested'
-                    email_template_name = (
-                        'main/password/password_reset_email.txt'
-                    )
-                    """c = {
-                        "email": "test@gmail.com",
-                        'domain': '127.0.0.1:8000',
-                        'site_name': 'Website',
-                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                        "user": "test",
-                        'token': default_token_generator.make_token(user),
-                        'protocol': 'http',
-                    }"""
+            user = User.objects.get(email=data)
+            print(user)
+            subject = 'Password Reset Requested'
+            email_template_name = 'main/password/password_reset_email.txt'
+            """c = {
+                "email": "test@gmail.com",
+                'domain': '127.0.0.1:8000',
+                'site_name': 'Website',
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "user": "test",
+                'token': default_token_generator.make_token(user),
+                'protocol': 'http',
+            }"""
             # email = render_to_string(email_template_name, c)
             return redirect('/password_reset/done/')
 
