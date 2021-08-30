@@ -1,5 +1,5 @@
 # HTML Handeling
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
 
@@ -55,20 +55,23 @@ def recover_form(request):
             if associated_users.exists():
                 for user in associated_users:"""
             # get users
-            user = User.objects.get(email=data)
-            user = None
-            print(user)
-            subject = 'Password Reset Requested'
-            email_template_name = 'main/password/password_reset_email.txt'
-            """c = {
-                "email": "test@gmail.com",
-                'domain': '127.0.0.1:8000',
-                'site_name': 'Website',
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                "user": "test",
-                'token': default_token_generator.make_token(user),
-                'protocol': 'http',
-            }"""
+            users = User.objects.filter(email=data)
+            if users is not None:
+                for user in users:
+                    print(user)
+                    subject = 'Password Reset Requested'
+                    email_template_name = (
+                        'main/password/password_reset_email.txt'
+                    )
+                    """c = {
+                        "email": "test@gmail.com",
+                        'domain': '127.0.0.1:8000',
+                        'site_name': 'Website',
+                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                        "user": "test",
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http',
+                    }"""
             # email = render_to_string(email_template_name, c)
             return redirect('/password_reset/done/')
 
@@ -121,6 +124,7 @@ def register(request):
                 is_admin=False,
                 certificate=None,
                 profile_pic=None,
+                created_on=timezone.now(),
             )
             # TODO: Create Context
             request.session['user'] = user.id

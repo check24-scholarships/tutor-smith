@@ -2,7 +2,7 @@
 
 Name still to be defined
 
-````console
+````shell
 Start the server:
 ~$ python3 manage.py runserver
 ````
@@ -14,7 +14,7 @@ Requirements:
 * packages from requirements.txt
 * **new package needed! Please run the pip install**
 
-````console
+````shell
 ~$ pip install -r requirements.txt
 ````
 ---
@@ -56,7 +56,7 @@ User.objects.filter(email__startswith="a")
 # Selecting a single Object
 User.objects.get(email=email) # -> Raises an DoesNotExist Exeption on empty Querry
 ````
-[more infos on reading here](https://docs.djangoproject.com/en/3.2/topics/db/queries/#retrieving-all-objects)
+[more infos here](https://docs.djangoproject.com/en/3.2/topics/db/queries/#retrieving-all-objects)
 ````python
 # Write
 # Create a new User with the email test@test

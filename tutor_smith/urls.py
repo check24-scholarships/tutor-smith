@@ -14,15 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, register_converter
 from django.contrib.auth import views as auth_views  # import this
 
 from user_management import views as user_views
+from .converters import UserHashIdConverter, ResetHashIdConverter
+
+register_converter(UserHashIdConverter, 'user_hashid')
+register_converter(ResetHashIdConverter, 'reset_hashid')
 
 urlpatterns = [
+    # TODO: Remove admin when finished
     path('admin/', admin.site.urls),
-    path('hello-template/', user_views.hello_world_temp),
+    path('', user_views.index),
     path('register/', user_views.register),
+    #path('login/', user_views.login),
+    path('users/<user_hashid:user_id>/', user_views.user_profile),
     path('recover/', user_views.recover_form),
     path('password_reset/done/', user_views.recover_form_sent),
     path(
