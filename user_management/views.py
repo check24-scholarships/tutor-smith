@@ -140,10 +140,11 @@ def login(request):
     return render(request, 'login.html', __context)
 '''
 
-def user_profile(request, user_id):
-    __context = {'user':None}
-    # TODO: use Hashid to hide Primary key
-    print(user_id)
-    __context['user']= get_object_or_404(User, id=user_id)
-    __context['gender']=dict_gender[__context['user'].gender]
-    return render(request, "profile.html", __context)
+def user_profile(request, user_id, subpath):
+    __context = {'user':get_object_or_404(User, id=user_id) , 'isOwner': True}
+    if subpath == 'profile':
+        __context['gender']=dict_gender[__context['user'].gender]
+        return render(request, "profile/profile.html", __context)
+    elif subpath == 'infos':
+        __context['infos'] = Info.objects.filter(author=__context['user'])
+        return render(request, 'profile/infos.html', __context)

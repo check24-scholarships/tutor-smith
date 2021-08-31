@@ -1,0 +1,17 @@
+{% extends 'profile/profile.html' %}
+{% load static %}
+{% block site_name %}Anzeigen{% endblock site_name %}
+{% block choice_selector %}
+    <a class="selection" href="profile">Profil</a>
+    <a class="selection selected" href="more">Mehr</a>
+    <a class="selection" href="infos">Anzeigen</a>
+    <a class="selection" href="rewiews">Bewertungen</a>
+    {% if isOwner %}
+        <a class="selection" href="edit">Bearbeiten</a>
+    {% endif %}
+{% endblock choice_selector %}
+{% block profile_content %}
+    {% for info in infos %}
+        <p>{{info.description}}</p>
+    {% endfor %}
+{% endblock profile_content %}

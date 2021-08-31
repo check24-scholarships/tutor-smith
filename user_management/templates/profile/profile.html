@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ user.first_name }} {{ user.last_name }} - {% block site_name %}Profile{% endblock site_name %}{% endblock title %}
+{% block styles %}
+        <link rel="stylesheet" href={% static 'user_management/detail_style.css' %}>
+{% endblock styles %}
+{% block content %}
+        <div class="selector">
+                {% block choice_selector %}
+                        <a class="selection selected" href="profile">Profil</a>
+                        <a class="selection" href="more">Mehr</a>
+                        <a class="selection" href="infos">Anzeigen</a>
+                        <a class="selection" href="rewiews">Bewertungen</a>
+                        {% if isOwner %}
+                                <a class="selection" href="edit">Bearbeiten</a>
+                        {% endif %}
+                {% endblock choice_selector %}
+        </div>
+        {% block profile_content %}
+        <div class="profile-content">
+                <div class="right-colum">
+                        {% if user.profile_pic %}
+                                <img src="{{ user.profile_pic }}" alt="Profile Pic" class="profile_pic">
+                        {% else %}
+                                <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
+                                class="profile_pic"
+                                alt="Profile Pic">
+                        {% endif %}
+                        <p class="detail">Name: {{user.first_name}} {{user.last_name}}</p>
+                        {% if user.adress %}
+                        <div class="flex">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" style="margin-right:5px"><g fill="none"><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+                                <p class="detail">{{user.adress}}</p>
+                        </div>
+                        {% endif %}
+                </div>
+                <div class="left-colum">
+                        <p class="detail">Email: {{user.email}}</p>
+                        <p class="detail">Birthdate: {{user.birth_date}}</p>
+                        {% if user.description %}
+                                <p class="detail long">{{user.description}}</p>
+                        {% endif %}
+                        {% if user.phone %}
+                                <p class="detail">Phone: {{user.phone}}</p>
+                        {% endif %}
+                        
+                        <p class="detail">Gender: {{gender}}</p>
+                        
+                </div> 
+        </div>
+        {% endblock profile_content %}
+        <div class="flex_bottom">
+                <p class="created_on">Created on: {{user.created_on}}</p>
+                <a href="/user/report/{{user.get_hashid}}" class="error">Beinhaltet dieser Accound schädliche Inhalte? Report!</a>
+        </div>
+{% endblock content %}

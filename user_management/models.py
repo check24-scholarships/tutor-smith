@@ -51,6 +51,7 @@ class UserAuth(AbstractUser):
 
 
 # Create your models here.
+# TODO: Fix typo in address
 class User(models.Model):
     email = models.EmailField(
         verbose_name='email address',
@@ -103,9 +104,9 @@ class Info(models.Model):
 
     created_on = models.DateTimeField()
 
-    def __str__(self) -> str:
-        return self.subject + self.author
-
+    def __str__(self):
+        return self.author.email + ' ' + str(self.subject)
+    
 
 class Review(models.Model):
 

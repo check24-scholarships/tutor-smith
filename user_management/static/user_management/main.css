@@ -2,8 +2,13 @@
 Colors: #F97E72
 */
 *{
-    --header-color: hsl(180, 28%, 32%);
-    color: hsl(180, 25%, 5%);
+    --color-lines: #731D2C;
+    --color-highlight-dark: #2F6C73;
+    --color-highlight-light: #60B6BF;
+    --color-base-dark: #BFAB99;
+    --color-base-light: #F2E0C9;
+    --color-font-dark: #0D0D0D;
+
 }
 body, html{
     font-size: 15px;
@@ -15,7 +20,7 @@ header{
     display:flex !important; 
     justify-content: space-between;
     align-items: center;
-    background-color: var(--header-color);
+    background-color: var(--color-lines);
     height: 70px;
     width: 100%;
 }
@@ -23,11 +28,11 @@ header a, header p{
     margin:2rem;
 }
 a{
-    color:rgb(230, 3, 71);
+    color:var(--color-highlight-light);
     text-decoration: none;
 }
 a:hover{
-    color:orangered;
+    color:var(--color-highlight-dark);
 }
 .error{
     color:red;
@@ -40,17 +45,15 @@ form{
 }
 input{
     outline: none;
-    border:2px var(--header-color) solid;
+    border:2px var(--color-lines) solid;
     border-radius: 25px;
     margin:0.2rem;
     padding: 2px 8px;
 }
 
+
 @media screen and (max-width:800px) {
     head, body{
         font-size: 20px;
-    }
-    header{
-        background-color: blue;
     }
 }

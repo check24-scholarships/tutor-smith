@@ -23,13 +23,14 @@ from .converters import UserHashIdConverter, ResetHashIdConverter
 register_converter(UserHashIdConverter, 'user_hashid')
 register_converter(ResetHashIdConverter, 'reset_hashid')
 
+
 urlpatterns = [
     # TODO: Remove admin when finished
     path('admin/', admin.site.urls),
     path('', user_views.index),
     path('register/', user_views.register),
     #path('login/', user_views.login),
-    path('users/<user_hashid:user_id>/', user_views.user_profile),
+    path('users/<user_hashid:user_id>/<str:subpath>', user_views.user_profile),
     path('recover/', user_views.recover_form),
     path('password_reset/done/', user_views.recover_form_sent),
     path(

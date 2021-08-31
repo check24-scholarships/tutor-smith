@@ -4,6 +4,6 @@
 {% block content %}
     <p>Index Side</p>
     {% for user in users %}
-      <a href="users/{{user.get_hashid}}">{{user.first_name}} {{user.last_name}}</a>
+      <a href="users/{{user.get_hashid}}/profile">{{user.first_name}} {{user.last_name}}</a>
     {% endfor %}
 {% endblock content %}
