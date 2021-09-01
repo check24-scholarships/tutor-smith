@@ -50,26 +50,33 @@ def recover_form(request):
         if password_reset_form.is_valid():
             data = password_reset_form.cleaned_data['email']
             # Send email...
-            print(data)
             """associated_users = User.objects.filter(Q(email=data))
             if associated_users.exists():
                 for user in associated_users:"""
             # get users
-            user = User.objects.get(email=data)
-            print(user)
-            subject = 'Password Reset Requested'
-            email_template_name = 'main/password/password_reset_email.txt'
-            """c = {
-                "email": "test@gmail.com",
-                'domain': '127.0.0.1:8000',
-                'site_name': 'Website',
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                "user": "test",
-                'token': default_token_generator.make_token(user),
-                'protocol': 'http',
-            }"""
-            # email = render_to_string(email_template_name, c)
-            return redirect('/password_reset/done/')
+            try:
+                user = User.objects.get(email=data)
+                print(user.__dict__)
+                print(user)
+                subject = 'Password Reset Requested'
+                email_template_name = 'main/password/password_reset_email.txt'
+                """c = {
+                    "email": "test@gmail.com",
+                    'domain': '127.0.0.1:8000',
+                    'site_name': 'Website',
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "user": "test",
+                    'token': default_token_generator.make_token(user),
+                    'protocol': 'http',
+                }"""
+                # email = render_to_string(email_template_name, c)
+                return redirect('/password_reset/done/')
+            except Exception:
+                messages.add_message(
+                    request,
+                    messages.INFO,
+                    'An invalid email has been entered.',
+                )
 
     password_reset_form = PasswordResetForm()
     return render(
