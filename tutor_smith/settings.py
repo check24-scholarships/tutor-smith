@@ -61,7 +61,7 @@ ROOT_URLCONF = 'tutor_smith.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,3 +134,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user_management.UserAuth'
 
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
+
+LOGIN_REDIRECT_URL = '/'

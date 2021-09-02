@@ -21,5 +21,6 @@ from user_management import views as user_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello-template/', user_views.hello_world_temp),
-    path('register/', user_views.register)
+    path('register/', user_views.register),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
