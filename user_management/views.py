@@ -15,7 +15,7 @@ from django.contrib.auth.password_validation import (
 from random import randint
 
 from django.contrib.auth.forms import PasswordResetForm
-from django.utils.http import urlsafe_base64_encode
+from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 
@@ -23,6 +23,7 @@ from .forms import *
 from .models import User, Info, Review
 from .validators import validate_login, validate_register
 from .choices import *
+from tutor_smith.converters import UserHashIdConverter, ResetHashIdConverter
 
 # TODO: Write functional Ipgrabber eg. with django-ipware
 def get_client_ip(request):
@@ -56,20 +57,24 @@ def recover_form(request):
             # get users
             try:
                 user = User.objects.get(email=data)
-                print(user.__dict__)
-                print(user)
+                print(user.id)
                 subject = 'Password Reset Requested'
-                email_template_name = 'main/password/password_reset_email.txt'
-                """c = {
-                    "email": "test@gmail.com",
+                email_template_name = 'password/password_reset_email.txt'
+                converter = ResetHashIdConverter()
+                print('Working')
+                # print(default_token_generator.make_token(user))
+                c = {
+                    'email': 'test@gmail.com',
                     'domain': '127.0.0.1:8000',
                     'site_name': 'Website',
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "user": "test",
-                    'token': default_token_generator.make_token(user),
+                    'uid': converter.to_url(user.id),
+                    'user': 'test',
+                    'token': 0,
                     'protocol': 'http',
-                }"""
-                # email = render_to_string(email_template_name, c)
+                }
+                email = render_to_string(email_template_name, c)
+                print(email)
+
                 return redirect('/password_reset/done/')
             except Exception:
                 messages.add_message(
@@ -81,7 +86,7 @@ def recover_form(request):
     password_reset_form = PasswordResetForm()
     return render(
         request,
-        'password/password_reset_form.html',
+        'password/password_reset.html',
         context={'password_reset_form': password_reset_form},
     )
 
