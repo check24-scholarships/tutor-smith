@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Register{% endblock title %}
 {% block content %}
-<form action="/register/" method="post">
+<form action="{% url 'register' %}" method="post">
     {% csrf_token %}
     {% if messages %}
         <ul class="messages">
@@ -14,5 +14,5 @@
     {{form}}
     <input type="submit" value="Submit">
 </form>
-<p>Already have an Account? <a href="/login/">Log in</a></p>
+<p>Already have an Account? <a href="{% url 'login' %}">Log in</a></p>
 {% endblock content %}

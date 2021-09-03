@@ -27,11 +27,16 @@ register_converter(ResetHashIdConverter, 'reset_hashid')
 urlpatterns = [
     # TODO: Remove admin when finished
     path('admin/', admin.site.urls),
-    path('', user_views.index),
-    path('register/', user_views.register),
-    #path('login/', user_views.login),
-    path('users/<user_hashid:user_id>/<str:subpath>', user_views.user_profile),
-    path('recover/', user_views.recover_form),
+    path('', user_views.index, name='index'),
+    path('register/', user_views.register, name='register'),
+    path('login/', user_views.login, name='login'),
+    path('logout/', user_views.logout, name='logout'),
+    path(
+        'users/<user_hashid:user_id>/<str:subpath>',
+        user_views.user_profile,
+        name='profile',
+    ),
+    path('recover/', user_views.recover_form, name='recover_password'),
     path('password_reset/done/', user_views.recover_form_sent),
     path(
         'reset/<uidb64>/<token>/',

@@ -37,12 +37,12 @@ urlpatterns = [
 ## The Database
 **Important:** The *Name* Field is now seperated in *first_name* and *last_name*
 ### Basics
-If you make changes to the Database please run 
+If you make changes to the Database please run
 ````shell
 ~$ python3 manage.py makemigrations
 ~$ python3 manage.py migrate
 ````
-**Don't forget to inform the others of your changes**  
+**Don't forget to inform the others of your changes**
 </br>
 ### Read and write to / from the Database
 ```python

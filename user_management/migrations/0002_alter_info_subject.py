@@ -13,6 +13,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='info',
             name='subject',
-            field=models.IntegerField(choices=[(0, 'German'), (1, 'Math'), (2, 'English'), (3, 'Chemestry'), (4, 'Computer Science')]),
+            field=models.IntegerField(
+                choices=[
+                    (0, 'German'),
+                    (1, 'Math'),
+                    (2, 'English'),
+                    (3, 'Chemestry'),
+                    (4, 'Computer Science'),
+                ]
+            ),
         ),
     ]

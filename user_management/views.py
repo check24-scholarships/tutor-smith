@@ -1,4 +1,4 @@
-#HTML Handeling
+# HTML Handeling
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
@@ -6,9 +6,12 @@ from django.contrib import messages
 from django.utils.text import slugify
 from django.utils import timezone
 
-#Auth Handler
+# Auth Handler
 from django.contrib.auth.hashers import make_password, check_password
-from django.contrib.auth.password_validation import validate_password, password_changed
+from django.contrib.auth.password_validation import (
+    validate_password,
+    password_changed,
+)
 from random import randint
 
 from django.contrib.auth.forms import PasswordResetForm
@@ -32,13 +35,15 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
 dict_gender = dict(choice_gender)
 
-def index(request):
-    __context={"users":User.objects.all()}
-    return render(request, "index.html", __context)
 
- 
+def index(request):
+    __context = {'users': User.objects.all()}
+    return render(request, 'index.html', __context)
+
+
 def recover_form(request):
     if request.method == 'POST':
         password_reset_form = PasswordResetForm(request.POST)
@@ -82,69 +87,79 @@ def recover_form_sent(request):
     return render(request, 'password/password_reset_sent.html')
 
 
-def hello_world_temp(request):
-    return render(
-        request, 'hello.html', context={'time': timezone.now(), 'ip':get_client_ip(request)}
-    )
-
-
 # Handels incoming GET & POST requests on the register view.
 def register(request):
-    #All context gets initialized
-    __context = {'form':None}
-    if request.method == "POST":
+    # All context gets initialized
+    __context = {'form': None}
+    if request.method == 'POST':
         form = UserForm(request.POST)
-        
+
         res = validate_register(request, form)
         if res:
             user = User.objects.create(
-            email=form.cleaned_data['email'],
-            first_name=form.cleaned_data['first_name'],
-            last_name=form.cleaned_data['last_name'],
-            password=make_password(form.cleaned_data['password_1'], salt=str(randint(0, 2**15))),
-            gender=form.cleaned_data['gender'],
-            adress=form.cleaned_data['adress'],
-            phone=form.cleaned_data['phone'],
-            user_class=form.cleaned_data['user_class'],
-            description='',
-            birth_date=form.cleaned_data['birth_date'],
-            ip=get_client_ip(request),
-            is_active=True,
-            is_staff=False,
-            is_admin=False,
-
-            certificate=None,
-            profile_pic=None,
-            created_on=timezone.now()
+                email=form.cleaned_data['email'],
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                password=make_password(
+                    form.cleaned_data['password_1'],
+                    salt=str(randint(0, 2 ** 15)),
+                ),
+                gender=form.cleaned_data['gender'],
+                adress=form.cleaned_data['adress'],
+                phone=form.cleaned_data['phone'],
+                user_class=form.cleaned_data['user_class'],
+                description='',
+                birth_date=form.cleaned_data['birth_date'],
+                ip=get_client_ip(request),
+                is_active=True,
+                is_staff=False,
+                is_admin=False,
+                certificate=None,
+                profile_pic=None,
+                created_on=timezone.now(),
             )
             # TODO: Create Context
-            request.session["user"] = user.id
-            messages.add_message(request, messages.SUCCESS, "Nutzer erstellt!")
-            return redirect("/login")
+            request.session['user'] = user.id
+            messages.add_message(request, messages.SUCCESS, 'Nutzer erstellt!')
+            return redirect('/login')
     # Displays Form and Context on view when not returned before
     form = UserForm()
     __context['form'] = form
     return render(request, 'register.html', context=__context)
 
-'''
-# XXX: DELETE THIS NOT MY JOB
+
 def login(request):
-    __context = {"form": None}
+    try:
+        if request.session['userid']:
+            return redirect('/')
+    except KeyError:
+        pass
+
+    __context = {'form': None}
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        if validate_login(request, form):
-            # return redirect("/dashboard")
-            return HttpResponse("Login!")
+        user = validate_login(request, form)
+        if user:
+            request.session['userid'] = user.get_hashid()
+            user.ip = get_client_ip(request)
+            return redirect('/')
+
     form = LoginForm()
     __context['form'] = form
+    request.session.set_test_cookie()
     return render(request, 'login.html', __context)
-'''
+
+
+def logout(request):
+    request.session.flush()
+    return HttpResponse("Logged out! <a href=\"/\">Back</a>")
+
 
 def user_profile(request, user_id, subpath):
-    __context = {'user':get_object_or_404(User, id=user_id) , 'isOwner': True}
+    __context = {'user': get_object_or_404(User, id=user_id), 'isOwner': True}
     if subpath == 'profile':
-        __context['gender']=dict_gender[__context['user'].gender]
-        return render(request, "profile/profile.html", __context)
+        __context['gender'] = dict_gender[__context['user'].gender]
+        return render(request, 'profile/profile.html', __context)
     elif subpath == 'infos':
         __context['infos'] = Info.objects.filter(author=__context['user'])
         return render(request, 'profile/infos.html', __context)

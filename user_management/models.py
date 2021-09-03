@@ -37,6 +37,7 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
+
 class UserAuth(AbstractUser):
     username = None
     email = models.EmailField(
@@ -81,15 +82,12 @@ class User(models.Model):
     def __str__(self) -> str:
         return self.email
 
-    
     def save(self, *args, **kwargs):
         self.email = self.email.lower()
         super().save(*args, **kwargs)
-    
+
     def get_hashid(self):
         return h_encode(user_hasher, self.id)
-    
-    
 
 
 class Info(models.Model):
@@ -106,15 +104,19 @@ class Info(models.Model):
 
     def __str__(self):
         return self.author.email + ' ' + str(self.subject)
-    
+
 
 class Review(models.Model):
 
     title = models.CharField(max_length=24)
     text = models.TextField()
     stars = models.IntegerField()
-    author = models.ForeignKey(User, related_name='Author', on_delete=models.CASCADE)
-    for_user = models.ForeignKey(User, related_name='for_user', on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User, related_name='Author', on_delete=models.CASCADE
+    )
+    for_user = models.ForeignKey(
+        User, related_name='for_user', on_delete=models.CASCADE
+    )
 
     created_on = models.DateTimeField()
 

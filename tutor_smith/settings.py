@@ -38,11 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #required
+    # required
     'phonenumber_field',
-    #own
+    # own
     'user_management',
-  
     'crispy_forms',
 ]
 
