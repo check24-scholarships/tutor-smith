@@ -1,3 +1,4 @@
+{% comment "" %}
 {% extends 'profile/profile.html' %}
 {% load static %}
 {% block site_name %}Anzeigen{% endblock site_name %}
@@ -15,3 +16,20 @@
         <p>{{info.description}}</p>
     {% endfor %}
 {% endblock profile_content %}
+{% endcomment %}
+<div class="right-colum" id="profile-content">
+{% for info in infos %}
+    <div class="info">
+        {% if searching %}
+        <p>Suche Nachhilfe in</p>
+        {% else %}
+        <p>Gebe Nachilfe in</p>
+        {% endif %}
+            <div class="flex">
+                <h3>{{ info.get_hr_subject }}</h3>
+                <p class="success">{{ info.cost_budget }}€</p>
+            </div>
+            <p>{{info.description}}</p>
+        </div>
+{% endfor %}
+</div>

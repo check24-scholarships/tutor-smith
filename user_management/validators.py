@@ -20,7 +20,7 @@ def display_errors(request, msg):
 def validate_register(request, form):
     if form.is_valid():
         # Checks if email is already in database SELECT * FROM User WHERE email=email
-        if User.objects.filter(email=form.cleaned_data['email']):
+        if User.objects.filter(email=form.cleaned_data['email'].lower()):
             display_errors(request, 'User already exists')
             return False
         # Checks if passwords match
@@ -44,7 +44,7 @@ def validate_register(request, form):
 def validate_login(request, form) -> User:
     if form.is_valid():
         try:
-            user = User.objects.get(email=form.cleaned_data['email'])
+            user = User.objects.get(email=form.cleaned_data['email'].lower())
             if check_password(
                 form.cleaned_data['password'],
                 user.password,

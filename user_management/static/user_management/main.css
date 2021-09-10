@@ -30,6 +30,7 @@ header a, header p{
 a{
     color:var(--color-highlight-light);
     text-decoration: none;
+    cursor: pointer;
 }
 a:hover{
     color:var(--color-highlight-dark);
