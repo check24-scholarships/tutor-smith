@@ -19,6 +19,9 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 
+from django.core.mail import send_mail
+from tutor_smith.settings import EMAIL_HOST_USER
+
 from .forms import *
 from .models import User, Info, Review
 from .validators import validate_login, validate_register
@@ -64,7 +67,7 @@ def recover_form(request):
                 print('Working')
                 # print(default_token_generator.make_token(user))
                 c = {
-                    'email': 'test@gmail.com',
+                    'email': 'shizhe.he6@gmail.com',
                     'domain': '127.0.0.1:8000',
                     'site_name': 'Website',
                     'uid': converter.to_url(user.id),
@@ -74,8 +77,24 @@ def recover_form(request):
                 }
                 email = render_to_string(email_template_name, c)
                 print(email)
+                subject = 'Password Recover Requested'
+                recepient = 'shizhe.he6@gmail.com'
+                message = email
+
+                send_mail(
+                    subject,
+                    message,
+                    EMAIL_HOST_USER,
+                    [recepient],
+                    fail_silently=False,
+                )
+                messages.success(
+                    request,
+                    'A message with reset password instructions has been sent to your inbox.',
+                )
 
                 return redirect('/password_reset/done/')
+
             except Exception:
                 messages.add_message(
                     request,
