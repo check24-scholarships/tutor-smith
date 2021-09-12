@@ -19,35 +19,48 @@
                 {% endblock choice_selector %}
         </div>
         {% block profile_content %}
-        <div class="profile-content" id="profile-content">
-                <div class="right-colum">
-                        {% if user.profile_pic %}
-                                <img src="{{ user.profile_pic }}" alt="Profile Pic" class="profile_pic">
-                        {% else %}
-                                <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
-                                class="profile_pic"
-                                alt="Profile Pic">
-                        {% endif %}
-                        <p class="detail">Name: {{user.first_name}} {{user.last_name}}</p>
-                        {% if user.address and settings.show_address %}
-                        <div class="flex">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" style="margin-right:5px"><g fill="none"><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
-                                <p class="detail">{{user.address}}</p>
+        <div id="profile-content">
+                <div class="profile-content">
+                        <div class="right-colum">
+                                {% if user.profile_pic %}
+                                        <img src="{{ user.profile_pic }}" alt="Profile Pic" class="profile_pic">
+                                {% else %}
+                                        <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
+                                        class="profile_pic"
+                                        alt="Profile Pic">
+                                {% endif %}
+                                <p class="detail">Name: {{user.first_name}} {{user.last_name}}</p>
+                                {% if user.address and settings.show_address %}
+                                <div class="flex">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" style="margin-right:5px"><g fill="none"><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2a8 8 0 0 0-8 8c0 1.892.402 3.13 1.5 4.5L12 22l6.5-7.5c1.098-1.37 1.5-2.608 1.5-4.5a8 8 0 0 0-8-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+                                        <p class="detail">{{user.address}}</p>
+                                </div>
+                                {% endif %}
                         </div>
-                        {% endif %}
-                </div>
-                <div class="left-colum">
-                        <p class="detail">Email: {{user.email}}</p>
-                        <p class="detail">Birthdate: {{user.birth_date}}</p>
-                        {% if user.description %}
-                                <p class="detail long">{{user.description}}</p>
-                        {% endif %}
-                        {% if user.phone and settings.show_phone %}
-                                <p class="detail">Phone: {{user.phone}}</p>
-                        {% endif %}
+                        <div class="left-colum">
+                                <p class="detail">Email: {{user.email}}</p>
+                                <p class="detail">Birthdate: {{user.birth_date}}</p>
+                                {% if user.description %}
+                                        <p class="detail long">{{user.description | linebreaks}}</p>
+                                {% endif %}
+                                {% if user.phone and settings.show_phone %}
+                                        <p class="detail">Phone: {{user.phone}}</p>
+                                {% endif %}
+                                <p class="detail">Gender: {{gender}}</p>
+                                {% if review %}
+                                        <div class="info">
+                                                <div class="flex">
+                                                        <h3>{{ review.title }}</h3>
+                                                        <p>von {{ review.author.first_name }} {{ review.author.last_name }}</p>
 
-                        <p class="detail">Gender: {{gender}}</p>
-
+                                                        </div>
+                                                        <p>{{review.text | linebreaks}}</p>
+                                                <div style="color: lightgray" class="flex">
+                                                        <p>created on: {{ review.created_on }}</p>
+                                                </div>
+                                        </div>
+                                {% endif %}
+                        </div>
                 </div>
         </div>
         {% endblock profile_content %}

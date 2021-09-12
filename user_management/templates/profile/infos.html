@@ -29,7 +29,7 @@
                 <h3>{{ info.get_hr_subject }}</h3>
                 <p class="success">{{ info.cost_budget }}€</p>
             </div>
-            <p>{{info.description}}</p>
+            <p>{{info.description | linebreaks}}</p>
         </div>
 {% endfor %}
 </div>

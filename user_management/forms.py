@@ -32,7 +32,12 @@ class UserForm(forms.Form):
     gender = forms.ChoiceField(
         choices=choice_gender, label='Geschlecht', required=True
     )
-    adress = forms.CharField(max_length=64, label='Adresse', required=False)
+    adress = forms.CharField(
+        max_length=64,
+        label='Adresse',
+        widget=forms.TextInput(attrs={'placeholder': 'Straße, Stadt'}),
+        required=False,
+    )
     phone = PhoneNumberField(required=False, widget=PhoneNumberPrefixWidget())
     user_class = forms.ChoiceField(
         choices=classes, label='Klasse', required=True
@@ -56,11 +61,11 @@ class LoginForm(forms.Form):
     )
 
 
-class ProfileForm(forms.Form):
+class ProfileEditForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
         self.settings = kwargs.pop('settings')
-        super(ProfileForm, self).__init__(*args, **kwargs)
+        super(ProfileEditForm, self).__init__(*args, **kwargs)
 
         # add args
         self.fields['show_address'].initial = self.settings.show_address

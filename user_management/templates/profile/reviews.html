@@ -1,0 +1,13 @@
+{% for review in reviews %}
+    <div class="info">
+        <div class="flex">
+            <h3>{{ review.title }}</h3>
+            <p>von {{ review.author.first_name }} {{ review.author.last_name }}</p>
+
+        </div>
+        <p>{{review.text | linebreaks}}</p>
+        <div style="color: lightgray" class="flex">
+            <p>created on: {{ review.created_on }}</p>
+        </div>
+    </div>
+{% endfor %}

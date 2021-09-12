@@ -70,7 +70,9 @@
     margin: 1.1rem;
     padding: 0.5rem;
     box-shadow: 0.3rem 0.3rem 12px gray;
+    width: 65%;
 }
+
 
 @media screen and (max-width:800px) {
     .profile-content{

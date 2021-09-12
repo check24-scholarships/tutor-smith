@@ -146,6 +146,11 @@ def user_profile(request, user_id, subpath):
 
     if subpath == 'profile':
         __context['gender'] = dict_gender[__context['user'].gender]
+        __context['review'] = (
+            Review.objects.filter(for_user=__context['user'])
+            .order_by('-stars')
+            .first()
+        )
         return render(request, 'profile/profile.html', __context)
     elif subpath == 'infos':
         __context['infos'] = Info.objects.filter(author=__context['user'])
@@ -158,7 +163,7 @@ def user_profile(request, user_id, subpath):
     elif subpath == 'edit':
         if __context['isOwner']:
             if request.method == 'POST':
-                form = ProfileForm(
+                form = ProfileEditForm(
                     request.POST,
                     user=__context['user'],
                     settings=__context['settings'],
@@ -178,7 +183,7 @@ def user_profile(request, user_id, subpath):
                     __context['settings'].save()
                     # TODO: Add feedback for saved changes
 
-            __context['form'] = ProfileForm(
+            __context['form'] = ProfileEditForm(
                 user=__context['user'], settings=__context['settings']
             )
             return render(request, 'profile/edit.html', __context)
