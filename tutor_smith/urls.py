@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, register_converter
-from django.contrib.auth import views as auth_views  # import this
+from django.contrib.auth import views as auth_views
 
 from user_management import views as user_views
 from .converters import UserHashIdConverter, ResetHashIdConverter
@@ -41,7 +41,7 @@ urlpatterns = [
     path(
         'reset/<uidb64>/<token>/',
         auth_views.PasswordResetConfirmView.as_view(
-            template_name='password/password_reset_email.html'
+            template_name='password/password_reset_confirm.html'
         ),
         name='password_reset_confirm',
     ),

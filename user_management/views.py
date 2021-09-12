@@ -7,14 +7,19 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 
 from django.contrib.auth.forms import PasswordResetForm
-from django.utils.http import urlsafe_base64_encode
+from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+
+from django.core.mail import send_mail
+from tutor_smith.settings import EMAIL_HOST_USER
 
 from .forms import *
 from .models import User, Info, Review, Settings
 from .validators import validate_login, validate_register
 from .choices import *
+from tutor_smith.converters import UserHashIdConverter, ResetHashIdConverter
+
 from tutor_smith.utils import get_client_ip, is_user_authenticated
 
 dict_gender = dict(choice_gender)
@@ -31,31 +36,58 @@ def recover_form(request):
         if password_reset_form.is_valid():
             data = password_reset_form.cleaned_data['email']
             # Send email...
-            print(data)
             """associated_users = User.objects.filter(Q(email=data))
             if associated_users.exists():
                 for user in associated_users:"""
             # get users
-            user = User.objects.get(email=data)
-            print(user)
-            subject = 'Password Reset Requested'
-            email_template_name = 'main/password/password_reset_email.txt'
-            """c = {
-                "email": "test@gmail.com",
-                'domain': '127.0.0.1:8000',
-                'site_name': 'Website',
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                "user": "test",
-                'token': default_token_generator.make_token(user),
-                'protocol': 'http',
-            }"""
-            # email = render_to_string(email_template_name, c)
-            return redirect('/password_reset/done/')
+            try:
+                user = User.objects.get(email=data)
+                print(user.id)
+                subject = 'Password Reset Requested'
+                email_template_name = 'password/password_reset_email.txt'
+                converter = ResetHashIdConverter()
+                print('Working')
+                # print(default_token_generator.make_token(user))
+                c = {
+                    'email': 'shizhe.he6@gmail.com',
+                    'domain': '127.0.0.1:8000',
+                    'site_name': 'Website',
+                    'uid': converter.to_url(user.id),
+                    'user': 'test',
+                    'token': 0,
+                    'protocol': 'http',
+                }
+                email = render_to_string(email_template_name, c)
+                print(email)
+                subject = 'Password Recover Requested'
+                recepient = 'shizhe.he6@gmail.com'
+                message = email
+
+                send_mail(
+                    subject,
+                    message,
+                    EMAIL_HOST_USER,
+                    [recepient],
+                    fail_silently=False,
+                )
+                messages.success(
+                    request,
+                    'A message with reset password instructions has been sent to your inbox.',
+                )
+
+                return redirect('/password_reset/done/')
+
+            except Exception:
+                messages.add_message(
+                    request,
+                    messages.INFO,
+                    'An invalid email has been entered.',
+                )
 
     password_reset_form = PasswordResetForm()
     return render(
         request,
-        'password/password_reset_form.html',
+        'password/password_reset.html',
         context={'password_reset_form': password_reset_form},
     )
 
