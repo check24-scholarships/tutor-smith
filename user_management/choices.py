@@ -7,9 +7,9 @@ choice_subject = (
 )
 choice_difficulity = ((0, 'Beginner'), (1, 'Medium'), (2, 'Hard'))
 
-choice_gender= (
+choice_gender = (
     (9, 'Not Stated'),
     (1, 'Male'),
     (2, 'Female'),
-    (3, 'Another Term')
+    (3, 'Another Term'),
 )

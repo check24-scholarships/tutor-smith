@@ -1,3 +1,5 @@
+from random import randint
+from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -11,10 +13,11 @@ from phonenumber_field.modelfields import PhoneNumberField
 from .choices import *
 from tutor_smith.converters import h_encode, user_hasher
 
+from django.utils import timezone
+
+dict_subject = dict(choice_subject)
 
 # User model
-
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
         if not email:
@@ -36,6 +39,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('Superuser must have is_superuser=True.'))
 
         return self.create_user(email, password, **extra_fields)
+
 
 class UserAuth(AbstractUser):
     username = None
@@ -61,7 +65,7 @@ class User(models.Model):
     last_name = models.CharField(max_length=32)
     password = models.CharField(max_length=265)
     gender = models.IntegerField(choices=choice_gender)
-    adress = models.CharField(max_length=64, blank=True, null=True)
+    address = models.CharField(max_length=64, blank=True, null=True)
     phone = PhoneNumberField(unique=True, null=True, blank=True)
     user_class = models.IntegerField(default=11)
     description = models.TextField(default='')
@@ -80,15 +84,38 @@ class User(models.Model):
     def __str__(self) -> str:
         return self.email
 
-    
     def save(self, *args, **kwargs):
-        self.email = self.email.lower()
         super().save(*args, **kwargs)
-    
+
+    def create_default_data(self):
+        self.email = self.email.lower()
+        self.description = ''
+        self.is_active = True
+        self.is_staff = False
+        self.is_admin = False
+        self.certificate = None
+        self.profile_pic = None
+        self.created_on = timezone.now()
+
+    def set_password(self, plainpassword: str):
+        self.password = make_password(
+            plainpassword,
+            salt=str(randint(0, 2 ** 15)),
+        )
+
     def get_hashid(self):
         return h_encode(user_hasher, self.id)
-    
-    
+
+
+class Settings(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    show_address = models.BooleanField()
+    show_phone = models.BooleanField()
+
+    def create_default(self):
+        self.show_address = False
+        self.show_phone = False
 
 
 class Info(models.Model):
@@ -98,13 +125,16 @@ class Info(models.Model):
 
     level_class = models.IntegerField()
     difficulity = models.IntegerField(choices=choice_difficulity)
-    cost_budget = models.FloatField()
+    cost_budget = models.DecimalField(max_digits=5, decimal_places=2)
     searching = models.BooleanField()
 
     created_on = models.DateTimeField()
 
-    def __str__(self) -> str:
-        return self.subject + self.author
+    def __str__(self):
+        return self.author.email + ' ' + str(self.subject)
+
+    def get_hr_subject(self):
+        return dict_subject[self.subject]
 
 
 class Review(models.Model):
@@ -112,8 +142,12 @@ class Review(models.Model):
     title = models.CharField(max_length=24)
     text = models.TextField()
     stars = models.IntegerField()
-    author = models.ForeignKey(User, related_name='Author', on_delete=models.CASCADE)
-    for_user = models.ForeignKey(User, related_name='for_user', on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User, related_name='Author', on_delete=models.CASCADE
+    )
+    for_user = models.ForeignKey(
+        User, related_name='for_user', on_delete=models.CASCADE
+    )
 
     created_on = models.DateTimeField()
 

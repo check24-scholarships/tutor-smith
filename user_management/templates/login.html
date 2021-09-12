@@ -1,9 +1,8 @@
-<!-- XXX: DELETE ME -->
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Login{% endblock title %}
 {% block content %}
-<form action="/login/" method="post">
+<form action="{% url 'login' %}" method="post">
     {% csrf_token %}
     {% if messages %}
         <ul class="messages">
@@ -15,5 +14,6 @@
     {{form}}
     <input type="submit" value="Login">
 </form>
-<p>Dont have an Account? <a href="/register/">Register</a></p>
+<p><a href="{% url 'recover_password' %}">Lost password?</a></p>
+<p>Dont have an Account? <a href="{% url 'register' %}">Register</a></p>
 {% endblock content %}

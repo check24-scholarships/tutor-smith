@@ -13,7 +13,8 @@
 <body>
     <header>
         <p>Logo</p>
-        <a href="/login/">Login</a>
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'logout' %}">Logout</a>
     </header>
 
     {% block messages %}
