@@ -8,15 +8,28 @@ Start the server:
 ````
 ---
 ## Setting up
+### Packages
 Requirements:
 * python3 >= 3.8
 * pip3
 * packages from requirements.txt
-* **new package needed! Please run the pip install**
+* packages from requirements-dev.txt if you're a developer
 
 ````shell
 ~$ pip install -r requirements.txt
 ````
+### Precommit Hooks
+precommit hooks are important to guarantee merges with less conflicts.
+**installation**
+make sure you have installed the packages from requirements-dev.txt
+````shell
+~$ pre-commit install
+pre-commit installed at .git/hooks/pre-commit
+
+~$ pre-commit run --all-files
+````
+if one of the hooks fail, just add & commit again
+
 ---
 
 ## Adding new content

@@ -1,11 +1,10 @@
 from django import forms
-from django.forms.forms import Form
-from django.forms.widgets import TextInput
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
 from .choices import *
 
+# Creates an iterable classes dict for rendering
 classes = [[i, i] for i in range(5, 13)]
 
 # Creates Forms for validation and rendering. The Structure is simmilar to the Model
@@ -63,6 +62,7 @@ class LoginForm(forms.Form):
 
 class ProfileEditForm(forms.Form):
     def __init__(self, *args, **kwargs):
+        # Enables prefilled Fields
         self.user = kwargs.pop('user')
         self.settings = kwargs.pop('settings')
         super(ProfileEditForm, self).__init__(*args, **kwargs)

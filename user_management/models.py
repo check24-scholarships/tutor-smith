@@ -1,13 +1,16 @@
 from random import randint
 from django.contrib.auth.hashers import make_password
 from django.db import models
+
+# -----
+# Will be unused with the removal of Admin
 from django.contrib.auth.models import (
-    AbstractBaseUser,
     BaseUserManager,
     AbstractUser,
 )
 from django.utils.translation import ugettext_lazy as _
-from django.utils.text import slugify
+
+# -------
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .choices import *
@@ -88,6 +91,10 @@ class User(models.Model):
         super().save(*args, **kwargs)
 
     def create_default_data(self):
+        """
+        Creates a default context
+        Can be used for resets
+        """
         self.email = self.email.lower()
         self.description = ''
         self.is_active = True
@@ -98,12 +105,18 @@ class User(models.Model):
         self.created_on = timezone.now()
 
     def set_password(self, plainpassword: str):
+        """
+        sets the password of the model to a hashed and salted password
+        """
         self.password = make_password(
             plainpassword,
             salt=str(randint(0, 2 ** 15)),
         )
 
     def get_hashid(self):
+        """
+        Returns the id hashed with the user_hasher
+        """
         return h_encode(user_hasher, self.id)
 
 
@@ -114,6 +127,10 @@ class Settings(models.Model):
     show_phone = models.BooleanField()
 
     def create_default(self):
+        """
+        Creates a default context
+        Can be used for resets
+        """
         self.show_address = False
         self.show_phone = False
 
@@ -134,6 +151,9 @@ class Info(models.Model):
         return self.author.email + ' ' + str(self.subject)
 
     def get_hr_subject(self):
+        """
+        Returns the subject in human readable form
+        """
         return dict_subject[self.subject]
 
 

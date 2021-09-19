@@ -1,10 +1,16 @@
+{% load custom_tags %}
+{% load static %}
 {% for review in reviews %}
     <div class="info">
         <div class="flex">
             <h3>{{ review.title }}</h3>
             <p>von {{ review.author.first_name }} {{ review.author.last_name }}</p>
-
-        </div>
+            <div class="flex">
+                {% for i in review.stars|range %}
+                <img src="{% static 'user_management/svg/star.svg' %}" alt="star" width="35rem">
+                {% endfor %}
+                </div>
+            </div>
         <p>{{review.text | linebreaks}}</p>
         <div style="color: lightgray" class="flex">
             <p>created on: {{ review.created_on }}</p>

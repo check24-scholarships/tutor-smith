@@ -1,27 +1,41 @@
-from django.contrib.auth.hashers import reset_hashers
 from hashids import Hashids
 from django.conf import settings
 
 user_min_length = 8
 reset_min_length = 12
 
+"""
+Use these hashers for parameters in the decode / encode method
+"""
 user_hasher = Hashids(settings.HASHIDS_SALT, min_length=user_min_length)
 reset_hasher = Hashids(
     settings.RESET_HASHIDS_SALT, min_length=reset_min_length
 )
 
-
-def h_encode(hasher, id):
+# IDEA: Move this into utils
+def h_encode(hasher: Hashids, id: int) -> str:
+    """
+    This function converts an intiger to an hashed id.
+    This function requires a hasher
+    """
     return hasher.encode(id)
 
 
-def h_decode(hasher, h):
+def h_decode(hasher: Hashids, h: str) -> int:
+    """
+    This function converts a hashed id into an intiger.
+    This function requires a hasher
+    """
     z = hasher.decode(h)
     if z:
         return z[0]
 
 
 class UserHashIdConverter:
+    """
+    This converter is only for urls.py Don't use this for getting Hashids
+    """
+
     regex = f'[a-zA-Z0-9]{{{user_min_length},}}'
 
     def to_python(self, value):
@@ -32,6 +46,10 @@ class UserHashIdConverter:
 
 
 class ResetHashIdConverter:
+    """
+    This converter is only for urls.py Don't use this for getting Hashids
+    """
+
     regex = f'[a-zA-Z0-9]{{{reset_min_length},}}'
 
     def to_python(self, value):

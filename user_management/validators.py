@@ -1,27 +1,18 @@
-from typing import List
+from django.contrib import messages
 from django.contrib.auth.password_validation import (
     validate_password,
-    password_changed,
     ValidationError,
 )
 from django.contrib.auth.hashers import check_password
-from django.contrib import messages
-from .models import User, Info, Review
-
-
-def display_errors(request, msg):
-    if type(msg) == List:
-        for err in msg:
-            messages.add_message(request, messages.ERROR, err)
-    else:
-        messages.add_message(request, messages.ERROR, msg)
+from tutor_smith.utils import display_messages
+from .models import User
 
 
 def validate_register(request, form):
     if form.is_valid():
         # Checks if email is already in database SELECT * FROM User WHERE email=email
         if User.objects.filter(email=form.cleaned_data['email'].lower()):
-            display_errors(request, 'User already exists')
+            display_messages(request, 'User already exists', messages.ERROR)
             return False
         # Checks if passwords match
         elif (
@@ -31,13 +22,13 @@ def validate_register(request, form):
                 validate_password(form.cleaned_data['password_1'], user=User)
                 return True
             except ValidationError as error:
-                display_errors(request, error)
+                display_messages(request, error, messages.ERROR)
                 return False
         else:
-            display_errors(request, 'Passwords don\'t match')
+            display_messages(request, 'Passwords don\'t match', messages.ERROR)
             return False
     else:
-        display_errors(request, form.errors)
+        display_messages(request, form.errors, messages.ERROR)
         return False
 
 
@@ -51,11 +42,11 @@ def validate_login(request, form) -> User:
             ):
                 return user
             else:
-                display_errors(request, 'Wrong password')
+                display_messages(request, 'Wrong password', messages.ERROR)
                 return None
         except User.DoesNotExist:
-            display_errors(request, 'User doesn\'t exist')
+            display_messages(request, 'User doesn\'t exist', messages.ERROR)
             return None
     else:
-        display_errors(request, form.errors)
+        display_messages(request, form.errors, messages.ERROR)
         return None
