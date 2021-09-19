@@ -40,6 +40,9 @@ def recover_form(request):
             if associated_users.exists():
                 for user in associated_users:"""
             # get users
+            # ADD LAST LOGIN attribute to user for password recover to fully work
+            # user = User.objects.get(email=data)
+            # default_token_generator.make_token(user)
             try:
                 # Get user by email entered in form
                 user = User.objects.get(email=data)
@@ -53,7 +56,7 @@ def recover_form(request):
                     'site_name': 'Website',
                     'uid': converter.to_url(user.id),
                     'user': 'test',
-                    'token': 0,
+                    'token': 0,  # default_token_generator.make_token(user),
                     'protocol': 'http',
                 }
                 email = render_to_string(email_template_name, content)
