@@ -20,8 +20,29 @@ from django.contrib.auth import views as auth_views
 from user_management import views as user_views
 from .converters import UserHashIdConverter, ResetHashIdConverter
 
+# Registers Converters
 register_converter(UserHashIdConverter, 'user_hashid')
 register_converter(ResetHashIdConverter, 'reset_hashid')
+
+# All reset patterns
+resetpatterns = [
+    path('', user_views.recover_form, name='recover_password'),
+    path('send/', user_views.recover_form_sent),
+    path(
+        '<uidb64>/<token>/',
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name='password/password_reset_confirm.html'
+        ),
+        name='password_reset_confirm',
+    ),
+    path(
+        'done/',
+        auth_views.PasswordResetCompleteView.as_view(
+            template_name='password/password_reset_complete.html'
+        ),
+        name='password_reset_complete',
+    ),
+]
 
 
 urlpatterns = [
@@ -36,20 +57,6 @@ urlpatterns = [
         user_views.user_profile,
         name='profile',
     ),
-    path('recover/', user_views.recover_form, name='recover_password'),
-    path('password_reset/done/', user_views.recover_form_sent),
-    path(
-        'reset/<uidb64>/<token>/',
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name='password/password_reset_confirm.html'
-        ),
-        name='password_reset_confirm',
-    ),
-    path(
-        'reset/done/',
-        auth_views.PasswordResetCompleteView.as_view(
-            template_name='password/password_reset_complete.html'
-        ),
-        name='password_reset_complete',
-    ),
+    # Reset patterns will have the path: reset/..../...
+    path('reset/', include(resetpatterns)),
 ]

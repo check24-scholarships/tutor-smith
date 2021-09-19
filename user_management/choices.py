@@ -1,3 +1,6 @@
+# Choices for models, sites, etc
+# Use (id, human readable name) the id will be saved in the db
+# TODO: Add subjects
 choice_subject = (
     (0, 'German'),
     (1, 'Math'),

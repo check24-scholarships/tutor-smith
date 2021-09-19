@@ -10,6 +10,7 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+from tutor_smith.utils import display_messages
 
 from django.core.mail import send_mail
 from tutor_smith.settings import EMAIL_HOST_USER
@@ -18,6 +19,8 @@ from .forms import *
 from .models import User, Info, Review, Settings
 from .validators import validate_login, validate_register
 from .choices import *
+
+# XXX: Don't use the converters for en- / decoding
 from tutor_smith.converters import UserHashIdConverter, ResetHashIdConverter
 
 from tutor_smith.utils import get_client_ip, is_user_authenticated
@@ -96,9 +99,7 @@ def recover_form_sent(request):
     return render(request, 'password/password_reset_sent.html')
 
 
-# Handels incoming GET & POST requests on the register view.
 def register(request):
-    # All context gets initialized
     __context = {'form': None}
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -132,6 +133,7 @@ def register(request):
 
 
 def login(request):
+    # redirect if the user is authenticated
     try:
         if request.session['userid']:
             return redirect('/')
@@ -140,6 +142,7 @@ def login(request):
 
     __context = {'form': None}
     if request.method == 'POST':
+        # Test cookie looks if cookies are enabled.
         if not request.session.test_cookie_worked():
             return HttpResponse('Please Enable Cookies')
         request.session.delete_test_cookie()
@@ -159,11 +162,15 @@ def login(request):
 
 def logout(request):
     request.session.flush()
-    return HttpResponse("Logged out! <a href=\"/\">Back</a>")
+    # TODO: Find better solution (Template, Variable)
+    return HttpResponse(
+        '<script>setTimeout(function(){window.location.href = \'/\';}, 2000);</script><p>Logged out! if you don\'t get redirected after 2 secounds click <a href=\"/\">here</a></p>'
+    )
 
 
 @csrf_exempt
 def user_profile(request, user_id, subpath):
+    # Uses HTMX for Reactive Design
     __context = {
         'user': get_object_or_404(User, id=user_id),
         'isOwner': is_user_authenticated(request),
@@ -172,7 +179,7 @@ def user_profile(request, user_id, subpath):
         __context['settings'] = Settings.objects.get(user=__context['user'])
     except Settings.DoesNotExist:
         return HttpResponseServerError()
-
+    # ----------------
     if subpath == 'profile':
         __context['gender'] = dict_gender[__context['user'].gender]
         __context['review'] = (
@@ -181,14 +188,17 @@ def user_profile(request, user_id, subpath):
             .first()
         )
         return render(request, 'profile/profile.html', __context)
+    # ----------------
     elif subpath == 'infos':
         __context['infos'] = Info.objects.filter(author=__context['user'])
         return render(request, 'profile/infos.html', __context)
+    # -----------------
     elif subpath == 'reviews':
         __context['reviews'] = Review.objects.filter(
             for_user=__context['user']
         )
         return render(request, 'profile/reviews.html', __context)
+    # -----------------
     elif subpath == 'edit':
         if __context['isOwner']:
             if request.method == 'POST':
@@ -198,10 +208,10 @@ def user_profile(request, user_id, subpath):
                     settings=__context['settings'],
                 )
                 if form.is_valid():
+                    # TODO: Change for more  method
                     __context['user'].description = form.cleaned_data[
                         'description'
                     ]
-                    # Change everything
                     __context['user'].save()
                     __context['settings'].show_phone = form.cleaned_data[
                         'show_phone'
@@ -210,7 +220,8 @@ def user_profile(request, user_id, subpath):
                         'show_address'
                     ]
                     __context['settings'].save()
-                    # TODO: Add feedback for saved changes
+
+                    messages.add_message(request, messages.SUCCESS, 'saved')
 
             __context['form'] = ProfileEditForm(
                 user=__context['user'], settings=__context['settings']
