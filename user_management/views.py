@@ -18,7 +18,7 @@ from .forms import *
 from .models import User, Info, Review, Settings
 from .validators import validate_login, validate_register
 from .choices import *
-from tutor_smith.converters import UserHashIdConverter, ResetHashIdConverter
+from tutor_smith.converters import reset_hasher, h_encode
 
 from tutor_smith.utils import get_client_ip, is_user_authenticated
 
@@ -47,14 +47,14 @@ def recover_form(request):
                 # Get user by email entered in form
                 user = User.objects.get(email=data)
                 email_template_name = 'password/password_reset_email.txt'
-                # generate user hashid for password reset
-                converter = ResetHashIdConverter()
                 content = {
                     'subject': 'Password Recover Requested',
                     'email': 'shizhe.he6@gmail.com',
                     'domain': '127.0.0.1:8000',
                     'site_name': 'Website',
-                    'uid': converter.to_url(user.id),
+                    'uid': h_encode(
+                        reset_hasher, user.id
+                    ),  # generate user hashid for password reset
                     'user': 'test',
                     'token': 0,  # default_token_generator.make_token(user),
                     'protocol': 'http',

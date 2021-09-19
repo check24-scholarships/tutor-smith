@@ -14,11 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include, register_converter
 from django.contrib.auth import views as auth_views
-
+from django.urls import include, path, register_converter
 from user_management import views as user_views
-from .converters import UserHashIdConverter, ResetHashIdConverter
+
+from .converters import ResetHashIdConverter, UserHashIdConverter
 
 register_converter(UserHashIdConverter, 'user_hashid')
 register_converter(ResetHashIdConverter, 'reset_hashid')
