@@ -43,32 +43,31 @@ def recover_form(request):
             if associated_users.exists():
                 for user in associated_users:"""
             # get users
+            # ADD LAST LOGIN attribute to user for password recover to fully work
+            # user = User.objects.get(email=data)
+            # default_token_generator.make_token(user)
             try:
+                # Get user by email entered in form
                 user = User.objects.get(email=data)
-                print(user.id)
-                subject = 'Password Reset Requested'
                 email_template_name = 'password/password_reset_email.txt'
+                # generate user hashid for password reset
                 converter = ResetHashIdConverter()
-                print('Working')
-                # print(default_token_generator.make_token(user))
-                c = {
+                content = {
+                    'subject': 'Password Recover Requested',
                     'email': 'shizhe.he6@gmail.com',
                     'domain': '127.0.0.1:8000',
                     'site_name': 'Website',
                     'uid': converter.to_url(user.id),
                     'user': 'test',
-                    'token': 0,
+                    'token': 0,  # default_token_generator.make_token(user),
                     'protocol': 'http',
                 }
-                email = render_to_string(email_template_name, c)
-                print(email)
-                subject = 'Password Recover Requested'
+                email = render_to_string(email_template_name, content)
                 recepient = 'shizhe.he6@gmail.com'
-                message = email
 
                 send_mail(
-                    subject,
-                    message,
+                    content['subject'],
+                    email,
                     EMAIL_HOST_USER,
                     [recepient],
                     fail_silently=False,
