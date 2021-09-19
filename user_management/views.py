@@ -41,14 +41,13 @@ def recover_form(request):
                 for user in associated_users:"""
             # get users
             try:
+                # Get user by email entered in form
                 user = User.objects.get(email=data)
-                print(user.id)
-                subject = 'Password Reset Requested'
                 email_template_name = 'password/password_reset_email.txt'
+                # generate user hashid for password reset
                 converter = ResetHashIdConverter()
-                print('Working')
-                # print(default_token_generator.make_token(user))
-                c = {
+                content = {
+                    'subject': 'Password Recover Requested',
                     'email': 'shizhe.he6@gmail.com',
                     'domain': '127.0.0.1:8000',
                     'site_name': 'Website',
@@ -57,15 +56,12 @@ def recover_form(request):
                     'token': 0,
                     'protocol': 'http',
                 }
-                email = render_to_string(email_template_name, c)
-                print(email)
-                subject = 'Password Recover Requested'
+                email = render_to_string(email_template_name, content)
                 recepient = 'shizhe.he6@gmail.com'
-                message = email
 
                 send_mail(
-                    subject,
-                    message,
+                    content['subject'],
+                    email,
                     EMAIL_HOST_USER,
                     [recepient],
                     fail_silently=False,
