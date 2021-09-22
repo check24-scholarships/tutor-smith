@@ -156,6 +156,12 @@ class Info(models.Model):
         """
         return dict_subject[self.subject]
 
+    def get_hashid(self):
+        """
+        Returns the id hashed with the user_hasher
+        """
+        return h_encode(user_hasher, self.id)
+
 
 class Review(models.Model):
 
@@ -173,3 +179,9 @@ class Review(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_hashid(self):
+        """
+        Returns the id hashed with the user_hasher
+        """
+        return h_encode(user_hasher, self.id)

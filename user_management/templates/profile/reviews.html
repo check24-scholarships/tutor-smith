@@ -12,6 +12,7 @@
                 </div>
             </div>
         <p>{{review.text | linebreaks}}</p>
+        <a href="/detail/review/{{ review.get_hashid }}">More</a>
         <div style="color: lightgray" class="flex">
             <p>created on: {{ review.created_on }}</p>
         </div>

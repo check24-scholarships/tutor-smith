@@ -43,7 +43,14 @@ resetpatterns = [
         name='password_reset_complete',
     ),
 ]
-
+'''
+detailpatterns = [
+    path('info/<user_hashid:id>/', user_views.detail_info, name="detail_info"),
+    path('info/<user_hashid:id>/edit', user_views.detail_info_edit, name="detail_info_edit"),
+    path('review/<user_hashid:id>/', user_views.detail_review, name="detail_review"),
+    path('review/<user_hashid:id>/edit', user_views.detail_review_edit, name="detail_review_edit"),
+]
+'''
 
 urlpatterns = [
     # TODO: Remove admin when finished
@@ -59,4 +66,5 @@ urlpatterns = [
     ),
     # Reset patterns will have the path: reset/..../...
     path('reset/', include(resetpatterns)),
+    path('detail/<str:subpath>/<user_hashid:id>/', user_views.detail_view),
 ]

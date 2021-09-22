@@ -1,4 +1,5 @@
 # HTML Handeling
+from django.contrib.messages.constants import SUCCESS
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseServerError
 from django.contrib import messages
@@ -21,7 +22,7 @@ from .validators import validate_login, validate_register
 from .choices import *
 
 # XXX: Don't use the converters for en- / decoding
-from tutor_smith.converters import UserHashIdConverter, ResetHashIdConverter
+from tutor_smith.converters import ResetHashIdConverter
 
 from tutor_smith.utils import get_client_ip, is_user_authenticated
 
@@ -228,3 +229,14 @@ def user_profile(request, user_id, subpath):
             return render(request, 'profile/edit.html', __context)
         else:
             return Http404()
+
+
+def detail_view(request, id, subpath):
+    __context = {'isOwner': is_user_authenticated(request)}
+    print(id)
+    if subpath == 'info':
+        __context['Detail'] = get_object_or_404(Info, id=id)
+        return render(request, 'detail_pages/detail_info.html', __context)
+    elif subpath == 'review':
+        __context['Detail'] = get_object_or_404(Review, id=id)
+        return render(request, 'detail_pages/detail_review.html', __context)

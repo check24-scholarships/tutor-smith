@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block content %}
+    <h2>{{ Detail.title }}</h2>
+    <p>{{ Detail.text | linebreaks }}</p>
+    {% if isOwner %}
+        <a href="edit">Edit</a>
+    {% endif %}
+{% endblock content %}
