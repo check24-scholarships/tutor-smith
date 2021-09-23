@@ -50,3 +50,21 @@ def validate_login(request, form) -> User:
     else:
         display_messages(request, form.errors, messages.ERROR)
         return None
+
+
+def validate_recover(request, form):
+    if form.is_valid():
+        # Checks if passwords match
+        if form.cleaned_data['password_1'] == form.cleaned_data['password_2']:
+            try:
+                validate_password(form.cleaned_data['password_1'], user=User)
+                return True
+            except ValidationError as error:
+                display_messages(request, error, messages.ERROR)
+                return False
+        else:
+            display_messages(request, 'Passwords don\'t match', messages.ERROR)
+            return False
+    else:
+        display_messages(request, form.errors, messages.ERROR)
+        return False

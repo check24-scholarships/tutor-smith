@@ -27,19 +27,18 @@ register_converter(ResetHashIdConverter, 'reset_hashid')
 # All reset patterns
 resetpatterns = [
     path('', user_views.recover_form, name='recover_password'),
-    path('send/', user_views.recover_form_sent),
+    path('sent/', user_views.recover_form_sent),
     path(
         '<uidb64>/<token>/',
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name='password/password_reset_confirm.html'
-        ),
+        user_views.recover_form_confirm,
+        # auth_views.PasswordResetConfirmView.as_view(
+        #    template_name='password/password_reset_confirm.html'
+        # ),
         name='password_reset_confirm',
     ),
     path(
         'done/',
-        auth_views.PasswordResetCompleteView.as_view(
-            template_name='password/password_reset_complete.html'
-        ),
+        user_views.recover_form_complete,
         name='password_reset_complete',
     ),
 ]

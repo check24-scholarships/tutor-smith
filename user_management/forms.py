@@ -79,3 +79,20 @@ class ProfileEditForm(forms.Form):
     show_phone = forms.BooleanField(
         label='Telefon Nummer Anzeigen', required=False
     )
+
+
+class ResetForm(forms.Form):
+    password_1 = forms.CharField(
+        max_length=16,
+        min_length=8,
+        widget=forms.PasswordInput(),
+        label='Password',
+        required=True,
+    )
+    password_2 = forms.CharField(
+        max_length=16,
+        min_length=8,
+        widget=forms.PasswordInput(),
+        label='Repeat Password',
+        required=True,
+    )

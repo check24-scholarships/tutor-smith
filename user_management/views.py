@@ -17,9 +17,9 @@ from tutor_smith.settings import EMAIL_HOST_USER
 
 from .forms import *
 from .models import User, Info, Review, Settings
-from .validators import validate_login, validate_register
+from .validators import validate_login, validate_register, validate_recover
 from .choices import *
-from tutor_smith.converters import reset_hasher, h_encode
+from tutor_smith.converters import reset_hasher, h_encode, h_decode
 
 from tutor_smith.utils import get_client_ip, is_user_authenticated
 
@@ -47,6 +47,7 @@ def recover_form(request):
             try:
                 # Get user by email entered in form
                 user = User.objects.get(email=data)
+                print(user.password)
                 email_template_name = 'password/password_reset_email.txt'
                 content = {
                     'subject': 'Password Recover Requested',
@@ -75,7 +76,7 @@ def recover_form(request):
                     'A message with reset password instructions has been sent to your inbox.',
                 )
 
-                return redirect('/password_reset/done/')
+                return redirect('/reset/sent/')
 
             except Exception:
                 messages.add_message(
@@ -94,6 +95,36 @@ def recover_form(request):
 
 def recover_form_sent(request):
     return render(request, 'password/password_reset_sent.html')
+
+
+def recover_form_confirm(request, uidb64, token):
+    # get session validity
+
+    if request.method == 'POST':
+        form = ResetForm(request.POST)
+        res = validate_recover(request, form)
+        uid = h_decode(reset_hasher, uidb64)  # get user id
+        user = User.objects.get(id=uid)
+
+        if res:
+            user.password = form.cleaned_data[
+                'password_1'
+            ]  # not great, but works for now
+            # user.set_password(form.cleaned_data['password_1'])
+            user.save()
+
+            return redirect('/reset/done/')
+
+    form = ResetForm()
+    return render(
+        request,
+        'password/password_reset_confirm.html',
+        context={'form': form},
+    )
+
+
+def recover_form_complete(request):
+    return render(request, 'password/password_reset_complete.html')
 
 
 def register(request):
