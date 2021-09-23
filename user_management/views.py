@@ -1,5 +1,6 @@
 # HTML Handeling
 from django.contrib.messages.constants import SUCCESS
+from django.http.response import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseServerError
 from django.contrib import messages
@@ -233,10 +234,32 @@ def user_profile(request, user_id, subpath):
 
 def detail_view(request, id, subpath):
     __context = {'isOwner': is_user_authenticated(request)}
-    print(id)
     if subpath == 'info':
         __context['Detail'] = get_object_or_404(Info, id=id)
+        __context['isOwner'] = __context['Detail'].author == __context['isOwner'].id
         return render(request, 'detail_pages/detail_info.html', __context)
     elif subpath == 'review':
         __context['Detail'] = get_object_or_404(Review, id=id)
+        __context['isOwner'] = __context['Detail'].author == __context['isOwner'].id
         return render(request, 'detail_pages/detail_review.html', __context)
+
+def edit_detail_view(request, id, subpath):
+    __context = {'isOwner': is_user_authenticated(request)}
+    if subpath == 'info':
+        __context['Detail'] = get_object_or_404(Info, id=id)
+        if not __context['Detail'].author == __context['isOwner'].id:
+            return HttpResponseForbidden()
+        if request.mesthod == 'POST':
+            display_messages(request, 'Saved!', messages.SUCCESS) 
+        return render(request, 'detail_pages/detail_info.html_edit', __context)
+    elif subpath == 'review':
+        __context['Detail'] = get_object_or_404(Review, id=id)
+        if not __context['Detail'].author == __context['isOwner'].id:
+            return HttpResponseForbidden() 
+        if request.mesthod == 'POST':
+            display_messages(request, 'Saved!', messages.SUCCESS)
+        return render(request, 'detail_pages/detail_review_edit.html', __context)
+
+def add_detail_view(request, subpath):
+    __context = {'isOwner': is_user_authenticated(request)}
+    return render(request)
