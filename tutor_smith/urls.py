@@ -58,4 +58,5 @@ urlpatterns = [
     ),
     # Reset patterns will have the path: reset/..../...
     path('reset/', include(resetpatterns)),
+    path('search', user_views.search, name='search'),
 ]

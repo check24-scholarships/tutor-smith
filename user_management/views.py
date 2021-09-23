@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseServerError
 from django.contrib import messages
+from django.db.models import Q
 
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -125,6 +126,23 @@ def recover_form_confirm(request, uidb64, token):
 
 def recover_form_complete(request):
     return render(request, 'password/password_reset_complete.html')
+
+
+def search(request):
+    if request.method == 'POST':
+        search = request.POST['searched']
+        if search:
+            # get users associated with search value
+            users = User.objects.filter(
+                Q(first_name__icontains=search)
+                | Q(last_name__icontains=search)
+                | Q(email__icontains=search)
+            )
+            return render(
+                request, 'search.html', {'search': search, 'users': users}
+            )
+
+    return render(request, 'search.html', {})
 
 
 def register(request):

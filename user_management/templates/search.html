@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Tutor-Smith{% endblock title %}
+{% block content %}
+    {% if search %}
+        <h1>Your Search Results: {{ search }}</h1>
+        <br/>
+        {% for user in users %}
+            <div class="row">
+                <div class="col-md-4">
+                    {% if user.profile_pic %}
+                        <img src="{{ user.profile_pic }}" alt="Profile Pic" class="profile_pic">
+                    {% else %}
+                        <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
+                        class="profile_pic"
+                        alt="Profile Pic">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <a href="users/{{user.get_hashid}}/profile">{{ user.first_name }} {{ user.last_name }}</a>
+                    <p>{{ user.email }}</p>
+                    <p>{{ user.phone_number }}</p>
+                    <p>{{ user.address }}</p>
+                    <p>{{ user.city }}</p>
+                </div>
+            </div>
+            {% endfor %}
+    {% else %}
+        <h1>No Search Found</h1>
+    {% endif %}
+{% endblock content %}
