@@ -1,6 +1,7 @@
 from random import randint
 from django.contrib.auth.hashers import make_password
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # -----
 # Will be unused with the removal of Admin
@@ -167,7 +168,9 @@ class Review(models.Model):
 
     title = models.CharField(max_length=24)
     text = models.TextField()
-    stars = models.IntegerField()
+    stars = models.IntegerField(
+        validators=[MaxValueValidator(5), MinValueValidator(1)]
+    )
     author = models.ForeignKey(
         User, related_name='Author', on_delete=models.CASCADE
     )

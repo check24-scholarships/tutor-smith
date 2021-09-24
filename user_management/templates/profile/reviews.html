@@ -1,5 +1,9 @@
 {% load custom_tags %}
 {% load static %}
+<div class="right-colum" id="profile-content">
+{% if not isOwner and isAuth %}
+    <a href="/detail/review/{{ user.get_hashid }}/add">Add</a>
+{% endif %}
 {% for review in reviews %}
     <div class="info">
         <div class="flex">
@@ -18,3 +22,4 @@
         </div>
     </div>
 {% endfor %}
+</div>

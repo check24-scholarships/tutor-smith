@@ -1,8 +1,8 @@
 # HTML Handeling
-from django.contrib.messages.constants import SUCCESS
-from django.http.response import HttpResponseForbidden
+from user_management.custom_class_views import AddDetail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseServerError
+from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 
 from django.views.decorators.csrf import csrf_exempt
@@ -12,11 +12,12 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from tutor_smith.utils import display_messages
+from tutor_smith.utils import *
 
 from django.core.mail import send_mail
 from tutor_smith.settings import EMAIL_HOST_USER
 
+from .custom_class_views import *
 from .forms import *
 from .models import User, Info, Review, Settings
 from .validators import validate_login, validate_register
@@ -25,7 +26,6 @@ from .choices import *
 # XXX: Don't use the converters for en- / decoding
 from tutor_smith.converters import ResetHashIdConverter
 
-from tutor_smith.utils import get_client_ip, is_user_authenticated
 
 dict_gender = dict(choice_gender)
 
@@ -112,7 +112,7 @@ def register(request):
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 gender=form.cleaned_data['gender'],
-                address=form.cleaned_data['adress'],
+                address=form.cleaned_data['address'],
                 phone=form.cleaned_data['phone'],
                 user_class=form.cleaned_data['user_class'],
                 birth_date=form.cleaned_data['birth_date'],
@@ -174,12 +174,13 @@ def user_profile(request, user_id, subpath):
     # Uses HTMX for Reactive Design
     __context = {
         'user': get_object_or_404(User, id=user_id),
-        'isOwner': is_user_authenticated(request),
     }
-    try:
-        __context['settings'] = Settings.objects.get(user=__context['user'])
-    except Settings.DoesNotExist:
+    __context['isOwner'] = check_ownership(request, __context['user'].id)
+
+    __context['settingsQ'] = Settings.objects.filter(user=__context['user'])
+    if not __context['settingsQ']:
         return HttpResponseServerError()
+    __context['settings'] = __context['settingsQ'].first()
     # ----------------
     if subpath == 'profile':
         __context['gender'] = dict_gender[__context['user'].gender]
@@ -198,68 +199,95 @@ def user_profile(request, user_id, subpath):
         __context['reviews'] = Review.objects.filter(
             for_user=__context['user']
         )
+        __context['isAuth'] = is_user_authenticated(request)
         return render(request, 'profile/reviews.html', __context)
     # -----------------
     elif subpath == 'edit':
-        if __context['isOwner']:
-            if request.method == 'POST':
-                form = ProfileEditForm(
-                    request.POST,
-                    user=__context['user'],
-                    settings=__context['settings'],
-                )
-                if form.is_valid():
-                    # TODO: Change for more  method
-                    __context['user'].description = form.cleaned_data[
-                        'description'
-                    ]
-                    __context['user'].save()
-                    __context['settings'].show_phone = form.cleaned_data[
-                        'show_phone'
-                    ]
-                    __context['settings'].show_address = form.cleaned_data[
-                        'show_address'
-                    ]
-                    __context['settings'].save()
-
-                    messages.add_message(request, messages.SUCCESS, 'saved')
-
-            __context['form'] = ProfileEditForm(
-                user=__context['user'], settings=__context['settings']
+        __context['isOwner'] = check_ownership(
+            request, __context['user'].id, True
+        )
+        if request.method == 'POST':
+            form = ProfileEditForm(
+                request.POST,
+                user=__context['user'],
+                settings=__context['settings'],
             )
-            return render(request, 'profile/edit.html', __context)
-        else:
-            return Http404()
+            if form.is_valid():
+                # TODO: Change for more  method
+                __context['user'].description = form.cleaned_data[
+                    'description'
+                ]
+                __context['user'].save()
+                __context['settingsQ'].update(form.cleaned_data)
+
+                messages.add_message(request, messages.SUCCESS, 'saved')
+
+        __context['form'] = ProfileEditForm(
+            user=__context['user'], settings=__context['settings']
+        )
+        return render(request, 'profile/edit.html', __context)
+    else:
+        return Http404()
 
 
-def detail_view(request, id, subpath):
+def detail_view(request, id, *args, **kwargs):
+    # print(kwargs['detail_class'].objects.filter(id=id).first().get_hashid())
     __context = {'isOwner': is_user_authenticated(request)}
-    if subpath == 'info':
-        __context['Detail'] = get_object_or_404(Info, id=id)
-        __context['isOwner'] = __context['Detail'].author == __context['isOwner'].id
-        return render(request, 'detail_pages/detail_info.html', __context)
-    elif subpath == 'review':
-        __context['Detail'] = get_object_or_404(Review, id=id)
-        __context['isOwner'] = __context['Detail'].author == __context['isOwner'].id
-        return render(request, 'detail_pages/detail_review.html', __context)
+    __context['detail'] = get_object_or_404(kwargs['detail_class'], id=id)
+    if __context['isOwner']:
+        __context['isOwner'] = (
+            __context['detail'].author == __context['isOwner']
+        )
+    return render(request, kwargs['template'], __context)
 
-def edit_detail_view(request, id, subpath):
-    __context = {'isOwner': is_user_authenticated(request)}
-    if subpath == 'info':
-        __context['Detail'] = get_object_or_404(Info, id=id)
-        if not __context['Detail'].author == __context['isOwner'].id:
-            return HttpResponseForbidden()
-        if request.mesthod == 'POST':
-            display_messages(request, 'Saved!', messages.SUCCESS) 
-        return render(request, 'detail_pages/detail_info.html_edit', __context)
-    elif subpath == 'review':
-        __context['Detail'] = get_object_or_404(Review, id=id)
-        if not __context['Detail'].author == __context['isOwner'].id:
-            return HttpResponseForbidden() 
-        if request.mesthod == 'POST':
-            display_messages(request, 'Saved!', messages.SUCCESS)
-        return render(request, 'detail_pages/detail_review_edit.html', __context)
 
-def add_detail_view(request, subpath):
-    __context = {'isOwner': is_user_authenticated(request)}
-    return render(request)
+class EditInfo(EditDetail):
+    detail = Info
+    FormClass = InfoEditForm
+
+
+class EditReview(EditDetail):
+    detail = Review
+    FormClass = ReviewEditForm
+
+
+class AddInfo(AddDetail):
+    detail = Info
+    FormClass = InfoEditForm
+
+    def create_model(self, *args, **kwargs):
+        self.detail.objects.create(
+            **self.context['form'].cleaned_data,
+            author=self.context['Owner'],
+            created_on=timezone.now()
+        )
+
+    def check_perm(self, request, *args, **kwargs):
+        return True
+
+
+class AddReview(AddDetail):
+    detail = Review
+    FormClass = ReviewEditForm
+
+    def create_model(self, *args, **kwargs):
+        self.detail.objects.create(
+            author=self.context['Owner'],
+            for_user=User.objects.get(id=kwargs['args']['user_id']),
+            created_on=timezone.now(),
+            **self.context['form'].cleaned_data
+        )
+
+    def check_perm(self, request, *args, **kwargs):
+        if check_ownership(request, kwargs['args']['user_id']):
+            raise PermissionDenied(
+                'you are the owner of the review your trying to write'
+            )
+
+
+def delete_detail(request, id, *args, **kwargs):
+    obj = get_object_or_404(kwargs['detail'], id=id)
+    check_ownership(request, obj.author.id, True, True)
+    obj.delete()
+    display_messages(request, 'Deleted', messages.SUCCESS)
+    return redirect(kwargs['redirect_url'])
