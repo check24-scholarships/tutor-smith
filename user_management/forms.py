@@ -123,3 +123,20 @@ class ReviewEditForm(forms.Form):
     stars = forms.IntegerField(
         validators=[MaxValueValidator(5), MinValueValidator(1)], required=True
     )
+
+
+class ResetForm(forms.Form):
+    password_1 = forms.CharField(
+        max_length=16,
+        min_length=8,
+        widget=forms.PasswordInput(),
+        label='Password',
+        required=True,
+    )
+    password_2 = forms.CharField(
+        max_length=16,
+        min_length=8,
+        widget=forms.PasswordInput(),
+        label='Repeat Password',
+        required=True,
+    )

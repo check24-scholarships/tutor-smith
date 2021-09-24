@@ -15,11 +15,11 @@ Including another URLconf
 """
 from user_management.models import Info, Review
 from django.contrib import admin
-from django.urls import path, include, register_converter
 from django.contrib.auth import views as auth_views
-
+from django.urls import include, path, register_converter
 from user_management import views as user_views
-from .converters import UserHashIdConverter, ResetHashIdConverter
+
+from .converters import ResetHashIdConverter, UserHashIdConverter
 
 # Registers Converters
 register_converter(UserHashIdConverter, 'user_hashid')
@@ -28,19 +28,18 @@ register_converter(ResetHashIdConverter, 'reset_hashid')
 # All reset patterns
 resetpatterns = [
     path('', user_views.recover_form, name='recover_password'),
-    path('send/', user_views.recover_form_sent),
+    path('sent/', user_views.recover_form_sent),
     path(
         '<uidb64>/<token>/',
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name='password/password_reset_confirm.html'
-        ),
+        user_views.recover_form_confirm,
+        # auth_views.PasswordResetConfirmView.as_view(
+        #    template_name='password/password_reset_confirm.html'
+        # ),
         name='password_reset_confirm',
     ),
     path(
         'done/',
-        auth_views.PasswordResetCompleteView.as_view(
-            template_name='password/password_reset_complete.html'
-        ),
+        user_views.recover_form_complete,
         name='password_reset_complete',
     ),
 ]
@@ -106,4 +105,5 @@ urlpatterns = [
     # Reset patterns will have the path: reset/..../...
     path('reset/', include(resetpatterns)),
     path('detail/', include(detailpatterns)),
+    path('search', user_views.search, name='search'),
 ]

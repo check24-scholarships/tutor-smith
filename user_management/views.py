@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseServerError
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
+from django.db.models import Q
 
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -20,11 +21,9 @@ from tutor_smith.settings import EMAIL_HOST_USER
 from .custom_class_views import *
 from .forms import *
 from .models import User, Info, Review, Settings
-from .validators import validate_login, validate_register
+from .validators import validate_login, validate_register, validate_recover
 from .choices import *
-
-# XXX: Don't use the converters for en- / decoding
-from tutor_smith.converters import ResetHashIdConverter
+from tutor_smith.converters import reset_hasher, h_encode, h_decode
 
 
 dict_gender = dict(choice_gender)
@@ -51,15 +50,16 @@ def recover_form(request):
             try:
                 # Get user by email entered in form
                 user = User.objects.get(email=data)
+                print(user.password)
                 email_template_name = 'password/password_reset_email.txt'
-                # generate user hashid for password reset
-                converter = ResetHashIdConverter()
                 content = {
                     'subject': 'Password Recover Requested',
                     'email': 'shizhe.he6@gmail.com',
                     'domain': '127.0.0.1:8000',
                     'site_name': 'Website',
-                    'uid': converter.to_url(user.id),
+                    'uid': h_encode(
+                        reset_hasher, user.id
+                    ),  # generate user hashid for password reset
                     'user': 'test',
                     'token': 0,  # default_token_generator.make_token(user),
                     'protocol': 'http',
@@ -79,7 +79,7 @@ def recover_form(request):
                     'A message with reset password instructions has been sent to your inbox.',
                 )
 
-                return redirect('/password_reset/done/')
+                return redirect('/reset/sent/')
 
             except Exception:
                 messages.add_message(
@@ -98,6 +98,53 @@ def recover_form(request):
 
 def recover_form_sent(request):
     return render(request, 'password/password_reset_sent.html')
+
+
+def recover_form_confirm(request, uidb64, token):
+    # get session validity
+
+    if request.method == 'POST':
+        form = ResetForm(request.POST)
+        res = validate_recover(request, form)
+        uid = h_decode(reset_hasher, uidb64)  # get user id
+        user = User.objects.get(id=uid)
+
+        if res:
+            user.password = form.cleaned_data[
+                'password_1'
+            ]  # not great, but works for now
+            # user.set_password(form.cleaned_data['password_1'])
+            user.save()
+
+            return redirect('/reset/done/')
+
+    form = ResetForm()
+    return render(
+        request,
+        'password/password_reset_confirm.html',
+        context={'form': form},
+    )
+
+
+def recover_form_complete(request):
+    return render(request, 'password/password_reset_complete.html')
+
+
+def search(request):
+    if request.method == 'POST':
+        search = request.POST['searched']
+        if search:
+            # get users associated with search value
+            users = User.objects.filter(
+                Q(first_name__icontains=search)
+                | Q(last_name__icontains=search)
+                | Q(email__icontains=search)
+            )
+            return render(
+                request, 'search.html', {'search': search, 'users': users}
+            )
+
+    return render(request, 'search.html', {})
 
 
 def register(request):
