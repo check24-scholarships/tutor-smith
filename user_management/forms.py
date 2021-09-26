@@ -1,4 +1,5 @@
 from django import forms
+from django.core.validators import MaxValueValidator, MinValueValidator
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
@@ -31,7 +32,7 @@ class UserForm(forms.Form):
     gender = forms.ChoiceField(
         choices=choice_gender, label='Geschlecht', required=True
     )
-    adress = forms.CharField(
+    address = forms.CharField(
         max_length=64,
         label='Adresse',
         widget=forms.TextInput(attrs={'placeholder': 'Straße, Stadt'}),
@@ -78,6 +79,49 @@ class ProfileEditForm(forms.Form):
     show_address = forms.BooleanField(label='Adresse Anzeigen', required=False)
     show_phone = forms.BooleanField(
         label='Telefon Nummer Anzeigen', required=False
+    )
+
+
+class InfoEditForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        # Enables prefilled Fields
+        self.detail = kwargs.pop('detail')
+        super(InfoEditForm, self).__init__(*args, **kwargs)
+
+        if self.detail:
+            self.fields['subject'].initial = self.detail.subject
+            self.fields['description'].initial = self.detail.description
+            self.fields['level_class'].initial = self.detail.level_class
+            self.fields['difficulity'].initial = self.detail.difficulity
+            self.fields['cost_budget'].initial = self.detail.cost_budget
+            self.fields['searching'].initial = self.detail.searching
+
+    subject = forms.ChoiceField(choices=choice_subject, required=True)
+    description = forms.CharField(widget=forms.Textarea(), required=True)
+
+    level_class = forms.ChoiceField(choices=classes, required=True)
+    difficulity = forms.ChoiceField(choices=choice_difficulity, required=True)
+    cost_budget = forms.DecimalField(
+        max_digits=5, decimal_places=2, required=True
+    )
+    searching = forms.BooleanField(required=False)
+
+
+class ReviewEditForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        # Enables prefilled Fields
+        self.detail = kwargs.pop('detail')
+        super(ReviewEditForm, self).__init__(*args, **kwargs)
+
+        if self.detail:
+            self.fields['title'].initial = self.detail.title
+            self.fields['text'].initial = self.detail.text
+            self.fields['stars'].initial = self.detail.stars
+
+    title = forms.CharField(max_length=24, required=True)
+    text = forms.CharField(widget=forms.Textarea(), required=True)
+    stars = forms.IntegerField(
+        validators=[MaxValueValidator(5), MinValueValidator(1)], required=True
     )
 
 

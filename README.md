@@ -81,5 +81,5 @@ u1.save()
 ````
 ---
 ## Additional Information
-* The secret key has to be [generated](https://djecrety.ir/) or is given by an Administrator.
-Store it in the base directory as **SECRET_KEY.txt**
+* Passwords and the Secret Key are stored in an .env file.
+* The Secret Key can be [generated](https://djecrety.ir/) here or will be given by an Administrator

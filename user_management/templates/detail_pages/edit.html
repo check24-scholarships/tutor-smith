@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block title %}Edit{% endblock title %}
+{% block content %}
+<a href="..">Back</a>
+    <form action="?" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Save">
+    </form>
+{% endblock content %}

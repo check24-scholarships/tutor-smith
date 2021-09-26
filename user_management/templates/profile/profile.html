@@ -11,61 +11,58 @@
         <div class="selector">
                 {% block choice_selector %}
                         <a class="selection selected" href="/users/{{user.get_hashid}}/profile">Profil</a>
-                        <a class="selection" hx-post="/users/{{user.get_hashid}}/more" hx-swap="innerHTML" hx-target="#profile-content">Mehr</a>
                         <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Anzeigen</a>
-                        <a class="selection" hx-post="/users/{{user.get_hashid}}/reviews" hx-swap="innerHTML" hx-target="#profile-content">Bewertungen</a>
+                        <a class="selection" hx-post="/users/{{user.get_hashid}}/reviews" hx-swap="outerHTML" hx-target="#profile-content">Bewertungen</a>
                         {% if isOwner %}
                                 <a class="selection" href="edit">Bearbeiten</a>
                         {% endif %}
                 {% endblock choice_selector %}
         </div>
         {% block profile_content %}
-        <div id="profile-content">
-                <div class="profile-content">
-                        <div class="right-colum">
-                                {% if user.profile_pic %}
-                                        <img src="{{ user.profile_pic }}" alt="Profile Pic" class="profile_pic">
-                                {% else %}
-                                        <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
-                                        class="profile_pic"
-                                        alt="Profile Pic">
-                                {% endif %}
-                                <p class="detail">Name: {{user.first_name}} {{user.last_name}}</p>
-                                {% if user.address and settings.show_address %}
-                                <div class="flex">
-                                        <img src="{% static 'user_management/svg/location.svg' %}" alt="Location Icon">
-                                        <p class="detail">{{user.address}}</p>
-                                </div>
-                                {% endif %}
+        <div id="profile-content" class="profile-content">
+                <div class="right-colum">
+                        {% if user.profile_pic %}
+                                <img src="{{ user.profile_pic }}" alt="Profile Pic" class="profile_pic">
+                        {% else %}
+                                <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
+                                class="profile_pic"
+                                alt="Profile Pic">
+                        {% endif %}
+                        <p class="detail">Name: {{user.first_name}} {{user.last_name}}</p>
+                        {% if user.address and settings.show_address %}
+                        <div class="flex">
+                                <img src="{% static 'user_management/svg/location.svg' %}" alt="Location Icon">
+                                <p class="detail">{{user.address}}</p>
                         </div>
-                        <div class="left-colum">
-                                <p class="detail">Email: {{user.email}}</p>
-                                <p class="detail">Birthdate: {{user.birth_date}}</p>
-                                {% if user.description %}
-                                        <p class="detail long">{{user.description | linebreaks}}</p>
-                                {% endif %}
-                                {% if user.phone and settings.show_phone %}
-                                        <p class="detail">Phone: {{user.phone}}</p>
-                                {% endif %}
-                                <p class="detail">Gender: {{gender}}</p>
-                                {% if review %}
-                                        <div class="info">
-                                                <div class="flex">
-                                                        <h3>{{ review.title }}</h3>
-                                                        <p>von {{ review.author.first_name }} {{ review.author.last_name }}</p>
-                                                                <div class="flex">
-                                                                {% for i in review.stars|range %}
-                                                                <img src="{% static 'user_management/svg/star.svg' %}" alt="star"  width="35rem">
-                                                                {% endfor %}
-                                                                </div>
+                        {% endif %}
+                </div>
+                <div class="left-colum">
+                        <p class="detail">Email: {{user.email}}</p>
+                        <p class="detail">Birthdate: {{user.birth_date}}</p>
+                        {% if user.description %}
+                                <p class="detail long">{{user.description | linebreaks}}</p>
+                        {% endif %}
+                        {% if user.phone and settings.show_phone %}
+                                <p class="detail">Phone: {{user.phone}}</p>
+                        {% endif %}
+                        <p class="detail">Gender: {{gender}}</p>
+                        {% if review %}
+                                <div class="info">
+                                        <div class="flex">
+                                                <h3>{{ review.title }}</h3>
+                                                <p>von {{ review.author.first_name }} {{ review.author.last_name }}</p>
+                                                        <div class="flex">
+                                                        {% for i in review.stars|range %}
+                                                        <img src="{% static 'user_management/svg/star.svg' %}" alt="star"  width="35rem">
+                                                        {% endfor %}
                                                         </div>
-                                                        <p>{{review.text | linebreaks}}</p>
-                                                <div style="color: lightgray" class="flex">
-                                                        <p>created on: {{ review.created_on }}</p>
                                                 </div>
+                                                <p>{{review.text | linebreaks}}</p>
+                                        <div style="color: lightgray" class="flex">
+                                                <p>created on: {{ review.created_on }}</p>
                                         </div>
-                                {% endif %}
-                        </div>
+                                </div>
+                        {% endif %}
                 </div>
         </div>
         {% endblock profile_content %}

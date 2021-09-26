@@ -1,6 +1,7 @@
 from random import randint
 from django.contrib.auth.hashers import make_password
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # -----
 # Will be unused with the removal of Admin
@@ -156,12 +157,20 @@ class Info(models.Model):
         """
         return dict_subject[self.subject]
 
+    def get_hashid(self):
+        """
+        Returns the id hashed with the user_hasher
+        """
+        return h_encode(user_hasher, self.id)
+
 
 class Review(models.Model):
 
     title = models.CharField(max_length=24)
     text = models.TextField()
-    stars = models.IntegerField()
+    stars = models.IntegerField(
+        validators=[MaxValueValidator(5), MinValueValidator(1)]
+    )
     author = models.ForeignKey(
         User, related_name='Author', on_delete=models.CASCADE
     )
@@ -173,3 +182,9 @@ class Review(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_hashid(self):
+        """
+        Returns the id hashed with the user_hasher
+        """
+        return h_encode(user_hasher, self.id)

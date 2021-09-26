@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block title %}{{ detail.title }}{% endblock title %}
+{% block content %}
+    <h2>{{ detail.title }}</h2>
+    <p>{{ detail.text | linebreaks }}</p>
+    <div class="flex">
+        {% for i in detail.stars|range %}
+            <img src="{% static 'user_management/svg/star.svg' %}" alt="star" width="35rem">
+        {% endfor %}
+    </div>
+    {% if isOwner %}
+        <a href="edit">Edit</a>
+        <a href="delete">Delete</a>
+    {% endif %}
+{% endblock content %}
