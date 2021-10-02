@@ -36,6 +36,8 @@ def validate_login(request, form) -> User:
     if form.is_valid():
         try:
             user = User.objects.get(email=form.cleaned_data['email'].lower())
+            print(form.cleaned_data['password'])
+            print(user.password)
             if check_password(
                 form.cleaned_data['password'],
                 user.password,

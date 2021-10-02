@@ -1,0 +1,5 @@
+SECRET_KEY=")j$0*@s^(4w%yd&)aro@(e!n4lg01_w$)xpi+kj28b%9*lciem"
+EMAIL_HOST_PASSWORD="Password1234567890#"
+EMAIL_HOST_USER="suppport.tutormatching@gmail.com"
+HASHIDS_SALT="20122415029319303781"
+RESET_HASHIDS_SALT="3592838404"
