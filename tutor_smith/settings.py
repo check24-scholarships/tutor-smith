@@ -16,7 +16,6 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
 # load_dotenv(find_dotenv())
 
 # Quick-start development settings - unsuitable for production
@@ -142,7 +141,6 @@ AUTH_USER_MODEL = 'user_management.UserAuth'
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 
 HASHIDS_SALT = os.getenv('HASHIDS_SALT')
-print(HASHIDS_SALT)
 RESET_HASHIDS_SALT = os.getenv('RESET_HASHIDS_SALT')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

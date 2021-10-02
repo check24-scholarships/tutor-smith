@@ -5,6 +5,15 @@
     {% if search %}
         <h1>Your Search Results: {{ search }}</h1>
         <br/>
+        {% for offer in offers %}
+            <div class="row">
+                <div class="col-md-8">
+                    <p>{{ offer.subject }}</p>
+                    <p>{{ offer.description }}</p>
+                    <a href="users/{{user.get_hashid}}/profile">{{ offer.author }}</a>
+                </div>
+            </div>
+        {% endfor %}
         {% for user in users %}
             <div class="row">
                 <div class="col-md-4">
@@ -24,7 +33,7 @@
                     <p>{{ user.city }}</p>
                 </div>
             </div>
-            {% endfor %}
+        {% endfor %}
     {% else %}
         <h1>No Search Found</h1>
     {% endif %}
