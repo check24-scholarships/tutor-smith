@@ -74,8 +74,12 @@ def get_set_or_404(object, *args, **kwargs) -> QuerySet:
 
 
 def check_ownership(
-    request, user_id: int, force_ownership=False, force_authentication=False
-) -> bool:
+    request,
+    user_id: int,
+    force_ownership=False,
+    force_authentication=False,
+    return_user=False,
+):
     """
     Checks if an user has the ownership over an account.
     Returns True if the user is the owner,
@@ -85,12 +89,14 @@ def check_ownership(
     user = is_user_authenticated(request, force_authentication)
     if user:
         if user.id == user_id:
-            return True
+            if return_user:
+                return (True, user)
+            else:
+                return True
         elif force_ownership:
             raise PermissionDenied(
                 'You\'re missing the access permissions to view this side'
             )
-        else:
-            return False
-    else:
-        return False
+    if return_user:
+        return (False, user)
+    return False

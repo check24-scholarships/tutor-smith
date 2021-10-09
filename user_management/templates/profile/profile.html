@@ -14,7 +14,7 @@
                         <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Anzeigen</a>
                         <a class="selection" hx-post="/users/{{user.get_hashid}}/reviews" hx-swap="outerHTML" hx-target="#profile-content">Bewertungen</a>
                         {% if isOwner %}
-                                <a class="selection" href="edit">Bearbeiten</a>
+                                <a class="selection" href="/users/edit/{{user.get_hashid}}/">Bearbeiten</a>
                         {% endif %}
                 {% endblock choice_selector %}
         </div>

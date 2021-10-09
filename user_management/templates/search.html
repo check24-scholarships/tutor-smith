@@ -17,7 +17,7 @@
                     {% endif %}
                 </div>
                 <div class="col-md-8">
-                    <a href="users/{{user.get_hashid}}/profile">{{ user.first_name }} {{ user.last_name }}</a>
+                    <a href="/users/{{user.get_hashid}}/profile">{{ user.first_name }} {{ user.last_name }}</a>
                     <p>{{ user.email }}</p>
                     <p>{{ user.phone_number }}</p>
                     <p>{{ user.address }}</p>
