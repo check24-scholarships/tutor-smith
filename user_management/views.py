@@ -134,6 +134,12 @@ def search(request):
     if request.method == 'POST':
         search = request.POST['searched']
         if search:
+            # get offers associated with search value
+            offers = Info.objects.filter(
+                Q(subject__icontains=search)
+                | Q(description__icontains=search)
+                # | Q(author__icontains=search)
+            )
             # get users associated with search value
             users = User.objects.filter(
                 Q(first_name__icontains=search)
@@ -141,10 +147,28 @@ def search(request):
                 | Q(email__icontains=search)
             )
             return render(
-                request, 'search.html', {'search': search, 'users': users}
+                request,
+                'search.html',
+                {
+                    'search': search,
+                    'all': False,
+                    'offers': offers,
+                    'users': users,
+                },
             )
 
     return render(request, 'search.html', {})
+
+
+def view_all(request):
+    # get all offers
+    offers = Info.objects.all()
+
+    return render(
+        request,
+        'search.html',
+        {'search': 'search', 'all': True, 'offers': offers, 'users': []},
+    )
 
 
 def register(request):
