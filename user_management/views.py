@@ -149,10 +149,26 @@ def search(request):
             return render(
                 request,
                 'search.html',
-                {'search': search, 'offers': offers, 'users': users},
+                {
+                    'search': search,
+                    'all': False,
+                    'offers': offers,
+                    'users': users,
+                },
             )
 
     return render(request, 'search.html', {})
+
+
+def view_all(request):
+    # get all offers
+    offers = Info.objects.all()
+
+    return render(
+        request,
+        'search.html',
+        {'search': 'search', 'all': True, 'offers': offers, 'users': []},
+    )
 
 
 def register(request):

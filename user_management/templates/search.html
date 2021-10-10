@@ -3,7 +3,11 @@
 {% block title %}Tutor-Smith{% endblock title %}
 {% block content %}
     {% if search %}
-        <h1>Your Search Results: {{ search }}</h1>
+        {% if all %}
+            <h1>All Offers:</h1>
+        {% else %}
+            <h1>Your Search Results: {{ search }}</h1>
+        {% endif %}
         <br/>
         {% for offer in offers %}
             <div class="row">

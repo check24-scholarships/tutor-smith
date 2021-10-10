@@ -106,4 +106,5 @@ urlpatterns = [
     path('reset/', include(resetpatterns)),
     path('detail/', include(detailpatterns)),
     path('search', user_views.search, name='search'),
+    path('all', user_views.view_all, name='view_all'),
 ]
