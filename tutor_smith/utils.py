@@ -6,6 +6,11 @@ from django.http.response import Http404
 from .converters import h_decode, user_hasher
 from user_management.models import User
 
+from django.core.mail import send_mail
+from tutor_smith.settings import EMAIL_HOST_USER
+
+import os.path as path
+
 # TODO: Write functional Ipgrabber eg. with django-ipware
 def get_client_ip(request):
     """
@@ -94,3 +99,26 @@ def check_ownership(
             return False
     else:
         return False
+
+
+def send_custom_email(
+    recepients: list, template, content: dict, subject, message
+):
+    """
+    Sends an email to the user
+    Takes in:
+    - a list of recepients,
+    - a template name (example: password_reset_email.html) --> must be placed in the templates/emails folder,
+    - a content dict containing the variables for the template,
+    - a subject
+    """
+    email_template_path = path.join('template', template)
+    email = render_to_string(email_template_name, content)
+
+    send_mail(
+        subject,
+        email,
+        EMAIL_HOST_USER,
+        recepients,
+        fail_silently=False,
+    )
