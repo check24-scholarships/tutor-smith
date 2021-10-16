@@ -101,9 +101,7 @@ def check_ownership(
         return False
 
 
-def send_custom_email(
-    recepients: list, template, content: dict, subject, message
-):
+def send_custom_email(recepients: list, template, content: dict, subject):
     """
     Sends an email to the user
     Takes in:
