@@ -3,7 +3,7 @@
 {% load custom_tags %}
 {% block title %}{{ user.first_name }} {{ user.last_name }} - {% block site_name %}Profile{% endblock site_name %}{% endblock title %}
 {% block styles %}
-        <link rel="stylesheet" href={% static 'user_management/styles/detail_style.css' %}>
+        <link rel="stylesheet" href="{% static 'staticfiles/styles/detail_style.css' %}">
 {% endblock styles %}
 {% block content %}
 <!-- Load from unpkg -->
@@ -11,7 +11,7 @@
         <div class="selector">
                 {% block choice_selector %}
                         <a class="selection selected" href="/users/{{user.get_hashid}}/profile">Profil</a>
-                        <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Anzeigen</a>
+                        <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Angebot erstellen</a>
                         <a class="selection" hx-post="/users/{{user.get_hashid}}/reviews" hx-swap="outerHTML" hx-target="#profile-content">Bewertungen</a>
                         {% if isOwner %}
                                 <a class="selection" href="edit">Bearbeiten</a>

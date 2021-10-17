@@ -2,7 +2,33 @@
 {% load static %}
 {% block title %}Tutor-Smith{% endblock title %}
 {% block content %}
-    <p>Index Side</p>
+
+<img class= 'img-fluid' src="{% static 'staticfiles/styles/headerImage.jpg' %}" alt="header">
+<a href="{% url 'view_all' %}" type='button' class='btn btn-info'>Finde deinen Tutor!</a>
+
+<div class='content'>
+  <img class='img-fluid' src="{% static 'staticfiles/styles/stockpicture.jpeg' %}" alt="Location Icon">
+  <h3>Was ist Tutor-Smith?</h3>
+  <p>
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. 
+  </p>
+</div>
+<div class='content1'>
+  <img class= 'img-fluid' src="{% static 'staticfiles/styles/stockpicture.jpeg' %}" alt="Location Icon">
+  <h3>Lorem ipsum</h3>
+  <p>
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. 
+  </p>
+</div>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'view_all' %}" >Angebote</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+  {% for user in users %}
+  <a href="users/{{user.get_hashid}}/profile">Profile</a>
+  {% endfor %}
+</li>
     {% for user in users %}
       <a href="users/{{user.get_hashid}}/profile">{{user.first_name}} {{user.last_name}}</a>
     {% endfor %}
