@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Requests{% endblock title %}
+{% block content %}
+    {% if requests %}
+        {% for request in requests %}
+            <div>
+                <p>{{request.author}}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Keine Anfragen</p>
+    {% endif %}
+{% endblock content %}

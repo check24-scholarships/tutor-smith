@@ -124,6 +124,7 @@ class User(models.Model):
 class Settings(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    show_email = models.BooleanField()
     show_address = models.BooleanField()
     show_phone = models.BooleanField()
 
@@ -142,7 +143,7 @@ class Info(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     level_class = models.IntegerField()
-    difficulity = models.IntegerField(choices=choice_difficulity)
+    difficulty = models.IntegerField(choices=choice_difficulty)
     cost_budget = models.DecimalField(max_digits=5, decimal_places=2)
     searching = models.BooleanField()
 
@@ -188,3 +189,15 @@ class Review(models.Model):
         Returns the id hashed with the user_hasher
         """
         return h_encode(user_hasher, self.id)
+
+
+class Request(models.Model):
+    author = models.ForeignKey(
+        User, related_name='request_author', on_delete=models.CASCADE
+    )
+    for_user = models.ForeignKey(
+        User, related_name='request_info_author', on_delete=models.CASCADE
+    )
+    info = models.ForeignKey(
+        Info, related_name='info', on_delete=models.CASCADE
+    )

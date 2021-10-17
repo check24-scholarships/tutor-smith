@@ -1,0 +1,8 @@
+{% autoescape off %}
+Hello,
+
+Your request to view contact information from the user {{ user.first_name }} {{ user.last_name }} was accepted.
+Here is the information:
+Email: {{ user.email }}
+
+{% endautoescape %}
