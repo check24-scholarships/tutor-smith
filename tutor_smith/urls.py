@@ -133,6 +133,7 @@ urlpatterns = [
     # Reset patterns will have the path: reset/..../...
     path('reset/', include(resetpatterns)),
     path('detail/', include(detailpatterns)),
-    path('search/', user_views.search, name='search'),
     path('request/', include(requestpatterns)),
+    path('search', user_views.search, name='search'),
+    path('all', user_views.view_all, name='view_all'),
 ]

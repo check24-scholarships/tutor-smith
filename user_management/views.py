@@ -137,6 +137,12 @@ def search(request):
     if request.method == 'POST':
         search = request.POST['searched']
         if search:
+            # get offers associated with search value
+            offers = Info.objects.filter(
+                Q(subject__icontains=search)
+                | Q(description__icontains=search)
+                # | Q(author__icontains=search)
+            )
             # get users associated with search value
             users = User.objects.filter(
                 Q(first_name__icontains=search)
@@ -144,10 +150,28 @@ def search(request):
                 | Q(email__icontains=search)
             )
             return render(
-                request, 'search.html', {'search': search, 'users': users}
+                request,
+                'search.html',
+                {
+                    'search': search,
+                    'all': False,
+                    'offers': offers,
+                    'users': users,
+                },
             )
 
     return render(request, 'search.html', {})
+
+
+def view_all(request):
+    # get all offers
+    offers = Info.objects.all()
+
+    return render(
+        request,
+        'search.html',
+        {'search': 'search', 'all': True, 'offers': offers, 'users': []},
+    )
 
 
 def register(request):
@@ -378,15 +402,26 @@ def show_requests(request):
     __context['requests'] = Request.objects.filter(
         for_user=__context['isOwner']
     )
-    print(__context['requests'])
     return render(request, 'detail_pages/detail_requests.html', __context)
 
 
 def accept_request(request, request_id):
     user = is_user_authenticated(request, True)
-    # TODO: Alert user
-
+    query = reduce(operator.or_, (Q(id=i, for_user=user) for i in request_id))
+    query_l = Request.objects.filter(query)
+    if query_l:
+        __recipients = [r.author.email for r in query_l]
+        send_custom_email(
+            __recipients,
+            'request_accept.txt',
+            {'user': user},
+            'Your Request got accepted - Tutor Matching',
+        )
+        add_message(request, messages.SUCCESS, 'Requests send')
+    else:
+        add_message(request, messages.ERROR, 'Could not find Requests')
     return redirect(f'/request/delete/{h_encode(user_hasher, *request_id)}')
+    # return redirect(f'/request/list')
 
 
 def delete_request(request, request_id):
