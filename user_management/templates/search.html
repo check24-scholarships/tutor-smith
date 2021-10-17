@@ -4,23 +4,50 @@
 {% block content %}
     {% if search %}
         {% if all %}
-            <h1>All Offers:</h1>
+            <h1>Angebote</h1>
+            <div>
+            <form class="d-flex" method=POST action="{% url 'search' %}">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </form>
+        </div>
         {% else %}
-            <h1>Your Search Results: {{ search }}</h1>
+            <h1>Deine Suchergebnisse {{ search }}</h1>
             <br/>
-            <h2>Offers:</h2>
+            <form class="d-flex" method=POST action="{% url 'search' %}">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+            </form>
+            </br>
+            <h2>Angebote</h2>
         {% endif %}
+       
         <br/>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
         {% for offer in offers %}
-            <div class="row">
-                <div class="col-md-8">
-                    <p>{{ offer.subject }}</p>
-                    <p>{{ offer.description }}</p>
-                    <a href="users/{{user.get_hashid}}/profile">{{ offer.author }}</a>
+        <div class="col">
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="..." class="img-fluid rounded-start" alt="...">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{ offer.subject }}</h5>
+                  <p class="card-text">{{ offer.description }}</p>
+                  <p class="card-text"><small class="text-muted">{{offer.cost_budget}}€</small></p>
+                  <a href="users/{{user.get_hashid}}/profile">Kontakt: {{ offer.author }}</a>
+                  <a href="/detail/info/{{ info.get_hashid }}">More</a>
                 </div>
+              </div>
             </div>
+          </div>
+        </div>
+           
         {% endfor %}
-
+    </div>
         {% if not all %}
             <br/>
             <h2>Users:</h2>
