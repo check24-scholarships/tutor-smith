@@ -3,7 +3,7 @@
 {% block title %}Tutor-Smith{% endblock title %}
 {% block content %}
 
-<img class= 'img-fluid' src="{% static 'staticfiles/styles/headerImage.jpg' %}" alt="header">
+<header class='container' class='img-fluid'></header>
 <a href="{% url 'view_all' %}" type='button' class='btn btn-info'>Finde deinen Tutor!</a>
 
 <div class='content'>
@@ -14,7 +14,8 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh 
   </p>
 </div>
 <div class='content1'>
-  <img class= 'img-fluid' src="{% static 'staticfiles/styles/stockpicture.jpeg' %}" alt="Location Icon">
+ 
+ <img class= 'img-fluid' src="{% static 'staticfiles/styles/stockpicture.jpeg' %}" alt="Location Icon">
   <h3>Lorem ipsum</h3>
   <p>
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. 
@@ -32,4 +33,5 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh 
     {% for user in users %}
       <a href="users/{{user.get_hashid}}/profile">{{user.first_name}} {{user.last_name}}</a>
     {% endfor %}
+
 {% endblock content %}
