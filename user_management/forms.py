@@ -82,6 +82,10 @@ class ProfileEditForm(forms.Form):
         label='Telefon Nummer Anzeigen', required=False
     )
     show_email = forms.BooleanField(label='Email Anzeigen', required=False)
+    profile_image = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'multiple': False}),
+        required=False,
+    )
 
 
 class InfoEditForm(forms.Form):

@@ -2,6 +2,7 @@ SECRET_KEY.txt
 /.idea
 .vscode
 *.sqlite3
+media/users
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

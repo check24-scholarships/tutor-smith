@@ -13,6 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
+from . import settings
+
 from user_management.models import Info, Review
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -136,4 +139,4 @@ urlpatterns = [
     path('request/', include(requestpatterns)),
     path('search', user_views.search, name='search'),
     path('all', user_views.view_all, name='view_all'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,7 +2,7 @@
 {% load static %}
 {% block profile_content %}
     <div class="profile-content" id="profile-content">
-        <form action="?" method="post">
+        <form action="?" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{form}}
             <input type="submit" value="Save">

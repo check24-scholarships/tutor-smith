@@ -13,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 
 # -------
 from phonenumber_field.modelfields import PhoneNumberField
+from stdimage import JPEGField
 
 from .choices import *
 from tutor_smith.converters import h_encode, user_hasher
@@ -20,6 +21,17 @@ from tutor_smith.converters import h_encode, user_hasher
 from django.utils import timezone
 
 dict_subject = dict(choice_subject)
+
+
+def image_pic_path(instance, filename):
+    extension = filename.split('.')[-1]
+    new_filename = 'users/image_%s_%s.%s' % (
+        instance.__str__(),
+        instance.get_hashid(),
+        extension,
+    )
+    return new_filename
+
 
 # User model
 class CustomUserManager(BaseUserManager):
@@ -78,8 +90,18 @@ class User(models.Model):
     created_on = models.DateTimeField()
 
     ip = models.GenericIPAddressField(blank=True, null=True)
-    certificate = models.BinaryField(blank=True, null=True)
-    profile_pic = models.BinaryField(blank=True, null=True)
+    certificate = models.BinaryField(blank=True, null=True, default=None)
+    profile_pic = JPEGField(
+        upload_to=image_pic_path,
+        blank=True,
+        null=True,
+        variations={
+            'large': (800, 800, True),
+            'thumbnail': (100, 100, True),
+        },
+        delete_orphans=True,
+        default=None,
+    )
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -88,9 +110,6 @@ class User(models.Model):
     def __str__(self) -> str:
         return self.email
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
     def create_default_data(self):
         """
         Creates a default context
@@ -98,12 +117,7 @@ class User(models.Model):
         """
         self.email = self.email.lower()
         self.description = ''
-        self.is_active = True
-        self.is_staff = False
-        self.is_admin = False
-        self.certificate = None
-        self.profile_pic = None
-        self.created_on = timezone.now()
+        self.created_on = (timezone.now(),)
 
     def set_password(self, plainpassword: str):
         """
@@ -150,7 +164,7 @@ class Info(models.Model):
     created_on = models.DateTimeField()
 
     def __str__(self):
-        return self.author.email + ' ' + str(self.subject)
+        return self.author.email + '__' + str(self.subject)
 
     def get_hr_subject(self):
         """

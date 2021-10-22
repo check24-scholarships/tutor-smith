@@ -22,7 +22,7 @@
         <div id="profile-content" class="profile-content">
                 <div class="right-colum">
                         {% if user.profile_pic %}
-                                <img src="{{ user.profile_pic }}" alt="Profile Pic" class="profile_pic">
+                                <img alt="Image" src="{{ user.profile_pic.large.url }}" class="profile_pic"/>
                         {% else %}
                                 <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
                                 class="profile_pic"

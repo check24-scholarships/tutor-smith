@@ -224,7 +224,12 @@ def login(request):
         form = LoginForm(request.POST)
         user = validate_login(request, form)
         if user:
-            request.session['userid'] = user.get_hashid()
+            try:
+                request.session.cycle_key()
+            except Exception as e:
+                print(e)
+                request.session['userid'] = user.get_hashid()
+                request.session['userid'].set_expiry(36288000)  # 7 Days
             user.ip = get_client_ip(request)
             user.save()
             return redirect('/')
@@ -292,6 +297,7 @@ def user_edit(request, user_id):
     if request.method == 'POST':
         __context['form'] = ProfileEditForm(
             request.POST,
+            request.FILES,
             user=__context['user'],
             settings=__context['settings'],
         )
@@ -300,8 +306,14 @@ def user_edit(request, user_id):
             __context['user'].description = __context['form'].cleaned_data[
                 'description'
             ]
+            try:
+                __context['user'].profile_pic = request.FILES['profile_image']
+            except KeyError:
+                print('NOPE')
+            __context['form'].cleaned_data.pop('profile_image')
             __context['user'].save()
             __context['form'].cleaned_data.pop('description')
+
             __context['settingsQ'].update(**__context['form'].cleaned_data)
 
             messages.add_message(request, messages.SUCCESS, 'saved')
