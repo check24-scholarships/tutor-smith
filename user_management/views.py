@@ -131,7 +131,67 @@ def recover_form_complete(request):
 
 
 def search(request):
-    if request.method == 'POST':
+    grades = Info._meta.get_field('level_class').choices
+    subjects = {
+        key: value for (key, value) in Info._meta.get_field('subject').choices
+    }
+    difficulty_levels = {
+        key: value
+        for (key, value) in Info._meta.get_field('difficulity').choices
+    }
+
+    # Get query from search form
+    title_contains_query = request.GET.get('title_contains')
+    price_min = request.GET.get('price_min')
+    price_max = request.GET.get('price_max')
+    subject = request.GET.get('subject')
+    grade = request.GET.get('grade')
+    difficulty = request.GET.get('difficulty')
+    virtual = request.GET.get('virtual')
+
+    offers = Info.objects.all()
+
+    if title_contains_query:
+        offers = offers.filter(
+            Q(subject__icontains=title_contains_query)
+            | Q(description__icontains=title_contains_query)
+            | Q(level_class__icontains=title_contains_query)
+            # | Q(author__icontains=title_contains_query)
+        )
+    else:
+        title_contains_query = 'All'
+
+    if price_min:
+        offers = offers.filter(cost_budget__gte=price_min)
+    if price_max:
+        offers = offers.filter(cost_budget__lte=price_max)
+    if subject:
+        offers = offers.filter(
+            subject=[k for k, v in subjects.items() if v == subject][0]
+        )
+    if grade:  # not working yet
+        offers = offers.filter(level_class=grade)
+    if difficulty:
+        offers = offers.filter(
+            difficulity=[
+                k for k, v in difficulty_levels.items() if v == difficulty
+            ][0]
+        )
+
+    return render(
+        request,
+        'search.html',
+        {
+            'grades': grades,
+            'subjects': subjects.values(),
+            'difficulty_levels': difficulty_levels.values(),
+            'search': title_contains_query,
+            'all': False,
+            'offers': offers,
+        },
+    )
+
+    """if request.method == 'POST':
         search = request.POST['searched']
         if search:
             # get offers associated with search value
@@ -150,6 +210,9 @@ def search(request):
                 request,
                 'search.html',
                 {
+                    'grades': grades,
+                    'subjects': subjects,
+                    'difficulty_levels': difficulty_levels,
                     'search': search,
                     'all': False,
                     'offers': offers,
@@ -158,16 +221,33 @@ def search(request):
             )
 
     return render(request, 'search.html', {})
+"""
 
 
 def view_all(request):
+    grades = Info._meta.get_field('level_class').choices
+    subjects = {
+        key: value for (key, value) in Info._meta.get_field('subject').choices
+    }
+    difficulty_levels = {
+        key: value
+        for (key, value) in Info._meta.get_field('difficulity').choices
+    }
+
     # get all offers
     offers = Info.objects.all()
 
     return render(
         request,
         'search.html',
-        {'search': 'search', 'all': True, 'offers': offers, 'users': []},
+        {
+            'grades': grades,
+            'subjects': subjects.values(),
+            'difficulty_levels': difficulty_levels.values(),
+            'search': 'search',
+            'all': True,
+            'offers': offers,
+        },
     )
 
 
