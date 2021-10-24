@@ -311,7 +311,6 @@ def login(request):
                 print(e)
                 request.session['userid'] = user.get_hashid()
                 request.session.set_expiry(36288000)  # 7 Days
-                request.session.set_secure(True)
             user.ip = get_client_ip(request)
             user.save()
             return redirect('/')
