@@ -70,6 +70,9 @@ class AddDetail(View):
         if self.context['form'].is_valid():
             try:
                 self.create_model(args=kwargs)
+                return redirect(
+                    '/users/' + self.context['Owner'].get_hashid() + '/profile'
+                )
             except User.DoesNotExist:
                 raise BadRequest('User does not exist')
             display_messages(request, 'Saved', messages.SUCCESS)

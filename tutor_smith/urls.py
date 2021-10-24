@@ -13,16 +13,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
+from . import settings
+
 from user_management.models import Info, Review
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path, register_converter
 from user_management import views as user_views
 
-from .converters import ResetHashIdConverter, UserHashIdConverter
+from .converters import (
+    ResetHashIdConverter,
+    UserHashIdConverter,
+    MultipleHashIdConverter,
+)
 
 # Registers Converters
 register_converter(UserHashIdConverter, 'user_hashid')
+register_converter(MultipleHashIdConverter, 'multiple_hashid')
 register_converter(ResetHashIdConverter, 'reset_hashid')
 
 # All reset patterns
@@ -89,6 +97,24 @@ detailpatterns = [
     ),
 ]
 
+requestpatterns = [
+    path(
+        'add/<user_hashid:info_id>/',
+        user_views.request_contact,
+        name='request',
+    ),
+    path('list/', user_views.show_requests, name='list_request'),
+    path(
+        'accept/<multiple_hashid:request_id>/',
+        user_views.accept_request,
+        name='accept_request',
+    ),
+    path(
+        'delete/<multiple_hashid:request_id>/',
+        user_views.delete_request,
+        name='delete_request',
+    ),
+]
 
 urlpatterns = [
     # TODO: Remove admin when finished
@@ -102,9 +128,15 @@ urlpatterns = [
         user_views.user_profile,
         name='profile',
     ),
+    path(
+        'users/edit/<user_hashid:user_id>/',
+        user_views.user_edit,
+        name='profile_edit',
+    ),
     # Reset patterns will have the path: reset/..../...
     path('reset/', include(resetpatterns)),
     path('detail/', include(detailpatterns)),
+    path('request/', include(requestpatterns)),
     path('search', user_views.search, name='search'),
     path('all', user_views.view_all, name='view_all'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

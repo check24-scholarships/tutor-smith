@@ -13,12 +13,12 @@ reset_hasher = Hashids(
 )
 
 # IDEA: Move this into utils
-def h_encode(hasher: Hashids, id: int) -> str:
+def h_encode(hasher: Hashids, *args) -> str:
     """
     This function converts an intiger to an hashed id.
     This function requires a hasher
     """
-    return hasher.encode(id)
+    return hasher.encode(*args)
 
 
 def h_decode(hasher: Hashids, h: str) -> int:
@@ -31,6 +31,16 @@ def h_decode(hasher: Hashids, h: str) -> int:
         return z[0]
 
 
+def h_m_decode(hasher: Hashids, h: str) -> tuple:
+    """
+    This function converts a hashed id into an tuple.
+    This function requires a hasher
+    """
+    z = hasher.decode(h)
+    if z:
+        return z
+
+
 class UserHashIdConverter:
     """
     This converter is only for urls.py Don't use this for getting Hashids
@@ -40,6 +50,20 @@ class UserHashIdConverter:
 
     def to_python(self, value):
         return h_decode(user_hasher, value)
+
+    def to_url(self, value):
+        return h_encode(user_hasher, value)
+
+
+class MultipleHashIdConverter:
+    """
+    This converter is only for urls.py Don't use this for getting Hashids
+    """
+
+    regex = f'[a-zA-Z0-9]{{{user_min_length},}}'
+
+    def to_python(self, value):
+        return h_m_decode(user_hasher, value)
 
     def to_url(self, value):
         return h_encode(user_hasher, value)

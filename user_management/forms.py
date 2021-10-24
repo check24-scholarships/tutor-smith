@@ -8,7 +8,7 @@ from .choices import *
 # Creates an iterable classes dict for rendering
 classes = [[i, i] for i in range(5, 13)]
 
-# Creates Forms for validation and rendering. The Structure is simmilar to the Model
+# Creates Forms for validation and rendering. The Structure is similar to the Model
 class UserForm(forms.Form):
     email = forms.EmailField(
         max_length=255, label='Email Adresse', required=True
@@ -71,6 +71,7 @@ class ProfileEditForm(forms.Form):
         # add args
         self.fields['show_address'].initial = self.settings.show_address
         self.fields['show_phone'].initial = self.settings.show_phone
+        self.fields['show_email'].initial = self.settings.show_email
         self.fields['description'].initial = self.user.description
 
     description = forms.CharField(
@@ -79,6 +80,11 @@ class ProfileEditForm(forms.Form):
     show_address = forms.BooleanField(label='Adresse Anzeigen', required=False)
     show_phone = forms.BooleanField(
         label='Telefon Nummer Anzeigen', required=False
+    )
+    show_email = forms.BooleanField(label='Email Anzeigen', required=False)
+    profile_image = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'multiple': False}),
+        required=False,
     )
 
 
@@ -92,7 +98,7 @@ class InfoEditForm(forms.Form):
             self.fields['subject'].initial = self.detail.subject
             self.fields['description'].initial = self.detail.description
             self.fields['level_class'].initial = self.detail.level_class
-            self.fields['difficulity'].initial = self.detail.difficulity
+            self.fields['difficulty'].initial = self.detail.difficulty
             self.fields['cost_budget'].initial = self.detail.cost_budget
             self.fields['searching'].initial = self.detail.searching
 
@@ -100,7 +106,7 @@ class InfoEditForm(forms.Form):
     description = forms.CharField(widget=forms.Textarea(), required=True)
 
     level_class = forms.ChoiceField(choices=classes, required=True)
-    difficulity = forms.ChoiceField(choices=choice_difficulity, required=True)
+    difficulty = forms.ChoiceField(choices=choice_difficulty, required=False)
     cost_budget = forms.DecimalField(
         max_digits=5, decimal_places=2, required=True
     )

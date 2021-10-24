@@ -1,4 +1,5 @@
 # HTML Handeling
+from django.contrib.messages.api import add_message
 from user_management.custom_class_views import AddDetail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseServerError
@@ -11,16 +12,18 @@ from django.utils import timezone
 
 from django.contrib.auth.forms import PasswordResetForm
 from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from tutor_smith.utils import *
 
 from django.core.mail import send_mail
 from tutor_smith.settings import EMAIL_HOST_USER
 
+import operator
+from functools import reduce
+
 from .custom_class_views import *
 from .forms import *
-from .models import User, Info, Review, Settings
+from .models import Request, User, Info, Review, Settings
 from .validators import validate_login, validate_register, validate_recover
 from .choices import *
 from tutor_smith.converters import reset_hasher, h_encode, h_decode
@@ -301,7 +304,12 @@ def login(request):
         form = LoginForm(request.POST)
         user = validate_login(request, form)
         if user:
-            request.session['userid'] = user.get_hashid()
+            try:
+                request.session.cycle_key()
+            except Exception as e:
+                print(e)
+                request.session['userid'] = user.get_hashid()
+                request.session['userid'].set_expiry(36288000)  # 7 Days
             user.ip = get_client_ip(request)
             user.save()
             return redirect('/')
@@ -352,37 +360,51 @@ def user_profile(request, user_id, subpath):
         )
         __context['isAuth'] = is_user_authenticated(request)
         return render(request, 'profile/reviews.html', __context)
-    # -----------------
-    elif subpath == 'edit':
-        __context['isOwner'] = check_ownership(
-            request, __context['user'].id, True
-        )
-        if request.method == 'POST':
-            form = ProfileEditForm(
-                request.POST,
-                user=__context['user'],
-                settings=__context['settings'],
-            )
-            if form.is_valid():
-                # TODO: Change for more  method
-                __context['user'].description = form.cleaned_data[
-                    'description'
-                ]
-                __context['user'].save()
-                __context['settingsQ'].update(form.cleaned_data)
-
-                messages.add_message(request, messages.SUCCESS, 'saved')
-
-        __context['form'] = ProfileEditForm(
-            user=__context['user'], settings=__context['settings']
-        )
-        return render(request, 'profile/edit.html', __context)
     else:
         return Http404()
 
 
+def user_edit(request, user_id):
+    __context = {
+        'user': get_object_or_404(User, id=user_id),
+    }
+    __context['isOwner'] = check_ownership(
+        request, __context['user'].id, True, True
+    )
+    __context['settingsQ'] = Settings.objects.filter(user=__context['user'])
+    __context['settings'] = __context['settingsQ'].first()
+
+    if request.method == 'POST':
+        __context['form'] = ProfileEditForm(
+            request.POST,
+            request.FILES,
+            user=__context['user'],
+            settings=__context['settings'],
+        )
+        if __context['form'].is_valid():
+            # TODO: Change for more  method
+            __context['user'].description = __context['form'].cleaned_data[
+                'description'
+            ]
+            try:
+                __context['user'].profile_pic = request.FILES['profile_image']
+            except KeyError:
+                print('NOPE')
+            __context['form'].cleaned_data.pop('profile_image')
+            __context['user'].save()
+            __context['form'].cleaned_data.pop('description')
+
+            __context['settingsQ'].update(**__context['form'].cleaned_data)
+
+            messages.add_message(request, messages.SUCCESS, 'saved')
+    else:
+        __context['form'] = ProfileEditForm(
+            user=__context['user'], settings=__context['settings']
+        )
+    return render(request, 'profile/edit.html', __context)
+
+
 def detail_view(request, id, *args, **kwargs):
-    # print(kwargs['detail_class'].objects.filter(id=id).first().get_hashid())
     __context = {'isOwner': is_user_authenticated(request)}
     __context['detail'] = get_object_or_404(kwargs['detail_class'], id=id)
     if __context['isOwner']:
@@ -410,7 +432,7 @@ class AddInfo(AddDetail):
         self.detail.objects.create(
             **self.context['form'].cleaned_data,
             author=self.context['Owner'],
-            created_on=timezone.now()
+            created_on=timezone.now(),
         )
 
     def check_perm(self, request, *args, **kwargs):
@@ -426,7 +448,7 @@ class AddReview(AddDetail):
             author=self.context['Owner'],
             for_user=User.objects.get(id=kwargs['args']['user_id']),
             created_on=timezone.now(),
-            **self.context['form'].cleaned_data
+            **self.context['form'].cleaned_data,
         )
 
     def check_perm(self, request, *args, **kwargs):
@@ -442,3 +464,66 @@ def delete_detail(request, id, *args, **kwargs):
     obj.delete()
     display_messages(request, 'Deleted', messages.SUCCESS)
     return redirect(kwargs['redirect_url'])
+
+
+def request_contact(request, info_id):
+    __context = {}
+    __context['info'] = get_object_or_404(Info, id=info_id)
+    __context['isOwner'] = check_ownership(
+        request, __context['info'].author, False, True, True
+    )
+    if not __context['isOwner'][0]:
+        if Request.objects.filter(
+            info=__context['info'], author=__context['isOwner'][1]
+        ):
+            display_messages(request, 'Already requested', messages.ERROR)
+            return redirect('/')
+        Request.objects.create(
+            info=__context['info'],
+            author=__context['isOwner'][1],
+            for_user=__context['info'].author,
+        )
+        display_messages(request, 'Request sent', messages.SUCCESS)
+        return redirect('/')
+    else:
+        raise PermissionDenied('Cannot request to own info')
+
+
+def show_requests(request):
+    __context = {'isOwner': is_user_authenticated(request, True)}
+    __context['requests'] = Request.objects.filter(
+        for_user=__context['isOwner']
+    )
+    return render(request, 'detail_pages/detail_requests.html', __context)
+
+
+def accept_request(request, request_id):
+    user = is_user_authenticated(request, True)
+    query = reduce(operator.or_, (Q(id=i, for_user=user) for i in request_id))
+    query_l = Request.objects.filter(query)
+    if query_l:
+        __recipients = [r.author.email for r in query_l]
+        send_custom_email(
+            __recipients,
+            'request_accept.txt',
+            {'user': user},
+            'Your Request got accepted - Tutor Matching',
+        )
+        add_message(request, messages.SUCCESS, 'Requests send')
+    else:
+        add_message(request, messages.ERROR, 'Could not find Requests')
+    return redirect(f'/request/delete/{h_encode(user_hasher, *request_id)}')
+    # return redirect(f'/request/list')
+
+
+def delete_request(request, request_id):
+    # check_ownership(request, )
+    user = is_user_authenticated(request, True)
+    query = reduce(operator.or_, (Q(id=i, for_user=user) for i in request_id))
+    query_l = Request.objects.filter(query)
+    if query_l:
+        query_l.delete()
+        add_message(request, messages.SUCCESS, 'Deleted')
+    else:
+        add_message(request, messages.ERROR, 'Request not found')
+    return redirect('list_request')
