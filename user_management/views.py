@@ -176,7 +176,7 @@ def search(request):
         offers = offers.filter(level_class=grade)
     if difficulty:
         offers = offers.filter(
-            difficulity=[
+            difficulty=[
                 k for k, v in difficulty_levels.items() if v == difficulty
             ][0]
         )
