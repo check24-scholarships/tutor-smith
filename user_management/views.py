@@ -140,7 +140,7 @@ def search(request):
     }
     difficulty_levels = {
         key: value
-        for (key, value) in Info._meta.get_field('difficulity').choices
+        for (key, value) in Info._meta.get_field('difficulty').choices
     }
 
     # Get query from search form
@@ -234,7 +234,7 @@ def view_all(request):
     }
     difficulty_levels = {
         key: value
-        for (key, value) in Info._meta.get_field('difficulity').choices
+        for (key, value) in Info._meta.get_field('difficulty').choices
     }
 
     # get all offers
