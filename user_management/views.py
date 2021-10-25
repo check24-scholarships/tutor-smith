@@ -305,11 +305,12 @@ def login(request):
         user = validate_login(request, form)
         if user:
             try:
+                request.session['userid']
                 request.session.cycle_key()
             except Exception as e:
                 print(e)
                 request.session['userid'] = user.get_hashid()
-                request.session['userid'].set_expiry(36288000)  # 7 Days
+                request.session.set_expiry(36288000)  # 7 Days
             user.ip = get_client_ip(request)
             user.save()
             return redirect('/')
@@ -388,8 +389,8 @@ def user_edit(request, user_id):
             ]
             try:
                 __context['user'].profile_pic = request.FILES['profile_image']
-            except KeyError:
-                print('NOPE')
+            except:
+                pass
             __context['form'].cleaned_data.pop('profile_image')
             __context['user'].save()
             __context['form'].cleaned_data.pop('description')
