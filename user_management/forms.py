@@ -5,9 +5,6 @@ from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
 from .choices import *
 
-# Creates an iterable classes dict for rendering
-classes = [[i, i] for i in range(5, 13)]
-
 # Creates Forms for validation and rendering. The Structure is similar to the Model
 class UserForm(forms.Form):
     email = forms.EmailField(
@@ -40,7 +37,7 @@ class UserForm(forms.Form):
     )
     phone = PhoneNumberField(required=False, widget=PhoneNumberPrefixWidget())
     user_class = forms.ChoiceField(
-        choices=classes, label='Klasse', required=True
+        label='Klasse', required=True, validators=[MaxValueValidator(12), MinValueValidator(5)]
     )
     birth_date = forms.DateField(
         label='Geburtsdatum',
@@ -101,7 +98,7 @@ class InfoEditForm(forms.Form):
     subject = forms.ChoiceField(choices=choice_subject, required=True)
     description = forms.CharField(widget=forms.Textarea(), required=True)
 
-    level_class = forms.ChoiceField(choices=classes, required=True)
+    level_class = forms.forms.IntegerField(required=True, validators=[MaxValueValidator(12), MinValueValidator(5)])
     difficulty = forms.ChoiceField(choices=choice_difficulty, required=False)
     cost_budget = forms.DecimalField(
         max_digits=5, decimal_places=2, required=True

@@ -16,3 +16,9 @@ choice_gender = [
     (2, 'Female'),
     (3, 'Another Term'),
 ]
+
+choice_ticket_type=[
+    (1, 'Report'),
+    (2, 'Bug'),
+    (3, 'Request'),
+]

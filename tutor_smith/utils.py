@@ -54,6 +54,7 @@ def is_user_authenticated(request, force_authentication=False) -> User:
         return None
 
 
+
 def display_messages(request, msg, msg_type: int) -> None:
     """
     A simple Function for diplaying one or more messages with the Django messages API
@@ -106,6 +107,19 @@ def check_ownership(
 
     if return_user:
         return (False, user)
+    return False
+
+
+def is_user_staff(request, force_staff=False, force_authentication=False):
+    user = is_user_authenticated(request, force_authentication)
+    if user:
+        try:
+            User.objects.get(id=User.id, is_staff=True)
+            return True
+        except:
+            pass
+    if force_staff:
+        raise PermissionDenied('Not enough rights')
     return False
 
 

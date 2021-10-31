@@ -113,6 +113,11 @@ requestpatterns = [
     ),
 ]
 
+staffpatterns = [
+    path('add_ticket/', user_views.add_ticket),
+    path('add_report/<user_hashid:user_id>', user_views.add_report),
+]
+
 urlpatterns = [
     # TODO: Remove admin when finished
     path('admin/', admin.site.urls),
@@ -134,6 +139,7 @@ urlpatterns = [
     path('reset/', include(resetpatterns)),
     path('detail/', include(detailpatterns)),
     path('request/', include(requestpatterns)),
+    path('staff/', include(staffpatterns)),
     path('search', user_views.search, name='search'),
     path('all', user_views.view_all, name='view_all'),
 ]
