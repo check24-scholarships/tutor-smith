@@ -436,24 +436,33 @@ def delete_request(request, request_id):
         add_message(request, messages.ERROR, 'Request not found')
     return redirect('list_request')
 
+
 def add_ticket(request):
-    __context = {'form':None} #Ticket form
+    __context = {'form': TicketCreateForm()}  # Ticket form
     __context['user'] = is_user_authenticated(request, True)
-    if request.method == "POST":
-        form = None #TODO: Insert Form
+    if request.method == 'POST':
+        form = TicketCreateForm(request.POST)  # TODO: Insert Form
         if form.is_valid():
-            i = Ticket.objects.create(**form.cleaned_data, author=__context['user'])
+            i = Ticket.objects.create(
+                **form.cleaned_data, author=__context['user']
+            )
             return redirect('ticket_send', permanent=True)
-    return render(request,'staff/add_ticket.html', __context)
+    return render(request, 'staff/add_ticket.html', __context)
+
 
 def add_report(request, user_id):
-    __context = {} 
+    __context = {}
     __context['user'] = is_user_authenticated(request, True)
     try:
         reported_user = User.objects.get(id=user_id)
     except:
-        raise Http404("User not found")
-    if request.method == "POST":
-        i = Ticket.objects.create(author=__context['user'], for_user=reported_user, title=f"Report {reported_user.email}", text=request.POST['text'])
+        raise Http404('User not found')
+    if request.method == 'POST':
+        i = Ticket.objects.create(
+            author=__context['user'],
+            for_user=reported_user,
+            title=f'Report {reported_user.email}',
+            text=request.POST['text'],
+        )
         return redirect('ticket_send', permanent=True)
-    return render(request,'staff/add_report.html', __context)
+    return render(request, 'staff/add_report.html', __context)

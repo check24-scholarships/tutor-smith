@@ -116,6 +116,7 @@ requestpatterns = [
 staffpatterns = [
     path('add_ticket/', user_views.add_ticket),
     path('add_report/<user_hashid:user_id>', user_views.add_report),
+    # path('delete_ticket/<user_hashid:id>', user_views.delete_),
 ]
 
 urlpatterns = [

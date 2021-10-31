@@ -37,7 +37,9 @@ class UserForm(forms.Form):
     )
     phone = PhoneNumberField(required=False, widget=PhoneNumberPrefixWidget())
     user_class = forms.ChoiceField(
-        label='Klasse', required=True, validators=[MaxValueValidator(12), MinValueValidator(5)]
+        label='Klasse',
+        required=True,
+        validators=[MaxValueValidator(12), MinValueValidator(5)],
     )
     birth_date = forms.DateField(
         label='Geburtsdatum',
@@ -98,7 +100,9 @@ class InfoEditForm(forms.Form):
     subject = forms.ChoiceField(choices=choice_subject, required=True)
     description = forms.CharField(widget=forms.Textarea(), required=True)
 
-    level_class = forms.forms.IntegerField(required=True, validators=[MaxValueValidator(12), MinValueValidator(5)])
+    level_class = forms.IntegerField(
+        required=True, validators=[MaxValueValidator(12), MinValueValidator(5)]
+    )
     difficulty = forms.ChoiceField(choices=choice_difficulty, required=False)
     cost_budget = forms.DecimalField(
         max_digits=5, decimal_places=2, required=True
@@ -139,3 +143,9 @@ class ResetForm(forms.Form):
         label='Repeat Password',
         required=True,
     )
+
+
+class TicketCreateForm(forms.Form):
+    title = forms.CharField(max_length=30)
+    text = forms.TextField()
+    ticket_type = forms.IntegerField(choices=choice_ticket_type)
