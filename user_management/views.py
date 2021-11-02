@@ -183,6 +183,8 @@ def search(request):
                 k for k, v in difficulty_levels.items() if v == difficulty
             ][0]
         )
+    if virtual:
+        offers = offers.filter(virtual=virtual)
 
     return render(
         request,

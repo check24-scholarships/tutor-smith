@@ -164,6 +164,7 @@ class Info(models.Model):
     difficulty = models.IntegerField(choices=choice_difficulty)
     cost_budget = models.DecimalField(max_digits=5, decimal_places=2)
     searching = models.BooleanField()
+    virtual = models.BooleanField()
 
     created_on = models.DateTimeField()
 
