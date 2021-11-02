@@ -8,11 +8,11 @@ body, html{
 }
 .container{
     background-image: url("../styles/headerImage.jpg");
-   height: 80vh;
+   height: 100vh;
    background-blend-mode: multiply;
    background-size: cover;
    background-repeat: no-repeat;
-   
+
 }
 .headerimage{
     max-width: 100%;

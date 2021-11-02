@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <link type="text/css" rel="stylesheet" href="{% static 'staticfiles/styles/styles.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     {% block styles %}{% endblock styles %}
@@ -16,7 +16,7 @@
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
           <a class="navbar-brand" href="/">
-            <img src="{% static 'staticfiles/styles/logo.jpeg' %}" alt="" width="70" height="30" padding="0" margin="0"> 
+            <img src="{% static 'staticfiles/styles/logo.png' %}" alt="" width="100" height="30" padding="0" margin="0">
           </a>
           <div>
             <ul class="navbar-nav mr-auto">
@@ -31,10 +31,10 @@
                     <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
                 -->
-            </ul>    
+            </ul>
             </div>
       </nav>
- 
+
 <!--
 
         <form class="d-flex" method=POST action="{% url 'search' %}">
@@ -42,7 +42,7 @@
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
             <button class="btn btn-outline-secondary" type="submit">Search</button>
         </form>
-   --> 
+   -->
 
     {% block messages %}
     <ul class="messages" id="messages-list">

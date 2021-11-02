@@ -8,6 +8,7 @@ from user_management.models import User
 
 from django.core.mail import send_mail
 from tutor_smith.settings import EMAIL_HOST_USER
+from django.template.loader import render_to_string
 
 import os.path as path
 
@@ -79,8 +80,12 @@ def get_set_or_404(object, *args, **kwargs) -> QuerySet:
 
 
 def check_ownership(
-    request, user_id: int, force_ownership=False, force_authentication=False
-) -> bool:
+    request,
+    user_id: int,
+    force_ownership=False,
+    force_authentication=False,
+    return_user=False,
+):
     """
     Checks if an user has the ownership over an account.
     Returns True if the user is the owner,
@@ -90,15 +95,18 @@ def check_ownership(
     user = is_user_authenticated(request, force_authentication)
     if user:
         if user.id == user_id:
-            return True
+            if return_user:
+                return (True, user)
+            else:
+                return True
         elif force_ownership:
             raise PermissionDenied(
                 'You\'re missing the access permissions to view this side'
             )
-        else:
-            return False
-    else:
-        return False
+
+    if return_user:
+        return (False, user)
+    return False
 
 
 def send_custom_email(recepients: list, template, content: dict, subject):
@@ -110,8 +118,8 @@ def send_custom_email(recepients: list, template, content: dict, subject):
     - a content dict containing the variables for the template,
     - a subject
     """
-    email_template_path = path.join('template', template)
-    email = render_to_string(email_template_name, content)
+    email_template_path = path.join('emails', template)
+    email = render_to_string(email_template_path, content)
 
     send_mail(
         subject,

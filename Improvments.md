@@ -9,5 +9,5 @@
 # TODO:
 - [x] Choices for Information Displayed on User page
 - [x] Hashids for pk hiding
-- [ ] Format for Address for most basic search
+- [X] Format for Address for most basic search
 - [ ] Better authenticate() method

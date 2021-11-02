@@ -7,5 +7,7 @@
     {% if isOwner %}
         <a href="edit">Edit</a>
         <a href="delete">Delete</a>
+    {% else %}
+        <a href="/request/{{ detail.get_hashid }}">Request</a>
     {% endif %}
 {% endblock content %}
