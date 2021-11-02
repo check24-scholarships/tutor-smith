@@ -116,6 +116,25 @@ requestpatterns = [
     ),
 ]
 
+staffpatterns = [
+    path('', user_views.staff_index, name='staff_index'),
+    path('list/', user_views.list_tickets, name='staff_list'),
+    path('add_ticket/', user_views.add_ticket),
+    path('add_report/<user_hashid:user_id>/', user_views.add_report),
+    # path('delete_ticket/<user_hashid:id>', user_views.delete_),
+    path(
+        'accept_ticket/<multiple_hashid:ticket_id>/',
+        user_views.accept_ticket,
+        name='accept_ticket',
+    ),
+    path(
+        'delete_ticket/<multiple_hashid:ticket_id>/',
+        user_views.delete_ticket,
+        name='delete_ticket',
+    ),
+    path('ticket_send/', user_views.ticket_send, name='ticket_send'),
+]
+
 urlpatterns = [
     # TODO: Remove admin when finished
     path('admin/', admin.site.urls),
@@ -137,6 +156,7 @@ urlpatterns = [
     path('reset/', include(resetpatterns)),
     path('detail/', include(detailpatterns)),
     path('request/', include(requestpatterns)),
+    path('staff/', include(staffpatterns)),
     path('search', user_views.search, name='search'),
     path('all', user_views.view_all, name='view_all'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -68,6 +68,6 @@
         {% endblock profile_content %}
         <div class="flex_bottom">
                 <p class="created_on">Created on: {{user.created_on}}</p>
-                <a href="/user/report/{{user.get_hashid}}" class="error">Beinhaltet dieser Accound schädliche Inhalte? Report!</a>
+                <a href="/staff/add_report/{{user.get_hashid}}" class="error">Beinhaltet dieser Accound schädliche Inhalte? Report!</a>
         </div>
 {% endblock content %}

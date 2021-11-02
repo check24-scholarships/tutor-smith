@@ -83,7 +83,9 @@ class User(models.Model):
     gender = models.IntegerField(choices=choice_gender)
     address = models.CharField(max_length=64, blank=True, null=True)
     phone = PhoneNumberField(unique=True, null=True, blank=True)
-    user_class = models.IntegerField(default=11)
+    user_class = models.IntegerField(
+        validators=[MaxValueValidator(12), MinValueValidator(5)]
+    )
     description = models.TextField(default='')
     birth_date = models.DateField()
 
@@ -117,7 +119,7 @@ class User(models.Model):
         """
         self.email = self.email.lower()
         self.description = ''
-        self.created_on = (timezone.now(),)
+        self.created_on = timezone.now()
 
     def set_password(self, plainpassword: str):
         """
@@ -156,7 +158,9 @@ class Info(models.Model):
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    level_class = models.IntegerField()
+    level_class = models.IntegerField(
+        validators=[MaxValueValidator(12), MinValueValidator(5)]
+    )
     difficulty = models.IntegerField(choices=choice_difficulty)
     cost_budget = models.DecimalField(max_digits=5, decimal_places=2)
     searching = models.BooleanField()
@@ -215,3 +219,20 @@ class Request(models.Model):
     info = models.ForeignKey(
         Info, related_name='info', on_delete=models.CASCADE
     )
+
+
+class Ticket(models.Model):
+    author = models.ForeignKey(
+        User, related_name='ticket_author', on_delete=models.CASCADE
+    )
+    for_user = models.ForeignKey(
+        User,
+        related_name='ticket_for_user',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+    title = models.CharField(max_length=30)
+    text = models.TextField()
+    ticket_type = models.IntegerField(choices=choice_ticket_type)
+    status = models.IntegerField(choices=choice_ticket_status, default=2)

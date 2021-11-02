@@ -109,6 +109,19 @@ def check_ownership(
     return False
 
 
+def is_user_staff(request, force_staff=False, force_authentication=False):
+    user = is_user_authenticated(request, force_authentication)
+    if user:
+        try:
+            User.objects.get(id=user.id, is_staff=True)
+            return True
+        except:
+            pass
+    if force_staff:
+        raise PermissionDenied('Not enough rights')
+    return False
+
+
 def send_custom_email(recepients: list, template, content: dict, subject):
     """
     Sends an email to the user

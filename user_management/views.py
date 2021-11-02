@@ -23,7 +23,7 @@ from functools import reduce
 
 from .custom_class_views import *
 from .forms import *
-from .models import Request, User, Info, Review, Settings
+from .models import Request, Ticket, User, Info, Review, Settings
 from .validators import validate_login, validate_register, validate_recover
 from .choices import *
 from tutor_smith.converters import reset_hasher, h_encode, h_decode
@@ -534,3 +534,99 @@ def delete_request(request, request_id):
     else:
         add_message(request, messages.ERROR, 'Request not found')
     return redirect('list_request')
+
+
+# Staff Sides
+def staff_index(request):
+    return render(request)
+
+
+def list_tickets(request):
+    try:
+        g = list(request.GET['status'])
+        g = list(map(int, g))
+    except:
+        query = Q(status=2)
+    if len(g) > 6:
+        return HttpResponse(status=413)
+    if all(isinstance(s, int) for s in g):
+        query = reduce(operator.or_, (Q(status=s) for s in g))
+    else:
+        query = Q(status=2)
+
+    __context = {'tickets': Ticket.objects.filter(query).all()}
+    return render(request, 'staff/list_tickets.html', __context)
+
+
+def add_ticket(request):
+    __context = {'form': TicketCreateForm()}  # Ticket form
+    __context['user'] = is_user_authenticated(request, True)
+    if request.method == 'POST':
+        form = TicketCreateForm(request.POST)  # TODO: Insert Form
+        if form.is_valid():
+            i = Ticket.objects.create(
+                **form.cleaned_data, author=__context['user']
+            )
+            return redirect('ticket_send', permanent=True)
+    return render(request, 'staff/add_ticket.html', __context)
+
+
+def add_report(request, user_id):
+    __context = {}
+    __context['user'] = is_user_authenticated(request, True)
+    try:
+        reported_user = User.objects.get(id=user_id)
+    except:
+        raise Http404('User not found')
+    if request.method == 'POST':
+        if not Ticket.objects.filter(
+            author=__context['user'], for_user=reported_user
+        ):
+            i = Ticket.objects.create(
+                author=__context['user'],
+                for_user=reported_user,
+                title=f'Report {reported_user.email}',
+                text=request.POST['text'],
+                ticket_type=1,
+            )
+        else:
+            add_message(
+                request,
+                messages.ERROR,
+                'Nutzer wurde bereits von dir gemeldet',
+            )
+            return redirect(f'/users/{reported_user.get_hashid()}/profile')
+        return redirect('ticket_send', permanent=True)
+    return render(request, 'staff/add_report.html', __context)
+
+
+def delete_ticket(request, ticket_id):
+    is_user_staff(request, True, True)
+    query = reduce(operator.or_, (Q(id=i) for i in ticket_id))
+    query_l = Ticket.objects.filter(query)
+    if query_l:
+        query_l.delete()
+        add_message(request, messages.SUCCESS, 'Deleted')
+    else:
+        add_message(request, messages.ERROR, 'Request not found')
+    return redirect('staffpage')
+
+
+def accept_ticket(request, ticket_id):
+    is_user_staff(request, True, True)
+    query = reduce(operator.or_, (Q(id=i) for i in ticket_id))
+    query_l = Ticket.objects.filter(query)
+    emails = []
+    for q in query_l:
+        emails.append(q.author.email)
+    send_custom_email(
+        emails,
+        'ticket_accept.txt',
+        {},
+        'Dein Ticket wurde bearbeitet - Tutor Matching',
+    )
+    return redirect('delete_ticket', h_encode(user_hasher, *ticket_id))
+
+
+def ticket_send(request):
+    return render(request, 'staff/ticket_send.html')
