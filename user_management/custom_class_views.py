@@ -69,9 +69,9 @@ class AddDetail(View):
         self.context['form'] = self.FormClass(request.POST, detail=None)
         if self.context['form'].is_valid():
             try:
-                self.create_model(args=kwargs)
+                info = self.create_model(args=kwargs)
                 return redirect(
-                    '/users/' + self.context['Owner'].get_hashid() + '/profile'
+                    '/detail/' + info.get_type() + '/' + info.get_hashid()
                 )
             except User.DoesNotExist:
                 raise BadRequest('User does not exist')
@@ -83,7 +83,7 @@ class AddDetail(View):
         return render(request, self.template, self.context)
 
     def create_model(self, *args, **kwargs):
-        self.detail.objects.create(**self.context['form'].cleaned_data)
+        return self.detail.objects.create(**self.context['form'].cleaned_data)
 
     def check_perm(self, request):
         return check_ownership(request, user_id=None)

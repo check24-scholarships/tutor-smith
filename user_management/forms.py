@@ -36,7 +36,7 @@ class UserForm(forms.Form):
         required=False,
     )
     phone = PhoneNumberField(required=False, widget=PhoneNumberPrefixWidget())
-    user_class = forms.ChoiceField(
+    user_class = forms.IntegerField(
         label='Klasse',
         required=True,
         validators=[MaxValueValidator(12), MinValueValidator(5)],
