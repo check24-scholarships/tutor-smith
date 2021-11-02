@@ -134,7 +134,9 @@ def recover_form_complete(request):
 
 
 def search(request):
-    grades = Info._meta.get_field('level_class').choices
+    grades = {
+        key: value for (key, value) in Info._meta.get_field('level_class').choices
+    }
     subjects = {
         key: value for (key, value) in Info._meta.get_field('subject').choices
     }
@@ -181,11 +183,12 @@ def search(request):
             ][0]
         )
 
+    print(grades)
     return render(
         request,
         'search.html',
         {
-            'grades': grades,
+            'grades': grades.values(),
             'subjects': subjects.values(),
             'difficulty_levels': difficulty_levels.values(),
             'search': title_contains_query,
@@ -228,7 +231,10 @@ def search(request):
 
 
 def view_all(request):
-    grades = Info._meta.get_field('level_class').choices
+    print(Info._meta.get_field('level_class').choices)
+    grades = {
+        key: value for (key, value) in Info._meta.get_field('level_class').choices
+    }
     subjects = {
         key: value for (key, value) in Info._meta.get_field('subject').choices
     }
@@ -244,7 +250,7 @@ def view_all(request):
         request,
         'search.html',
         {
-            'grades': grades,
+            'grades': grades.values(),
             'subjects': subjects.values(),
             'difficulty_levels': difficulty_levels.values(),
             'search': 'search',
