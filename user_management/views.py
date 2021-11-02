@@ -546,7 +546,7 @@ def list_tickets(request):
         g = list(request.GET['status'])
         g = list(map(int, g))
     except:
-        query = Q(status=2)
+        g = [2]
     if len(g) > 6:
         return HttpResponse(status=413)
     if all(isinstance(s, int) for s in g):

@@ -100,6 +100,7 @@ class InfoEditForm(forms.Form):
             self.fields['difficulty'].initial = self.detail.difficulty
             self.fields['cost_budget'].initial = self.detail.cost_budget
             self.fields['searching'].initial = self.detail.searching
+            self.fields['virtual'].initial = self.detail.virtual
 
     subject = forms.ChoiceField(choices=choice_subject, required=True)
     description = forms.CharField(widget=forms.Textarea(), required=True)
@@ -112,6 +113,7 @@ class InfoEditForm(forms.Form):
         max_digits=5, decimal_places=2, required=True
     )
     searching = forms.BooleanField(required=False)
+    virtual = forms.BooleanField(required=False)
 
 
 class ReviewEditForm(forms.Form):

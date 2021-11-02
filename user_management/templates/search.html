@@ -76,7 +76,7 @@
                 <div class="col-md-8">
                     <p>{{ offer.subject }}</p>
                     <p>{{ offer.description }}</p>
-                    <a href="users/{{user.get_hashid}}/profile">{{ offer.author }}</a>
+                    <a href="users/{{offer.author.get_hashid}}/profile">{{ offer.author }}</a>
                 </div>
             </div>
         {% endfor %}
