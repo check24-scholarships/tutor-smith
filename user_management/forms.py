@@ -81,6 +81,10 @@ class ProfileEditForm(forms.Form):
         label='Telefon Nummer Anzeigen', required=False
     )
     show_email = forms.BooleanField(label='Email Anzeigen', required=False)
+    profile_image = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'multiple': False}),
+        required=False,
+    )
 
 
 class InfoEditForm(forms.Form):
@@ -146,6 +150,6 @@ class ResetForm(forms.Form):
 
 
 class TicketCreateForm(forms.Form):
-    title = forms.CharField(max_length=30)
-    text = forms.TextField()
-    ticket_type = forms.IntegerField(choices=choice_ticket_type)
+    title = forms.CharField(max_length=30, required=True)
+    text = forms.CharField(widget=forms.Textarea(), required=True)
+    ticket_type = forms.ChoiceField(choices=choice_ticket_type, required=True)

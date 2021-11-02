@@ -4,7 +4,6 @@ SECRET_KEY.txt
 *.sqlite3
 media/users/*
 
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

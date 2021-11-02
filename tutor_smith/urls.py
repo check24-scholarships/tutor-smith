@@ -13,6 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
+from . import settings
+
 from user_management.models import Info, Review
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -114,9 +117,22 @@ requestpatterns = [
 ]
 
 staffpatterns = [
+    path('', user_views.staff_index, name='staff_index'),
+    path('list/', user_views.list_tickets, name='staff_list'),
     path('add_ticket/', user_views.add_ticket),
-    path('add_report/<user_hashid:user_id>', user_views.add_report),
+    path('add_report/<user_hashid:user_id>/', user_views.add_report),
     # path('delete_ticket/<user_hashid:id>', user_views.delete_),
+    path(
+        'accept_ticket/<multiple_hashid:ticket_id>/',
+        user_views.accept_ticket,
+        name='accept_ticket',
+    ),
+    path(
+        'delete_ticket/<multiple_hashid:ticket_id>/',
+        user_views.delete_ticket,
+        name='delete_ticket',
+    ),
+    path('ticket_send/', user_views.ticket_send, name='ticket_send'),
 ]
 
 urlpatterns = [
@@ -143,4 +159,4 @@ urlpatterns = [
     path('staff/', include(staffpatterns)),
     path('search', user_views.search, name='search'),
     path('all', user_views.view_all, name='view_all'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

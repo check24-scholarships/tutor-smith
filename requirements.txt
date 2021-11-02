@@ -2,5 +2,6 @@ Babel
 django
 django-crispy-forms
 django-phonenumber-field[phonenumbers]
+django-stdimage
 hashids
 python-dotenv

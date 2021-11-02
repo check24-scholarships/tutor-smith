@@ -8,7 +8,7 @@ choice_subject = (
     (3, 'Chemestry'),
     (4, 'Computer Science'),
 )
-choice_difficulty = ((0, 'Beginner'), (1, 'Medium'), (2, 'Hard'))
+choice_difficulty = [(0, 'Beginner'), (1, 'Medium'), (2, 'Hard')]
 
 choice_gender = [
     (9, 'Not Stated'),
@@ -17,8 +17,15 @@ choice_gender = [
     (3, 'Another Term'),
 ]
 
-choice_ticket_type=[
+choice_ticket_type = [
     (1, 'Report'),
     (2, 'Bug'),
     (3, 'Request'),
+]
+
+choice_ticket_status = [
+    (1, 'Rejected'),
+    (2, 'Review Pending'),
+    (3, 'Reviewing'),
+    (4, 'Finished'),
 ]

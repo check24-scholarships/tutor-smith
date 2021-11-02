@@ -134,7 +134,67 @@ def recover_form_complete(request):
 
 
 def search(request):
-    if request.method == 'POST':
+    grades = Info._meta.get_field('level_class').choices
+    subjects = {
+        key: value for (key, value) in Info._meta.get_field('subject').choices
+    }
+    difficulty_levels = {
+        key: value
+        for (key, value) in Info._meta.get_field('difficulty').choices
+    }
+
+    # Get query from search form
+    title_contains_query = request.GET.get('title_contains')
+    price_min = request.GET.get('price_min')
+    price_max = request.GET.get('price_max')
+    subject = request.GET.get('subject')
+    grade = request.GET.get('grade')
+    difficulty = request.GET.get('difficulty')
+    virtual = request.GET.get('virtual')
+
+    offers = Info.objects.all()
+
+    if title_contains_query:
+        offers = offers.filter(
+            Q(subject__icontains=title_contains_query)
+            | Q(description__icontains=title_contains_query)
+            | Q(level_class__icontains=title_contains_query)
+            # | Q(author__icontains=title_contains_query)
+        )
+    else:
+        title_contains_query = 'All'
+
+    if price_min:
+        offers = offers.filter(cost_budget__gte=price_min)
+    if price_max:
+        offers = offers.filter(cost_budget__lte=price_max)
+    if subject:
+        offers = offers.filter(
+            subject=[k for k, v in subjects.items() if v == subject][0]
+        )
+    if grade:  # not working yet
+        offers = offers.filter(level_class=grade)
+    if difficulty:
+        offers = offers.filter(
+            difficulty=[
+                k for k, v in difficulty_levels.items() if v == difficulty
+            ][0]
+        )
+
+    return render(
+        request,
+        'search.html',
+        {
+            'grades': grades,
+            'subjects': subjects.values(),
+            'difficulty_levels': difficulty_levels.values(),
+            'search': title_contains_query,
+            'all': False,
+            'offers': offers,
+        },
+    )
+
+    """if request.method == 'POST':
         search = request.POST['searched']
         if search:
             # get offers associated with search value
@@ -153,6 +213,9 @@ def search(request):
                 request,
                 'search.html',
                 {
+                    'grades': grades,
+                    'subjects': subjects,
+                    'difficulty_levels': difficulty_levels,
                     'search': search,
                     'all': False,
                     'offers': offers,
@@ -161,16 +224,33 @@ def search(request):
             )
 
     return render(request, 'search.html', {})
+"""
 
 
 def view_all(request):
+    grades = Info._meta.get_field('level_class').choices
+    subjects = {
+        key: value for (key, value) in Info._meta.get_field('subject').choices
+    }
+    difficulty_levels = {
+        key: value
+        for (key, value) in Info._meta.get_field('difficulty').choices
+    }
+
     # get all offers
     offers = Info.objects.all()
 
     return render(
         request,
         'search.html',
-        {'search': 'search', 'all': True, 'offers': offers, 'users': []},
+        {
+            'grades': grades,
+            'subjects': subjects.values(),
+            'difficulty_levels': difficulty_levels.values(),
+            'search': 'search',
+            'all': True,
+            'offers': offers,
+        },
     )
 
 
@@ -224,7 +304,13 @@ def login(request):
         form = LoginForm(request.POST)
         user = validate_login(request, form)
         if user:
-            request.session['userid'] = user.get_hashid()
+            try:
+                request.session['userid']
+                request.session.cycle_key()
+            except Exception as e:
+                print(e)
+                request.session['userid'] = user.get_hashid()
+                request.session.set_expiry(36288000)  # 7 Days
             user.ip = get_client_ip(request)
             user.save()
             return redirect('/')
@@ -292,6 +378,7 @@ def user_edit(request, user_id):
     if request.method == 'POST':
         __context['form'] = ProfileEditForm(
             request.POST,
+            request.FILES,
             user=__context['user'],
             settings=__context['settings'],
         )
@@ -300,8 +387,14 @@ def user_edit(request, user_id):
             __context['user'].description = __context['form'].cleaned_data[
                 'description'
             ]
+            try:
+                __context['user'].profile_pic = request.FILES['profile_image']
+            except:
+                pass
+            __context['form'].cleaned_data.pop('profile_image')
             __context['user'].save()
             __context['form'].cleaned_data.pop('description')
+
             __context['settingsQ'].update(**__context['form'].cleaned_data)
 
             messages.add_message(request, messages.SUCCESS, 'saved')
@@ -437,6 +530,28 @@ def delete_request(request, request_id):
     return redirect('list_request')
 
 
+# Staff Sides
+def staff_index(request):
+    return render(request)
+
+
+def list_tickets(request):
+    try:
+        g = list(request.GET['status'])
+        g = list(map(int, g))
+    except:
+        query = Q(status=2)
+    if len(g) > 6:
+        return HttpResponse(status=413)
+    if all(isinstance(s, int) for s in g):
+        query = reduce(operator.or_, (Q(status=s) for s in g))
+    else:
+        query = Q(status=2)
+
+    __context = {'tickets': Ticket.objects.filter(query).all()}
+    return render(request, 'staff/list_tickets.html', __context)
+
+
 def add_ticket(request):
     __context = {'form': TicketCreateForm()}  # Ticket form
     __context['user'] = is_user_authenticated(request, True)
@@ -458,11 +573,54 @@ def add_report(request, user_id):
     except:
         raise Http404('User not found')
     if request.method == 'POST':
-        i = Ticket.objects.create(
-            author=__context['user'],
-            for_user=reported_user,
-            title=f'Report {reported_user.email}',
-            text=request.POST['text'],
-        )
+        if not Ticket.objects.filter(
+            author=__context['user'], for_user=reported_user
+        ):
+            i = Ticket.objects.create(
+                author=__context['user'],
+                for_user=reported_user,
+                title=f'Report {reported_user.email}',
+                text=request.POST['text'],
+                ticket_type=1,
+            )
+        else:
+            add_message(
+                request,
+                messages.ERROR,
+                'Nutzer wurde bereits von dir gemeldet',
+            )
+            return redirect(f'/users/{reported_user.get_hashid()}/profile')
         return redirect('ticket_send', permanent=True)
     return render(request, 'staff/add_report.html', __context)
+
+
+def delete_ticket(request, ticket_id):
+    is_user_staff(request, True, True)
+    query = reduce(operator.or_, (Q(id=i) for i in ticket_id))
+    query_l = Ticket.objects.filter(query)
+    if query_l:
+        query_l.delete()
+        add_message(request, messages.SUCCESS, 'Deleted')
+    else:
+        add_message(request, messages.ERROR, 'Request not found')
+    return redirect('staffpage')
+
+
+def accept_ticket(request, ticket_id):
+    is_user_staff(request, True, True)
+    query = reduce(operator.or_, (Q(id=i) for i in ticket_id))
+    query_l = Ticket.objects.filter(query)
+    emails = []
+    for q in query_l:
+        emails.append(q.author.email)
+    send_custom_email(
+        emails,
+        'ticket_accept.txt',
+        {},
+        'Dein Ticket wurde bearbeitet - Tutor Matching',
+    )
+    return redirect('delete_ticket', h_encode(user_hasher, *ticket_id))
+
+
+def ticket_send(request):
+    return render(request, 'staff/ticket_send.html')

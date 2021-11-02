@@ -1,0 +1,8 @@
+{% autoescape off %}
+Hallo,
+
+Dein Ticket wurde von uns bearbeitet. Vielen Dank, dass du unsere Seite besser machst.
+
+Mit freundlichen Grüßen
+Das Tutormatching Team
+{% endautoescape %}

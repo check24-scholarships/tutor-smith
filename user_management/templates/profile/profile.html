@@ -22,7 +22,7 @@
         <div id="profile-content" class="profile-content">
                 <div class="right-colum">
                         {% if user.profile_pic %}
-                                <img src="{{ user.profile_pic }}" alt="Profile Pic" class="profile_pic">
+                                <img alt="Image" src="{{ user.profile_pic.large.url }}" class="profile_pic"/>
                         {% else %}
                                 <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
                                 class="profile_pic"
@@ -68,6 +68,6 @@
         {% endblock profile_content %}
         <div class="flex_bottom">
                 <p class="created_on">Created on: {{user.created_on}}</p>
-                <a href="/user/report/{{user.get_hashid}}" class="error">Beinhaltet dieser Accound schädliche Inhalte? Report!</a>
+                <a href="/staff/add_report/{{user.get_hashid}}" class="error">Beinhaltet dieser Accound schädliche Inhalte? Report!</a>
         </div>
 {% endblock content %}
