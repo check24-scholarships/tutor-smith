@@ -140,9 +140,9 @@ class User(models.Model):
 class Settings(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    show_email = models.BooleanField()
-    show_address = models.BooleanField()
-    show_phone = models.BooleanField()
+    show_email = models.BooleanField( default=False)
+    show_address = models.BooleanField( default=False)
+    show_phone = models.BooleanField( default=False)
 
     def create_default(self):
         """
@@ -170,6 +170,9 @@ class Info(models.Model):
 
     def __str__(self):
         return self.author.email + '__' + str(self.subject)
+
+    def get_type(self):
+        return 'info'
 
     def get_hr_subject(self):
         """
@@ -202,6 +205,9 @@ class Review(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_type(self):
+        return 'review'
 
     def get_hashid(self):
         """
