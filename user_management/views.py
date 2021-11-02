@@ -436,7 +436,7 @@ class AddInfo(AddDetail):
     FormClass = InfoEditForm
 
     def create_model(self, *args, **kwargs):
-        self.detail.objects.create(
+        return self.detail.objects.create(
             **self.context['form'].cleaned_data,
             author=self.context['Owner'],
             created_on=timezone.now(),
@@ -451,7 +451,7 @@ class AddReview(AddDetail):
     FormClass = ReviewEditForm
 
     def create_model(self, *args, **kwargs):
-        self.detail.objects.create(
+        return self.detail.objects.create(
             author=self.context['Owner'],
             for_user=User.objects.get(id=kwargs['args']['user_id']),
             created_on=timezone.now(),
