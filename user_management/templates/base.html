@@ -13,15 +13,14 @@
 <body>
     <header>
         <p>Logo</p>
-        <a href="{% url 'view_all' %}">All Offers</a>
+        <a href="{% url 'view_all' %}">Search</a>
         <a href="{% url 'login' %}">Login</a>
         <a href="{% url 'logout' %}">Logout</a>
-        <form class="d-flex" method=POST action="{% url 'search' %}">
+        <!--<form class="d-flex" method="GET" action="{% url 'search' %}">
             {% csrf_token %}
-
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
             <button class="btn btn-outline-secondary" type="submit">Search</button>
-        </form>
+        </form> -->
     </header>
 
     {% block messages %}

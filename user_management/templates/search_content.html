@@ -1,0 +1,19 @@
+<div id="offers">
+    {% if all %}
+        <h1>All Offers:</h1>
+    {% else %}
+        <h1>Your Search Results: </h1>
+        <br/>
+        <h2>Offers:</h2>
+    {% endif %}
+    <br/>
+    {% for offer in offers %}
+        <div class="row">
+            <div class="col-md-8">
+                <p>{{ offer.subject }}</p>
+                <p>{{ offer.description }}</p>
+                <a href="users/{{offer.author.get_hashid}}/profile">{{ offer.author }}</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>

@@ -158,5 +158,6 @@ urlpatterns = [
     path('request/', include(requestpatterns)),
     path('staff/', include(staffpatterns)),
     path('search', user_views.search, name='search'),
+    # path('search', user_views.view_all, name='view_all'),
     path('all', user_views.view_all, name='view_all'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

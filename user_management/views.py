@@ -134,10 +134,7 @@ def recover_form_complete(request):
 
 
 def search(request):
-    """grades = {
-        key: value for (key, value) in Info._meta.get_field('level_class').choices
-    }"""
-    grades = range(5,13)
+    grades = range(5, 13)
     subjects = {
         key: value for (key, value) in Info._meta.get_field('subject').choices
     }
@@ -147,13 +144,15 @@ def search(request):
     }
 
     # Get query from search form
-    title_contains_query = request.GET.get('title_contains')
-    price_min = request.GET.get('price_min')
-    price_max = request.GET.get('price_max')
-    subject = request.GET.get('subject')
-    grade = request.GET.get('grade')
-    difficulty = request.GET.get('difficulty')
-    virtual = request.GET.get('virtual')
+    title_contains_query = request.POST.get('title_contains')
+    price_min = request.POST.get('price_min')
+    price_max = request.POST.get('price_max')
+    subject = request.POST.get('subject')
+    grade = request.POST.get('grade')
+    difficulty = request.POST.get('difficulty')
+    virtual = request.POST.get('virtual')
+
+    virtual = True if virtual == 'on' else False
 
     offers = Info.objects.all()
 
@@ -175,7 +174,7 @@ def search(request):
         offers = offers.filter(
             subject=[k for k, v in subjects.items() if v == subject][0]
         )
-    if grade:  # not working yet
+    if grade:
         offers = offers.filter(level_class=grade)
     if difficulty:
         offers = offers.filter(
@@ -185,6 +184,20 @@ def search(request):
         )
     if virtual:
         offers = offers.filter(virtual=virtual)
+
+    if request.method == 'POST':
+        return render(
+            request,
+            'search_content.html',
+            {
+                'grades': grades,
+                'subjects': subjects.values(),
+                'difficulty_levels': difficulty_levels.values(),
+                'search': title_contains_query,
+                'all': False,
+                'offers': offers,
+            },
+        )
 
     return render(
         request,
@@ -199,44 +212,10 @@ def search(request):
         },
     )
 
-    """if request.method == 'POST':
-        search = request.POST['searched']
-        if search:
-            # get offers associated with search value
-            offers = Info.objects.filter(
-                Q(subject__icontains=search)
-                | Q(description__icontains=search)
-                # | Q(author__icontains=search)
-            )
-            # get users associated with search value
-            users = User.objects.filter(
-                Q(first_name__icontains=search)
-                | Q(last_name__icontains=search)
-                | Q(email__icontains=search)
-            )
-            return render(
-                request,
-                'search.html',
-                {
-                    'grades': grades,
-                    'subjects': subjects,
-                    'difficulty_levels': difficulty_levels,
-                    'search': search,
-                    'all': False,
-                    'offers': offers,
-                    'users': users,
-                },
-            )
-
-    return render(request, 'search.html', {})
-"""
-
 
 def view_all(request):
-    """grades = {
-        key: value for (key, value) in Info._meta.get_field('level_class').choices
-    }"""
-    grades = range(5,13)
+    print('here')
+    grades = range(5, 13)
     subjects = {
         key: value for (key, value) in Info._meta.get_field('subject').choices
     }
@@ -244,7 +223,6 @@ def view_all(request):
         key: value
         for (key, value) in Info._meta.get_field('difficulty').choices
     }
-
     # get all offers
     offers = Info.objects.all()
 

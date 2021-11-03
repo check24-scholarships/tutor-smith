@@ -2,8 +2,11 @@
 {% load static %}
 {% block title %}Tutor-Smith{% endblock title %}
 {% block content %}
+<!-- Load from unpkg -->
+<script src="https://unpkg.com/htmx.org@1.5.0"></script>
     {% if search %}
         <form method="GET" action="search">
+            {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-12">
                     <div class="input-group">
@@ -61,12 +64,13 @@
                     </label>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary" hx-post="/search" hx-swap="outerHTML" hx-target="#offers">Search</button>
         </form>
+    <div id="offers">
         {% if all %}
             <h1>All Offers:</h1>
         {% else %}
-            <h1>Your Search Results: {{ search }}</h1>
+            <h1>Your Search Results: </h1>
             <br/>
             <h2>Offers:</h2>
         {% endif %}
@@ -81,7 +85,8 @@
             </div>
         {% endfor %}
 
-    {% else %}
-        <h1>No Search Found</h1>
-    {% endif %}
+        {% else %}
+            <h1>No Search Found</h1>
+        {% endif %}
+    </div>
 {% endblock content %}
