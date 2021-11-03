@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Ticket hinzufügen{% endblock title %}
+{% block content %}
+    <form action="?" method="post">
+        {% csrf_token %}
+        <textarea name="text" id="text" cols="30" rows="10">Beschreibe dein Problem so gut wie möglich</textarea>
+        <input type="submit" value="Absenden">
+    </form>
+{% endblock content %}
