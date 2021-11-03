@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'user_management',
 ]
 
-crispy_template_pack = 'bootstrap 4'
+crispy_template_pack = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

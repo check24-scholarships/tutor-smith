@@ -4,12 +4,12 @@ from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
 from .choices import *
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 # Creates Forms for validation and rendering. The Structure is similar to the Model
 class UserForm(forms.Form):
-    email = forms.EmailField(
-        max_length=255, label='Email Adresse', required=True
-    )
+    email = forms.EmailField(max_length=255, label='Email', required=True)
     first_name = forms.CharField(label='Vorname', required=True)
     last_name = forms.CharField(label='Nachname', required=True)
     password_1 = forms.CharField(
@@ -53,10 +53,15 @@ class UserForm(forms.Form):
 
 class LoginForm(forms.Form):
     email = forms.EmailField(
-        max_length=255, label='Email Adresse', required=True
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=255,
+        label='Email',
+        required=True,
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(), label='Password', required=True
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True,
+        label='Passwort',
     )
 
 

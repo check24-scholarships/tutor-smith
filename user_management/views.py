@@ -137,7 +137,7 @@ def search(request):
     """grades = {
         key: value for (key, value) in Info._meta.get_field('level_class').choices
     }"""
-    grades = range(5,13)
+    grades = range(5, 13)
     subjects = {
         key: value for (key, value) in Info._meta.get_field('subject').choices
     }
@@ -234,7 +234,7 @@ def view_all(request):
     """grades = {
         key: value for (key, value) in Info._meta.get_field('level_class').choices
     }"""
-    grades = range(5,13)
+    grades = range(5, 13)
     subjects = {
         key: value for (key, value) in Info._meta.get_field('subject').choices
     }

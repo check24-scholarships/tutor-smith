@@ -2,10 +2,23 @@
     box-sizing: border-box;
 }
 body, html{
-    margin: 220;
-    padding: 220;
+
 
 }
+.farbe{
+    background-color: #192985;
+}
+.register{
+    margin-left: 50px;
+    margin-right: 50px
+}
+.containerla {
+    max-width: 600px;
+    margin-left: auto;
+
+    margin-right: auto;
+    padding: 1em;
+  }
 .container{
     background-image: url("../styles/headerImage.jpg");
    height: 100vh;
@@ -14,6 +27,24 @@ body, html{
    background-repeat: no-repeat;
 
 }
+.logincontainer{
+
+height: 100vh;
+
+
+
+}
+.wrapper {
+
+    border:darkblue;
+    border-width: 10px;
+    border-radius: 25px;
+    background: white;
+  }
+
+  .wrapper > *{
+    padding: 1em;
+  }
 .headerimage{
     max-width: 100%;
     max-height: 100%;

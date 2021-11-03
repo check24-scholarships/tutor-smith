@@ -140,9 +140,9 @@ class User(models.Model):
 class Settings(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    show_email = models.BooleanField( default=False)
-    show_address = models.BooleanField( default=False)
-    show_phone = models.BooleanField( default=False)
+    show_email = models.BooleanField(default=False)
+    show_address = models.BooleanField(default=False)
+    show_phone = models.BooleanField(default=False)
 
     def create_default(self):
         """
