@@ -262,6 +262,10 @@ def view_all(request):
 
 def register(request):
     __context = {'form': None}
+    gender = {
+        key: value for (key, value) in User._meta.get_field('gender').choices
+    }
+    grades = range(5, 13)
     if request.method == 'POST':
         form = UserForm(request.POST)
 
@@ -290,7 +294,9 @@ def register(request):
     # Displays Form and Context on view when not returned before
     form = UserForm()
     __context['form'] = form
-    return render(request, 'register.html', context=__context)
+    return render(
+        request, 'register.html', {'grades': grades, 'gender': gender.values()}
+    )
 
 
 def login(request):
