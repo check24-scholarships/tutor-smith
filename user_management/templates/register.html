@@ -3,7 +3,8 @@
 {% block title %}Register{% endblock title %}
 {% block content %}
 <div class="register">
-<h3>Registrieren</h3>
+    <h2 class="font-weight-bold mt-3"> Registrieren </h2>
+
 <form action="{% url 'register' %}" method="post">
     {% csrf_token %}
     <div class="form-row">
@@ -17,7 +18,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="">Email</label>
+        <label for="">E-Mail</label>
         <input type="email" class="form-control" id="" name='email' placeholder="">
       </div>
 

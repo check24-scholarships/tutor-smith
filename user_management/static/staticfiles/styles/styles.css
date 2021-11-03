@@ -19,7 +19,7 @@ body, html{
     margin-right: auto;
     padding: 1em;
   }
-.container{
+.containerheader{
     background-image: url("../styles/headerImage.jpg");
    height: 100vh;
    background-blend-mode: multiply;
