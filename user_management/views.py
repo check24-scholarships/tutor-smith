@@ -151,7 +151,9 @@ def search(request):
     grade = request.POST.get('grade')
     difficulty = request.POST.get('difficulty')
     virtual = request.POST.get('virtual')
+    searching = request.POST.get('searching')
 
+    searching = True if searching == 'on' else False
     virtual = True if virtual == 'on' else False
 
     offers = Info.objects.all()
@@ -184,6 +186,8 @@ def search(request):
         )
     if virtual:
         offers = offers.filter(virtual=virtual)
+    if searching:
+        offers = offers.filter(searching=searching)
 
     if request.method == 'POST':
         return render(
