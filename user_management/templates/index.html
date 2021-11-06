@@ -2,9 +2,10 @@
 {% load static %}
 {% block title %}Tutor-Smith{% endblock title %}
 {% block content %}
-
-<header class='container' class='img-fluid'></header>
+<body>
+<div class='containerheader'>
 <a href="{% url 'view_all' %}" type='button' class='btn btn-info'>Finde deinen Tutor!</a>
+</div>
 
 <div class='content'>
   <img class='img-fluid' src="{% static 'staticfiles/styles/stockpicture.jpeg' %}" alt="Location Icon">
@@ -21,17 +22,8 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
   </p>
 </div>
-<li class="nav-item">
-  <a class="nav-link" href="{% url 'view_all' %}" >Angebote</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-  {% for user in users %}
-  <a href="users/{{user.get_hashid}}/profile">Profile</a>
-  {% endfor %}
-</li>
-    {% for user in users %}
-      <a href="users/{{user.get_hashid}}/profile">{{user.first_name}} {{user.last_name}}</a>
-    {% endfor %}
-
+{% for user in users %}
+<a style="color: #192985" class="nav-link" href="users/{{user.get_hashid}}/profile">{{user}}</a>
+{% endfor %}
+  </body>
 {% endblock content %}

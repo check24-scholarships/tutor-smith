@@ -11,41 +11,56 @@
         <div class="selector">
                 {% block choice_selector %}
                         <a class="selection selected" href="/users/{{user.get_hashid}}/profile">Profil</a>
-                        <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Angebot erstellen</a>
                         <a class="selection" hx-post="/users/{{user.get_hashid}}/reviews" hx-swap="outerHTML" hx-target="#profile-content">Bewertungen</a>
                         {% if isOwner %}
-                                <a class="selection" href="/users/edit/{{user.get_hashid}}/">Bearbeiten</a>
+                                <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Angebot erstellen</a>
+
                         {% endif %}
                 {% endblock choice_selector %}
         </div>
         {% block profile_content %}
         <div id="profile-content" class="profile-content">
-                <div class="right-colum">
-                        {% if user.profile_pic %}
-                                <img alt="Image" src="{{ user.profile_pic.large.url }}" class="profile_pic"/>
-                        {% else %}
-                                <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
-                                class="profile_pic"
-                                alt="Profile Pic">
-                        {% endif %}
-                        <p class="detail">Name: {{user.first_name}} {{user.last_name}}</p>
-                        {% if user.address and settings.show_address %}
-                        <div class="flex">
-                                <img src="{% static 'user_management/svg/location.svg' %}" alt="Location Icon">
-                                <p class="detail">{{user.address}}</p>
-                        </div>
-                        {% endif %}
-                </div>
                 <div class="left-colum">
-                        <p class="detail">Email: {{user.email}}</p>
-                        <p class="detail">Birthdate: {{user.birth_date}}</p>
-                        {% if user.description %}
-                                <p class="detail long">{{user.description | linebreaks}}</p>
-                        {% endif %}
-                        {% if user.phone and settings.show_phone %}
-                                <p class="detail">Phone: {{user.phone}}</p>
-                        {% endif %}
-                        <p class="detail">Gender: {{gender}}</p>
+                        <table class="table table-borderless">
+                                <tbody>
+                                  <tr>
+                                        <td>E-Mail</td>
+                                        <td>{{user.email}}</td>
+                                  </tr>
+                                  {% if user.description %}
+                                  <tr>
+                                        <td>Beschreibung</td>
+                                        <td>{{user.description | linebreaks}}</td>
+
+                                </tr>
+                                {% endif %}
+                                  <tr>
+                                    <td>Geburtsdatum</td>
+                                    <td>{{user.birth_date}}</td>
+                                  </tr>
+
+                                {% if user.phone and settings.show_phone %}
+                                <tr>
+                                        <td>Telefonnummer</td>
+                                        <td>{{user.phone}}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                        <td>Geschlecht</td>
+                                        <td>{{gender}}</td>
+                                </tr>
+                                <tr>
+
+                                        <td><a class="text-muted" href="/users/edit/{{user.get_hashid}}/">Bearbeiten</a></td>
+
+                                </tr>
+                        </tbody>
+
+
+                              </table>
+
+
+
                         {% if review %}
                                 <div class="info">
                                         <div class="flex">
@@ -64,10 +79,27 @@
                                 </div>
                         {% endif %}
                 </div>
+                <div class="right-colum">
+                        {% if user.profile_pic %}
+                                <img alt="Image" src="{{ user.profile_pic.large.url }}" class="profile_pic"/>
+                        {% else %}
+                                <img src="https://avatars.dicebear.com/api/gridy/{{user.get_hashid}}.svg?scale=80&colorful=true"
+                                class="profile_pic"
+                                alt="Profile Pic">
+                        {% endif %}
+                        <p class="detail" style="font-weight: bold"> {{user.first_name}} {{user.last_name}}</p>
+                        {% if user.address and settings.show_address %}
+                        <div class="flex">
+                                <img src="{% static 'staticfiles/svg/location.svg' %}" alt="Location Icon">
+                                <p class="detail">  {{user.address}}</p>
+                        </div>
+                        {% endif %}
+                </div>
+
         </div>
         {% endblock profile_content %}
         <div class="flex_bottom">
                 <p class="created_on">Created on: {{user.created_on}}</p>
-                <a href="/staff/add_report/{{user.get_hashid}}" class="error">Beinhaltet dieser Accound schädliche Inhalte? Report!</a>
+                <a href="/staff/add_report/{{user.get_hashid}}" class="error">Beinhaltet dieser Account schädliche Inhalte? Report!</a>
         </div>
 {% endblock content %}

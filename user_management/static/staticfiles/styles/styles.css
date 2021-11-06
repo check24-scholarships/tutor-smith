@@ -20,26 +20,40 @@ body, html{
     padding: 1em;
   }
 .containerheader{
-    background-image: url("../styles/headerImage.jpg");
-   height: 100vh;
-   background-blend-mode: multiply;
-   background-size: cover;
-   background-repeat: no-repeat;
+    background-image: url("../styles/nexttry.jpg");
+    background-size: cover;
+    height: 100vh;
 
 }
+.button-container{
+    display: inline-block;
+    position:relative;
+    }
+
+    .button-container a{
+    position: absolute;
+    bottom:4em;
+    right:4em;
+    background-color:#8F0005;
+    border-radius:1.5em;
+    color:white;
+    text-transform:uppercase;
+    padding:1em 1.5em;
+    }
 .logincontainer{
-
 height: 100vh;
-
-
+}
+.colorspecial{
+    background-color: #4158D0;
+background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
 
 }
 .wrapper {
 
-    border:darkblue;
-    border-width: 10px;
+    border-color: rgb(30, 132, 172);
+    border-width: 1px;
     border-radius: 25px;
-    background: white;
+
   }
 
   .wrapper > *{
