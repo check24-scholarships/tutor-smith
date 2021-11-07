@@ -82,7 +82,7 @@ class User(models.Model):
     password = models.CharField(max_length=265)
     gender = models.IntegerField(choices=choice_gender)
     address = models.CharField(max_length=64, blank=True, null=True)
-    phone = PhoneNumberField(unique=True, null=True, blank=True)
+    phone = PhoneNumberField(null=True, blank=True)
     user_class = models.IntegerField(
         validators=[MaxValueValidator(12), MinValueValidator(5)]
     )
@@ -140,9 +140,9 @@ class User(models.Model):
 class Settings(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    show_email = models.BooleanField( default=False)
-    show_address = models.BooleanField( default=False)
-    show_phone = models.BooleanField( default=False)
+    show_email = models.BooleanField(default=False)
+    show_address = models.BooleanField(default=False)
+    show_phone = models.BooleanField(default=False)
 
     def create_default(self):
         """
@@ -243,3 +243,9 @@ class Ticket(models.Model):
     text = models.TextField()
     ticket_type = models.IntegerField(choices=choice_ticket_type)
     status = models.IntegerField(choices=choice_ticket_status, default=2)
+
+    def get_hashid(self):
+        """
+        Returns the id hashed with the user_hasher
+        """
+        return h_encode(user_hasher, self.id)

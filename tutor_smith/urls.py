@@ -105,12 +105,12 @@ requestpatterns = [
     ),
     path('list/', user_views.show_requests, name='list_request'),
     path(
-        'accept/<multiple_hashid:request_id>/',
+        'accept/',
         user_views.accept_request,
         name='accept_request',
     ),
     path(
-        'delete/<multiple_hashid:request_id>/',
+        'delete/',
         user_views.delete_request,
         name='delete_request',
     ),
@@ -128,7 +128,7 @@ staffpatterns = [
         name='accept_ticket',
     ),
     path(
-        'delete_ticket/<multiple_hashid:ticket_id>/',
+        'delete_ticket/',
         user_views.delete_ticket,
         name='delete_ticket',
     ),

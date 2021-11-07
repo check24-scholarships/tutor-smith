@@ -2,7 +2,7 @@ from typing import List
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.db.models.query import QuerySet
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponse
 from .converters import h_decode, user_hasher
 from user_management.models import User
 
@@ -141,3 +141,18 @@ def send_custom_email(recepients: list, template, content: dict, subject):
         recepients,
         fail_silently=False,
     )
+
+
+def prepare_multiple_hashids(request):
+    """
+    takes multiple request GET arguments ?hashid1=on&hashid2=on
+    and returns a list of ids
+    """
+    try:
+        g = dict(request.GET).keys()
+    except:
+        return HttpResponse(406)
+    prep = []
+    for _ in g:
+        prep.append(h_decode(user_hasher, _))
+    return prep

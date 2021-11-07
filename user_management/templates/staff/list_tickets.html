@@ -2,7 +2,11 @@
 {% load static %}
 {% block title %}Tickets anzeigen{% endblock title %}
 {% block content %}
+    <form action='{% url "delete_ticket" %}' method="GET">
     {% for ticket in tickets %}
+        <input type="checkbox" name="{{ ticket.get_hashid }}" id="{{ ticket.get_hashid }}">
         <p>{{ ticket.title }}</p>
     {% endfor %}
+    <input type="submit" value="Delete">
+    </form>
 {% endblock content %}

@@ -488,8 +488,9 @@ def show_requests(request):
     return render(request, 'detail_pages/detail_requests.html', __context)
 
 
-def accept_request(request, request_id):
+def accept_request(request):
     user = is_user_authenticated(request, True)
+    request_id = prepare_multiple_hashids(request)
     query = reduce(operator.or_, (Q(id=i, for_user=user) for i in request_id))
     query_l = Request.objects.filter(query)
     if query_l:
@@ -507,9 +508,10 @@ def accept_request(request, request_id):
     # return redirect(f'/request/list')
 
 
-def delete_request(request, request_id):
+def delete_request(request):
     # check_ownership(request, )
     user = is_user_authenticated(request, True)
+    request_id = prepare_multiple_hashids(request)
     query = reduce(operator.or_, (Q(id=i, for_user=user) for i in request_id))
     query_l = Request.objects.filter(query)
     if query_l:
@@ -584,8 +586,9 @@ def add_report(request, user_id):
     return render(request, 'staff/add_report.html', __context)
 
 
-def delete_ticket(request, ticket_id):
+def delete_ticket(request):
     is_user_staff(request, True, True)
+    ticket_id = prepare_multiple_hashids(request)
     query = reduce(operator.or_, (Q(id=i) for i in ticket_id))
     query_l = Ticket.objects.filter(query)
     if query_l:
@@ -593,7 +596,7 @@ def delete_ticket(request, ticket_id):
         add_message(request, messages.SUCCESS, 'Deleted')
     else:
         add_message(request, messages.ERROR, 'Request not found')
-    return redirect('staffpage')
+    return redirect('staff_list')
 
 
 def accept_ticket(request, ticket_id):
