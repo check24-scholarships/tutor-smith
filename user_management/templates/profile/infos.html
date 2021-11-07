@@ -1,20 +1,43 @@
 <div class="right-colum" id="profile-content">
 {% if isOwner %}
-<a href="/detail/info/add">Angebot erstellen</a>
+<a style="margin-bottom: 10px; color: black;" href="/detail/info/add">Angebot erstellen</a>
 {% endif %}
+<div class=" row row-cols-1 row-cols-md-4">
 {% for info in infos %}
-    <div class="info">
-        {% if searching %}
-        <p>Ich suche Nachhilfe in</p>
-        {% else %}
-        <p>Ich gebe Nachhilfe in</p>
-        {% endif %}
-            <div class="flex">
-                <h3>{{ info.get_hr_subject }}</h3>
-                <p class="success">{{ info.cost_budget }}€</p>
-            </div>
-            <p>{{info.description | linebreaks}}</p>
-            <a href="/detail/info/{{ info.get_hashid }}">More</a>
-    </div>
+<div class="col" style="margin-bottom: 20px">
+    <div class="card h-100">
+<div class="card-body">
+    <h5 class="card-title">{{ info.get_hr_subject }}</h5>
+
+    <p class="card-text">{{ info.description }}
+
+    <table class="table table-borderless">
+    <tr>
+        <td>Preis:</td>
+        <td>{{info.cost_budget}}€ pro Stunde</td>
+
+    </tr>
+    <tr>
+        <td>Ab Klassenstufe:</td>
+        <td>{{info.level_class}}</td>
+
+    </tr>
+    <tr>
+        <td>Schwierigkeitsgrad:</td>
+        <td>{{info.difficulty}}</td>
+
+    </tr>
+
+    </table>
+    </p>
+</div>
+    <div class="card-footer " style="background-color: #192985;">
+    <a style="color: white" href="users/{{info.author.get_hashid}}/profile"> Kontakt: {{ info.author }}</a>
+    <a style="float: right; color: lightgrey" href="/detail/info/{{ info.get_hashid }}">                  Details</a>
+
+</div>
+</div>
+</div>
 {% endfor %}
+</div>
 </div>

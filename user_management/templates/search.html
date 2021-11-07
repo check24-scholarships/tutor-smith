@@ -11,7 +11,7 @@
             <div class="form-row">
                 <div class="form-group col-12">
                     <div class="input-group">
-                        <input class="form-control py-2 border-right-0 border" type="search" name="title_contains" placeholder="Title contains..." />
+                        <input class="form-control py-2 border-right-0 border" type="search" name="title_contains" placeholder="Suchen..." />
                         <span class="input-group-append">
                             <div class="input-group-text bg-transparent">
                                 <i class="fa fa-search"></i>
@@ -39,7 +39,7 @@
                     </select>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="grade">Klassenstufe</label>
+                    <label for="grade">Ab Klassenstufe</label>
                     <select id="grade" class="form-control" name="grade">
                     <option selected></option>
                     {% for gra in grades %}
@@ -65,38 +65,75 @@
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="search" name="search">
+                    <input class="form-check-input" type="radio" id="search" name="search">
                     <label class="form-check-label" for="search">
-                        Nachhilfesuchend
+                        Ich biete Nachhilfe
                     </label>
                 </div>
             </div>
-            <button type="submit" class="btn text-light" style="background-color: #192985" hx-post="/search" hx-swap="outerHTML" hx-target="#offers">Search</button>
+            <button type="submit" class="btn text-light" style="background-color: #192985" hx-post="/search" hx-swap="outerHTML" hx-target="#offers">Suchen</button>
         </form>
     <div id="offers">
         {% if all %}
-            <h1>All Offers:</h1>
+            <h1 class="search-headline">Angebote</h1>
+            <hr>
         {% else %}
-            <h1>Your Search Results: </h1>
             <br/>
-            <h2>Offers:</h2>
+            <h2>Angebote</h2>
         {% endif %}
         <br/>
-        <div class="card-deck">
+        <div class=" row row-cols-1 row-cols-md-4">
+
         {% for offer in offers %}
-            <div class="row">
-                <div class="col-md-8">
-                    <p>{{ offer.get_hr_subject }}</p>
-                    <p>{{ offer.description }}</p>
-                    <a href="users/{{offer.author.get_hashid}}/profile">{{ offer.author }}</a>
+            <div class="col" style="margin-bottom: 20px">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ offer.get_hr_subject }}</h5>
+
+                        <p class="card-text">{{ offer.description }}
+                        <div >
+                        <table class="table table-borderless">
+                        <tr>
+                            <td>Preis:</td>
+                            <td style="font-weight: bold;" >{{offer.cost_budget}}€</td>
+
+                        </tr>
+                        <tr>
+                            <td>Ab Klassenstufe:</td>
+                            <td>{{offer.level_class}}</td>
+
+                        </tr>
+                        <tr>
+                            <td>Schwierigkeitsgrad:</td>
+                            <td>{{offer.difficulty}}</td>
+
+                        </tr>
+                        {% if offer.searching == True%}
+                    <tr>
+                        <td style="font-weight: bold;"> Ich suche Nachhilfe.</td>
+                    </tr>
+                    {%endif%}
+
+                        </table>
+                    </div>
+                    </p>
+                    </div>
+                        <div class="card-footer " style="background-color: #889289;">
+                        <a style="color: white" href="users/{{offer.author.get_hashid}}/profile"> Kontakt: {{ offer.author }}</a>
+                        <a style="float: right; color: lightgrey" href="/detail/info/{{ offer.get_hashid }}">                  Details</a>
+
+                    </div>
                 </div>
+            </div>
+
+                {% endfor %}
 
 
-        {% endfor %}
-    </div>
+        </div>
+</div>
 
         {% else %}
-            <h1>No Search Found</h1>
+            <h1>Für deine Suche konnten wir leider keine passende Nachhilfe finde. Bitte ändere deine Eingaben. </h1>
         {% endif %}
     </div>
 {% endblock content %}

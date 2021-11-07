@@ -22,18 +22,20 @@
             <ul class="navbar-nav ml-auto" >
 
               <li class="nav-item">
-                <a style="color: #192985" class="nav-link" href="{% url 'view_all' %}" >Angebote</a>
+                <a style="color: black" class="nav-link" href="{% url 'view_all' %}" >Angebote</a>
               </li>
-
+              <!-- {% if user.is_authenticated %} -->
               <li class="nav-item">
-                <a style="color: #192985" class="nav-link" href="users/{{user.get_hashid}}/profile">{{user}}</a>
-              </li>
-              <li class="nav-item">
-                <a style="color: #192985" class="nav-link" href="{% url 'login' %}">Login</a>
+                <a style="color: black" class="nav-link" href="users/{{user.get_hashid}}/profile">{{user.first_name}} {{user.last_name}}</a>
               </li>
               <li class="nav-item">
-                <a style="color: #192985" class="nav-link" href="{% url 'logout' %}">Logout</a>
+                <a style="color: black" class="nav-link" href="{% url 'logout' %}">Logout</a>
               </li>
+              <!--{%else%}-->
+              <li class="nav-item">
+                <a style="color: black" class="nav-link" href="{% url 'login' %}">Login</a>
+              </li>
+              <!--{%endif%}-->
 
             </ul>
           </div>
@@ -43,8 +45,9 @@
 
 
     {% block messages %}
-    <ul class="messages" id="messages-list">
     {% if messages %}
+    <ul class="messages" id="messages-list">
+
         {% for message in messages %}
 
             {% if message.tags %}
@@ -54,8 +57,9 @@
             {% endif %}
 
         {% endfor %}
+      </ul>
     {% endif %}
-    </ul>
+
     {% endblock %}
 
     {% block content %}

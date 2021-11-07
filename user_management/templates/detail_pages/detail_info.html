@@ -2,12 +2,63 @@
 {% load custom_tags %}
 {% block title %}{{ detail.get_hr_subject }}{% endblock title %}
 {% block content %}
-    <h2>{{ detail.get_hr_subject }}</h2>
-    <p>{{ detail.description | linebreaks }}</p>
-    {% if isOwner %}
-        <a href="edit">Edit</a>
-        <a href="delete">Delete</a>
-    {% else %}
-        <a href="/request/{{ detail.get_hashid }}">Request</a>
-    {% endif %}
+<div class="weeneedmargin">
+    <div class="card" style="max-width:600px">
+        <div class="card-body">
+            <h5 class="card-title">{{ detail.get_hr_subject }}</h5>
+
+            <p class="card-text">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>{{ detail.description }}</td>
+
+
+                    </tr>
+                    <tr>
+                        <td>Preis:</td>
+                        <td style="font-weight: bold;" >{{detail.cost_budget}}€</td>
+
+                    </tr>
+                    <tr>
+                        <td>Ab Klassenstufe:</td>
+                        <td>{{detail.level_class}}</td>
+
+                    </tr>
+                    <tr>
+                        <td>Schwierigkeitsgrad:</td>
+                        <td>{{detail.difficulty}}</td>
+                    </tr>
+                    {% if detail.searching == True%}
+                    <tr>
+                        <td style="font-weight: bold;"> Ich suche Nachhilfe.</td>
+                    </tr>
+                    {%endif%}
+                    {% if detail.virtual == True%}
+                    <tr>
+                        <td>Virtuelle Nachhilfe:</td>
+                        <td>Ja</td>
+                    </tr>
+                    {%endif%}
+
+
+
+                </table>
+            </p>
+        </div>
+        <div class="card-footer" style="background-color: #192985;">
+        <a style="color: white" href="users/{{detail.author.get_hashid}}/profile">Kontakt: {{ detail.author }}</a>
+        {% if isOwner %}
+                <a style="float: inline-end; color: lightgrey" href="delete">Delete</a>
+                <a style="float: right; color: lightgrey" href="edit">Edit/</a>
+
+
+
+            {% else %}
+                <a href="/request/{{ detail.get_hashid }}">Request</a>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
 {% endblock content %}

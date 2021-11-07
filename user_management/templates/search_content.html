@@ -1,19 +1,57 @@
+{% if search %}
 <div id="offers">
     {% if all %}
-        <h1>All Offers:</h1>
+        <h1>Angebote</h1>
     {% else %}
-        <h1>Your Search Results: </h1>
-        <br/>
-        <h2>Offers:</h2>
+        <h2>Angebote</h2>
     {% endif %}
     <br/>
+    <div class=" row row-cols-1 row-cols-md-4">
+
     {% for offer in offers %}
-        <div class="row">
-            <div class="col-md-8">
-                <p>{{ offer.subject }}</p>
-                <p>{{ offer.description }}</p>
-                <a href="users/{{offer.author.get_hashid}}/profile">{{ offer.author }}</a>
+    <div class="col" style="margin-bottom: 20px">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ offer.get_hr_subject }}</h5>
+
+                <p class="card-text">{{ offer.description }}
+                <table class="table table-borderless">
+                <tr>
+                    <td>Preis:</td>
+                    <td style="font-weight: bold;" >{{offer.cost_budget}}€</td>
+
+                </tr>
+                <tr>
+                    <td>Ab Klassenstufe:</td>
+                    <td>{{offer.level_class}}</td>
+
+                </tr>
+                <tr>
+                    <td>Schwierigkeitsgrad:</td>
+                    <td>{{offer.difficulty}}</td>
+
+                </tr>
+                {% if offer.searching == True%}
+                    <tr>
+                        <td style="font-weight: bold;"> Ich suche Nachhilfe.</td>
+                    </tr>
+                    {%endif%}
+
+                </table>
+            </p>
             </div>
+                <div class="card-footer " style="background-color: #192985;">
+                <a style="color: white" href="users/{{offer.author.get_hashid}}/profile"> Kontakt: {{ offer.author }}</a>
+                <a style="float: right; color: lightgrey" href="/detail/info/{{ offer.get_hashid }}">                  Details</a>
+
+            </div>
+
         </div>
+    </div>
+
     {% endfor %}
-</div>
+    {% else %}
+    <h1>Für deine Suche konnten wir leider keine passende Nachhilfe finde. Bitte ändere deine Eingaben. </h1>
+    {% endif %}
+    </div>
+    </div>

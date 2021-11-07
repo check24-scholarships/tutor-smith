@@ -46,8 +46,8 @@
         <label for="gender">Geschlecht</label>
         <select id="gender" class="form-control" name="gender">
         <option selected></option>
-        {% for gen in gender %}
-            <option value="{{ gen }}" name="{{ gen }}">{{ gen }}</option>
+        {% for k,gen in gender %}
+            <option value="{{ k }}" name="{{ k }}">{{ gen }}</option>
         {% endfor %}
         </select>
     </div>

@@ -2,24 +2,34 @@
 {% load static %}
 <div class="right-colum" id="profile-content">
 {% if not isOwner and isAuth %}
-    <a href="/detail/review/{{ user.get_hashid }}/add">Add</a>
+<a style="color: black; margin-bottom: 10px;" href="/detail/review/{{ user.get_hashid }}/add">Bewertung hinzufügen</a>
 {% endif %}
 {% for review in reviews %}
-    <div class="info">
-        <div class="flex">
-            <h3>{{ review.title }}</h3>
-            <p>von {{ review.author.first_name }} {{ review.author.last_name }}</p>
-            <div class="flex">
-                {% for i in review.stars|range %}
-                <img src="{% static 'user_management/svg/star.svg' %}" alt="star" width="35rem">
-                {% endfor %}
-                </div>
-            </div>
-        <p>{{review.text | linebreaks}}</p>
-        <a href="/detail/review/{{ review.get_hashid }}">More</a>
-        <div style="color: lightgray" class="flex">
-            <p>created on: {{ review.created_on }}</p>
-        </div>
+<div class="card" style="width: 25rem;">
+    <div class="flex card-title" style="margin-top: 10px; margin-bottom: 0px;">
+    <h3>{{ review.title }}</h3>
     </div>
+    <div class="card-body" >
+    <p class="text-muted" style="text-align: center; margin-top: 0px;">von {{ review.author.first_name }} {{ review.author.last_name }}</p>
+    <p>{{review.text | linebreaks}}</p>
+            <div class="flex">
+            {% for i in review.stars|range %}
+            <img src="{% static 'staticfiles/svg/star.svg' %}" alt="star"  width="35px">
+            {% endfor %}
+            </div>
+
+
+</div>
+<div class="card-footer" style="background-color: white;">
+    <a style="color: black" href="/detail/review/{{ review.get_hashid }}">Mehr</a>
+    <div style="color: lightgray" class="flex text-sm">
+        <p>erstellt am: {{ review.created_on }}</p>
+    </div>
+</div>
+
+</div>
+
+
+
 {% endfor %}
 </div>

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load custom_tags %}
-{% block title %}{{ user.first_name }} {{ user.last_name }} - {% block site_name %}Profile{% endblock site_name %}{% endblock title %}
+{% block title %}{{ user.first_name }} {{ user.last_name }} - {% block site_name %}Profil{% endblock site_name %}{% endblock title %}
 {% block styles %}
         <link rel="stylesheet" href="{% static 'staticfiles/styles/detail_style.css' %}">
 {% endblock styles %}
@@ -14,8 +14,9 @@
                         <a class="selection" hx-post="/users/{{user.get_hashid}}/reviews" hx-swap="outerHTML" hx-target="#profile-content">Bewertungen</a>
                         {% if isOwner %}
                                 <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Angebot erstellen</a>
-
+                                <a style="color: #192985" class="nav-link" href="{% url 'logout' %}">Logout</a>
                         {% endif %}
+
                 {% endblock choice_selector %}
         </div>
         {% block profile_content %}
@@ -49,11 +50,13 @@
                                         <td>Geschlecht</td>
                                         <td>{{gender}}</td>
                                 </tr>
+                                {% if isOwner %}
                                 <tr>
 
                                         <td><a class="text-muted" href="/users/edit/{{user.get_hashid}}/">Bearbeiten</a></td>
 
                                 </tr>
+                                {% endif %}
                         </tbody>
 
 
@@ -62,18 +65,23 @@
 
 
                         {% if review %}
-                                <div class="info">
-                                        <div class="flex">
+                                <div class="card" style="width: 18rem;">
+                                                <div class="flex card-title" style="margin-top: 10px; margin-bottom: 0px;">
                                                 <h3>{{ review.title }}</h3>
-                                                <p>von {{ review.author.first_name }} {{ review.author.last_name }}</p>
+                                                </div>
+                                                <div class="card-body" >
+                                                <p class="text-muted" style="text-align: center; margin-top: 0px;">von {{ review.author.first_name }} {{ review.author.last_name }}</p>
+                                                <p>{{review.text | linebreaks}}</p>
                                                         <div class="flex">
                                                         {% for i in review.stars|range %}
-                                                        <img src="{% static 'user_management/svg/star.svg' %}" alt="star"  width="35rem">
+                                                        <img src="{% static 'staticfiles/svg/star.svg' %}" alt="star"  width="35px">
                                                         {% endfor %}
                                                         </div>
-                                                </div>
-                                                <p>{{review.text | linebreaks}}</p>
-                                        <div style="color: lightgray" class="flex">
+
+
+                                        </div>
+
+                                        <div style="color: lightgray" class="flex text-sm">
                                                 <p>created on: {{ review.created_on }}</p>
                                         </div>
                                 </div>
