@@ -26,7 +26,10 @@
     justify-content: space-around;
     flex-direction: row-reverse;
 }
-
+.edit-content{
+    padding-left: 280px;
+    padding-right: 280px;
+}
 .left-colum, .right-colum{
     margin: 2rem;
     margin-bottom: 0;

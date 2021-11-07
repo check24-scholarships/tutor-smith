@@ -1,13 +1,13 @@
 <div class="right-colum" id="profile-content">
 {% if isOwner %}
-<a href="/detail/info/add">Add</a>
+<a href="/detail/info/add">Angebot erstellen</a>
 {% endif %}
 {% for info in infos %}
     <div class="info">
         {% if searching %}
-        <p>Suche Nachhilfe in</p>
+        <p>Ich suche Nachhilfe in</p>
         {% else %}
-        <p>Gebe Nachhilfe in</p>
+        <p>Ich gebe Nachhilfe in</p>
         {% endif %}
             <div class="flex">
                 <h3>{{ info.get_hr_subject }}</h3>

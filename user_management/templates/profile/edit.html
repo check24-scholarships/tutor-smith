@@ -1,11 +1,42 @@
 {% extends 'profile/profile.html' %}
 {% load static %}
 {% block profile_content %}
-    <div class="profile-content" id="profile-content">
+<div class="wrapper">
+<h3 style="padding-bottom: 0px; padding-left: 15px;margin-top: 15px; text-align: center">Bearbeiten</h3>
+    <div class="edit-content" id="profile-content">
         <form action="?" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{form}}
-            <input type="submit" value="Save">
+        <div class="form-group">
+            <label for="description">Beschreibung</label>
+            <textarea class="form-control" name='description'></textarea>
+        </div>
+        <div class="form-group">
+        <div class="form-check form-switch">
+            <input class="form-check-input" name="show_address" type="checkbox" role="switch" id="flexSwitchCheckChecked">
+            <label class="form-check-label" for="flexSwitchCheckChecked">Adresse anzeigen</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" name="show_email" type="checkbox" role="switch" id="flexSwitchCheckDisabled" >
+            <label class="form-check-label" >E-Mail Adresse anzeigen</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" name="show_phone"type="checkbox" role="switch" id="flexSwitchCheckCheckedDisabled" >
+            <label class="form-check-label" for="flexSwitchCheckCheckedDisabled">Telefonnummer anzeigen</label>
+          </div>
+        </div>
+        <div class="form-group">
+            <label>Profilbild</label>
+            <input type="file" class="form-control" name="profile_image" id="inputGroupFile01">
+          </div>
+
+        <input
+        class="btn text-light btn-block farbe"
+        style="background-color: #192985"
+        type="submit"
+        value="Save" >
+
+
         </form>
     </div>
+</div>
 {% endblock profile_content %}

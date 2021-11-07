@@ -7,7 +7,8 @@
 
 <form action="{% url 'register' %}" method="post">
     {% csrf_token %}
-    <div class="form-row">
+    {{ form }}
+   <div class="form-row">
         <div class="form-group col-md-6">
           <label for="inputEmail4">Vorname</label>
           <input type="text" class="form-control" name='first_name' id="inputEmail4" placeholder="">
@@ -60,12 +61,13 @@
       <label for="inputPassword4">Passwort wiederholen</label>
       <input type="password" name='password_2' class="form-control" id="inputPassword4" placeholder="Password">
     </div>
+
   </div>
     <button type="submit" class="btn btn-block text-light" style="background-color: #192985">Sign up</button>
   </form>
 
 
-<div  style="text-align: center">
+<div  style="text-align: center; margin-top: 10px;">
     <small>
         <p class="text-secondary">Bereits registriert? <a href="{% url 'login' %}">Login</a></p>
     </small>
