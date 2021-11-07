@@ -2,9 +2,12 @@
 {% load static %}
 {% block title %}Tutor-Smith{% endblock title %}
 {% block content %}
+<!-- Load from unpkg -->
+<script src="https://unpkg.com/htmx.org@1.5.0"></script>
     {% if search %}
     <div class="wrapper">
-        <form method="GET" action="search">
+        <form method="git" action="search">
+            {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-12">
                     <div class="input-group">
@@ -61,32 +64,39 @@
                         Virtuelle Nachhilfe
                     </label>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="search" name="search">
+                    <label class="form-check-label" for="search">
+                        Nachhilfesuchend
+                    </label>
+                </div>
             </div>
-            <button type="submit" class="btn text-light" style="background-color: #192985">Search</button>
+            <button type="submit" class="btn text-light" style="background-color: #192985" hx-post="/search" hx-swap="outerHTML" hx-target="#offers">Search</button>
         </form>
-    </div>
+    <div id="offers">
         {% if all %}
             <h1>All Offers:</h1>
         {% else %}
-            <h1>Your Search Results: {{ search }}</h1>
+            <h1>Your Search Results: </h1>
             <br/>
             <h2>Offers:</h2>
         {% endif %}
         <br/>
         <div class="card-deck">
         {% for offer in offers %}
-
-                <div class="card">
-                    <p>{{ offer.subject }}</p>
+            <div class="row">
+                <div class="col-md-8">
+                    <p>{{ offer.get_hr_subject }}</p>
                     <p>{{ offer.description }}</p>
-                    <a href="users/{{user.get_hashid}}/profile">{{ offer.author }}</a>
+                    <a href="users/{{offer.author.get_hashid}}/profile">{{ offer.author }}</a>
                 </div>
 
 
         {% endfor %}
     </div>
 
-    {% else %}
-        <h1>No Search Found</h1>
-    {% endif %}
+        {% else %}
+            <h1>No Search Found</h1>
+        {% endif %}
+    </div>
 {% endblock content %}
