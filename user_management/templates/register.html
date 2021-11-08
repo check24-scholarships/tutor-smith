@@ -2,10 +2,75 @@
 {% load static %}
 {% block title %}Register{% endblock title %}
 {% block content %}
+<div class="register">
+    <h2 class="font-weight-bold mt-3"> Registrieren </h2>
+
 <form action="{% url 'register' %}" method="post">
     {% csrf_token %}
-    {{form}}
-    <input type="submit" value="Submit">
-</form>
-<p>Already have an Account? <a href="{% url 'login' %}">Log in</a></p>
+    {{ form }}
+   <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Vorname</label>
+          <input type="text" class="form-control" name='first_name' id="inputEmail4" placeholder="">
+        </div>
+        <div class="form-group col-md-6">
+          <label >Nachname</label>
+          <input type="text" name='last_name' class="form-control" id="" placeholder="">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="">E-Mail</label>
+        <input type="email" class="form-control" id="" name='email' placeholder="">
+      </div>
+
+    <div class="form-group">
+      <label for="inputAddress">Adresse</label>
+      <input type="text" class="form-control" id="inputAddress" name="address" placeholder="Straße, Stadt">
+    </div>
+    <div class="form-row">
+    <div class="form-group col-md-4">
+        <label for="inputAddress">Geburtsdatum</label>
+        <input type="date" class="form-control" id="inputAddress" name="birth_date" placeholder="Geburtsdatum">
+      </div>
+
+    <div class="form-group col-md-4">
+        <label for="grade">Klassenstufe</label>
+        <select id="grade" class="form-control" name="user_class">
+        <option selected></option>
+        {% for gra in grades %}
+            <option value="{{ gra }}" name="{{ gra }}">{{ gra }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div class="form-group col-md-4">
+        <label for="gender">Geschlecht</label>
+        <select id="gender" class="form-control" name="gender">
+        <option selected></option>
+        {% for k,gen in gender %}
+            <option value="{{ k }}" name="{{ k }}">{{ gen }}</option>
+        {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputEmail4">Passwort</label>
+      <input type="password" class="form-control" name='password_1' id="" placeholder="">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputPassword4">Passwort wiederholen</label>
+      <input type="password" name='password_2' class="form-control" id="inputPassword4" placeholder="Password">
+    </div>
+
+  </div>
+    <button type="submit" class="btn btn-block text-light" style="background-color: #192985">Sign up</button>
+  </form>
+
+
+<div  style="text-align: center; margin-top: 10px;">
+    <small>
+        <p class="text-secondary">Bereits registriert? <a href="{% url 'login' %}">Login</a></p>
+    </small>
+</div>
+</div>
 {% endblock content %}

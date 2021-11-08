@@ -2,8 +2,36 @@
 {% load static %}
 {% block title %}Tutor-Smith{% endblock title %}
 {% block content %}
-    <p>Index Side</p>
-    {% for user in users %}
-      <a href="users/{{user.get_hashid}}/profile">{{user.first_name}} {{user.last_name}}</a>
-    {% endfor %}
+<body>
+<div class='containerheader'>
+  <div style="text-align:center; ">
+    <button href="{% url 'view_all' %}" type='button' class='btn btn-light btn-lg'
+style="
+background-color:whitesmoke; margin-top: 10% ">Finde deinen Tutor!</button>
+  </div>
+
+</div>
+
+
+<div class='content'>
+  <img class='img-fluid' src="{% static 'staticfiles/styles/stockpicture.jpeg' %}" alt="Location Icon">
+  <h3>Was ist Tutor-Matching?</h3>
+  <p>
+    <br>
+Tutor-Matching bietet dir einen unkomplizierten Weg, Lerntutoren zu finden oder anderen Schülern Nachhilfe zu geben. Ohne aufwendiges Suchen durch Aushänge oder Kontakte, kannst du dir hier mit nur wenigen Klicks deinen Lernerfolg sichern.
+  </p>
+</div>
+<div class='content1'>
+
+ <img class= 'img-fluid' src="{% static 'staticfiles/styles/stockpicture.jpeg' %}" alt="Location Icon">
+  <h3>Lorem ipsum</h3>
+  <p>
+    <br>
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+  </p>
+</div>
+{% for user in users %}
+<a style="color: #192985" class="nav-link" href="users/{{user.get_hashid}}/profile">{{user}}</a>
+{% endfor %}
+  </body>
 {% endblock content %}

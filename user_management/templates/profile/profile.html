@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% load custom_tags %}
-{% block title %}{{ user.first_name }} {{ user.last_name }} - {% block site_name %}Profile{% endblock site_name %}{% endblock title %}
+{% block title %}{{ user.first_name }} {{ user.last_name }} - {% block site_name %}Profil{% endblock site_name %}{% endblock title %}
 {% block styles %}
-        <link rel="stylesheet" href={% static 'user_management/styles/detail_style.css' %}>
+        <link rel="stylesheet" href="{% static 'staticfiles/styles/detail_style.css' %}">
 {% endblock styles %}
 {% block content %}
 <!-- Load from unpkg -->
@@ -11,15 +11,82 @@
         <div class="selector">
                 {% block choice_selector %}
                         <a class="selection selected" href="/users/{{user.get_hashid}}/profile">Profil</a>
-                        <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Anzeigen</a>
                         <a class="selection" hx-post="/users/{{user.get_hashid}}/reviews" hx-swap="outerHTML" hx-target="#profile-content">Bewertungen</a>
                         {% if isOwner %}
-                                <a class="selection" href="/users/edit/{{user.get_hashid}}/">Bearbeiten</a>
+                                <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Angebot erstellen</a>
+                                <a style="color: #192985" class="nav-link" href="{% url 'logout' %}">Logout</a>
                         {% endif %}
+
                 {% endblock choice_selector %}
         </div>
         {% block profile_content %}
         <div id="profile-content" class="profile-content">
+                <div class="left-colum">
+                        <table class="table table-borderless">
+                                <tbody>
+                                  <tr>
+                                        <td>E-Mail</td>
+                                        <td>{{user.email}}</td>
+                                  </tr>
+                                  {% if user.description %}
+                                  <tr>
+                                        <td>Beschreibung</td>
+                                        <td>{{user.description | linebreaks}}</td>
+
+                                </tr>
+                                {% endif %}
+                                  <tr>
+                                    <td>Geburtsdatum</td>
+                                    <td>{{user.birth_date}}</td>
+                                  </tr>
+
+                                {% if user.phone and settings.show_phone %}
+                                <tr>
+                                        <td>Telefonnummer</td>
+                                        <td>{{user.phone}}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                        <td>Geschlecht</td>
+                                        <td>{{gender}}</td>
+                                </tr>
+                                {% if isOwner %}
+                                <tr>
+
+                                        <td><a class="text-muted" href="/users/edit/{{user.get_hashid}}/">Bearbeiten</a></td>
+
+                                </tr>
+                                {% endif %}
+                        </tbody>
+
+
+                              </table>
+
+
+
+                        {% if review %}
+                                <div class="card" style="width: 18rem;">
+                                                <div class="flex card-title" style="margin-top: 10px; margin-bottom: 0px;">
+                                                <h3>{{ review.title }}</h3>
+                                                </div>
+                                                <div class="card-body" >
+                                                <p class="text-muted" style="text-align: center; margin-top: 0px;">von {{ review.author.first_name }} {{ review.author.last_name }}</p>
+                                                <p>{{review.text | linebreaks}}</p>
+                                                        <div class="flex">
+                                                        {% for i in review.stars|range %}
+                                                        <img src="{% static 'staticfiles/svg/star.svg' %}" alt="star"  width="35px">
+                                                        {% endfor %}
+                                                        </div>
+
+
+                                        </div>
+
+                                        <div style="color: lightgray" class="flex text-sm">
+                                                <p>created on: {{ review.created_on }}</p>
+                                        </div>
+                                </div>
+                        {% endif %}
+                </div>
                 <div class="right-colum">
                         {% if user.profile_pic %}
                                 <img alt="Image" src="{{ user.profile_pic.large.url }}" class="profile_pic"/>
@@ -28,46 +95,19 @@
                                 class="profile_pic"
                                 alt="Profile Pic">
                         {% endif %}
-                        <p class="detail">Name: {{user.first_name}} {{user.last_name}}</p>
+                        <p class="detail" style="font-weight: bold"> {{user.first_name}} {{user.last_name}}</p>
                         {% if user.address and settings.show_address %}
                         <div class="flex">
-                                <img src="{% static 'user_management/svg/location.svg' %}" alt="Location Icon">
-                                <p class="detail">{{user.address}}</p>
+                                <img src="{% static 'staticfiles/svg/location.svg' %}" alt="Location Icon">
+                                <p class="detail">  {{user.address}}</p>
                         </div>
                         {% endif %}
                 </div>
-                <div class="left-colum">
-                        <p class="detail">Email: {{user.email}}</p>
-                        <p class="detail">Birthdate: {{user.birth_date}}</p>
-                        {% if user.description %}
-                                <p class="detail long">{{user.description | linebreaks}}</p>
-                        {% endif %}
-                        {% if user.phone and settings.show_phone %}
-                                <p class="detail">Phone: {{user.phone}}</p>
-                        {% endif %}
-                        <p class="detail">Gender: {{gender}}</p>
-                        {% if review %}
-                                <div class="info">
-                                        <div class="flex">
-                                                <h3>{{ review.title }}</h3>
-                                                <p>von {{ review.author.first_name }} {{ review.author.last_name }}</p>
-                                                        <div class="flex">
-                                                        {% for i in review.stars|range %}
-                                                        <img src="{% static 'user_management/svg/star.svg' %}" alt="star"  width="35rem">
-                                                        {% endfor %}
-                                                        </div>
-                                                </div>
-                                                <p>{{review.text | linebreaks}}</p>
-                                        <div style="color: lightgray" class="flex">
-                                                <p>created on: {{ review.created_on }}</p>
-                                        </div>
-                                </div>
-                        {% endif %}
-                </div>
+
         </div>
         {% endblock profile_content %}
         <div class="flex_bottom">
                 <p class="created_on">Created on: {{user.created_on}}</p>
-                <a href="/staff/add_report/{{user.get_hashid}}" class="error">Beinhaltet dieser Accound schädliche Inhalte? Report!</a>
+                <a href="/staff/add_report/{{user.get_hashid}}" class="error">Beinhaltet dieser Account schädliche Inhalte? Report!</a>
         </div>
 {% endblock content %}

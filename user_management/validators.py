@@ -44,10 +44,14 @@ def validate_login(request, form) -> User:
             ):
                 return user
             else:
-                display_messages(request, 'Wrong password', messages.ERROR)
+                display_messages(request, 'Falsches Passwort.', messages.ERROR)
                 return None
         except User.DoesNotExist:
-            display_messages(request, 'User doesn\'t exist', messages.ERROR)
+            display_messages(
+                request,
+                'Diese E-Mail Adresse existiert nicht.',
+                messages.ERROR,
+            )
             return None
     else:
         display_messages(request, form.errors, messages.ERROR)

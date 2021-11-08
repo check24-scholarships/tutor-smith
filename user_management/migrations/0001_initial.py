@@ -34,11 +34,11 @@ class Migration(migrations.Migration):
                     'subject',
                     models.IntegerField(
                         choices=[
-                            (0, 'German'),
-                            (1, 'Math'),
-                            (2, 'English'),
-                            (3, 'Chemestry'),
-                            (4, 'Computer Science'),
+                            (0, 'Deutsch'),
+                            (1, 'Mathe'),
+                            (2, 'Englisch'),
+                            (3, 'Chemie'),
+                            (4, 'Informatik'),
                         ]
                     ),
                 ),
@@ -94,8 +94,8 @@ class Migration(migrations.Migration):
                     models.IntegerField(
                         choices=[
                             (9, 'Not Stated'),
-                            (1, 'Male'),
-                            (2, 'Female'),
+                            (1, 'Männlich'),
+                            (2, 'Weiblich'),
                             (3, 'Another Term'),
                         ]
                     ),

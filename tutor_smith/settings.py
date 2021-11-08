@@ -18,7 +18,6 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(find_dotenv())
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -48,7 +47,7 @@ INSTALLED_APPS = [
     'user_management',
 ]
 
-crispy_template_pack = 'bootstrap 4'
+crispy_template_pack = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -134,6 +133,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

@@ -32,8 +32,11 @@ from tutor_smith.converters import reset_hasher, h_encode, h_decode
 dict_gender = dict(choice_gender)
 
 
-def index(request):
-    __context = {'users': User.objects.all()}
+def index(request):  # wie gebe ich den user hier mit
+    __context = {
+        'users': User.objects.all(),
+        # 'user': get_object_or_404(User, id=user_id)
+    }
     return render(request, 'index.html', __context)
 
 
@@ -246,11 +249,16 @@ def view_all(request):
 
 def register(request):
     __context = {'form': None}
+    gender = {
+        key: value for (key, value) in User._meta.get_field('gender').choices
+    }
+
+    grades = range(5, 13)
     if request.method == 'POST':
         form = UserForm(request.POST)
-
         res = validate_register(request, form)
         if res:
+
             user = User(
                 email=form.cleaned_data['email'],
                 first_name=form.cleaned_data['first_name'],
@@ -274,7 +282,11 @@ def register(request):
     # Displays Form and Context on view when not returned before
     form = UserForm()
     __context['form'] = form
-    return render(request, 'register.html', context=__context)
+    return render(
+        request,
+        'register.html',
+        {'grades': grades, 'gender': zip(gender.keys(), gender.values())},
+    )
 
 
 def login(request):

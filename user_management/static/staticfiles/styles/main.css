@@ -1,0 +1,85 @@
+/* Ideas:
+Colors: #F97E72
+*/
+*{
+    --color-lines: #731D2C;
+    --color-highlight-dark: #2F6C73;
+    --color-highlight-light: #60B6BF;
+    --color-base-dark: #BFAB99;
+    --color-base-light: #F2E0C9;
+    --color-font-dark: #0D0D0D;
+
+}
+html{
+    font-size: 15px;
+    margin:0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #dc3545;
+
+}
+.main-header{
+    background-image: url("/user_management/static/user_management/images/headerImage.png");
+}
+
+a{
+    color:var(--color-highlight-light);
+    text-decoration: none;
+    cursor: pointer;
+}
+a:hover{
+    color:var(--color-highlight-dark);
+}
+.error{
+    color:red;
+}
+.success{
+    color:green;
+}
+form{
+    display:inline;
+}
+input{
+    outline: none;
+    border:2px var(--color-lines) solid;
+    border-radius: 25px;
+    margin:0.2rem;
+    padding: 2px 8px;
+}
+.badge-light {
+    margin-top: 2.5em;
+}
+.errorlist {
+    list-style: none;
+    padding-left: 0px;
+    opacity: 0.8;
+    color: #dc3545;
+    font-size: 12px;
+}
+.msg {
+    margin: 0 !important;
+    margin-bottom: 4px !important;
+    margin-top: 4px !important;
+}
+.messages {
+    z-index: 100;
+    position: fixed;
+    right: 2em;
+    margin-top: -1em;
+    list-style: none;
+    text-align: right;
+}
+.alert {
+    margin-top: 1rem;
+}
+.alert-error {
+    background-color: #f2dede;
+    border-color: #ebcccc;
+    color: #a94442;
+}
+
+
+@media screen and (max-width:800px) {
+    head, body{
+        font-size: 20px;
+    }
+}

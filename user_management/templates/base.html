@@ -5,27 +5,49 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="{% static 'user_management/styles/main.css' %}">
+
+    <link type="text/css" rel="stylesheet" href="{% static 'staticfiles/styles/styles.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    {% block styles %}{% endblock styles %}
+    {% block styles %} {% endblock styles %}
     <title>{% block title %}Template Error{% endblock %}</title>
 </head>
 <body>
-    <header>
-        <p>Logo</p>
-        <a href="{% url 'view_all' %}">Search</a>
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'logout' %}">Logout</a>
-        <!--<form class="d-flex" method="GET" action="{% url 'search' %}">
-            {% csrf_token %}
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
-            <button class="btn btn-outline-secondary" type="submit">Search</button>
-        </form> -->
-    </header>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">
+            <img src="{% static 'staticfiles/styles/logo.png' %}" alt="" width="100" height="30" padding="0" margin="0">
+          </a>
+          <div class="collapse navbar-collapse " id="navbarNav">
+            <ul class="navbar-nav ml-auto" >
+
+              <li class="nav-item">
+                <a style="color: black" class="nav-link" href="{% url 'view_all' %}" >Angebote</a>
+              </li>
+              <!-- {% if user.is_authenticated %} -->
+              <li class="nav-item">
+                <a style="color: black" class="nav-link" href="users/{{user.get_hashid}}/profile">{{user.first_name}} {{user.last_name}}</a>
+              </li>
+              <li class="nav-item">
+                <a style="color: black" class="nav-link" href="{% url 'logout' %}">Logout</a>
+              </li>
+              <!--{%else%}-->
+              <li class="nav-item">
+                <a style="color: black" class="nav-link" href="{% url 'login' %}">Login</a>
+              </li>
+              <!--{%endif%}-->
+
+            </ul>
+          </div>
+        </div>
+    </nav>
+
+
 
     {% block messages %}
-    <ul class="messages" id="messages-list">
     {% if messages %}
+    <ul class="messages" id="messages-list">
+
         {% for message in messages %}
 
             {% if message.tags %}
@@ -35,12 +57,15 @@
             {% endif %}
 
         {% endfor %}
+      </ul>
     {% endif %}
-    </ul>
+
     {% endblock %}
 
     {% block content %}
         <h1 class="error">Template Error</h1>
     {% endblock %}
 </body>
+
+
 </html>

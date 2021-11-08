@@ -3,15 +3,33 @@
 {% load static %}
 {% block title %}{{ detail.title }}{% endblock title %}
 {% block content %}
-    <h2>{{ detail.title }}</h2>
-    <p>{{ detail.text | linebreaks }}</p>
-    <div class="flex">
-        {% for i in detail.stars|range %}
-            <img src="{% static 'user_management/svg/star.svg' %}" alt="star" width="35rem">
-        {% endfor %}
+<div class="weeneedmargin">
+<div class="card" style="width: 25rem;">
+    <div class="flex card-title" style="margin-top: 10px; text-align: center; margin-bottom: 0px;">
+    <h3>{{ detail.title }}</h3>
     </div>
-    {% if isOwner %}
-        <a href="edit">Edit</a>
-        <a href="delete">Delete</a>
+    <div class="card-body" >
+    <p class="text-muted" style="text-align: center; margin-top: 0px;">von {{ detail.author.first_name }} {{ detail.author.last_name }}</p>
+    <p>{{detail.text | linebreaks}}</p>
+            <div class="flex">
+            {% for i in detail.stars|range %}
+            <img src="{% static 'staticfiles/svg/star.svg' %}" alt="star"  width="35px">
+            {% endfor %}
+            </div>
+
+
+</div>
+<div class="card-footer" style="background-color: white;">
+    <div style="color: lightgray" class="flex text-sm">
+        {% if isOwner %}
+        <a style="color: lightgray" href="edit">Edit</a>
+        <a style="color: lightgray" href="delete">Delete</a>
     {% endif %}
+        <p>erstellt am: {{ detail.created_on }}</p>
+    </div>
+</div>
+
+</div>
+</div>
+
 {% endblock content %}
