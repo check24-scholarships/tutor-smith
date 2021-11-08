@@ -21,6 +21,7 @@ from tutor_smith.converters import h_encode, user_hasher
 from django.utils import timezone
 
 dict_subject = dict(choice_subject)
+dict_difficulty = dict(choice_difficulty)
 
 
 def image_pic_path(instance, filename):
@@ -179,6 +180,12 @@ class Info(models.Model):
         Returns the subject in human readable form
         """
         return dict_subject[self.subject]
+
+    def get_hr_difficulty(self):
+        """
+        Returns the subject in human readable form
+        """
+        return dict_difficulty[self.difficulty]
 
     def get_hashid(self):
         """
