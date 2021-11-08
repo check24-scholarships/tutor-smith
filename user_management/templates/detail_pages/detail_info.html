@@ -46,7 +46,7 @@
             </p>
         </div>
         <div class="card-footer" style="background-color: #192985;">
-        <a style="color: white" href="/users/{{detail.author.get_hashid}}/profile">Kontakt: {{ detail.author }}</a>
+        <a style="color: white" href="/users/{{detail.author.get_hashid}}/profile">Kontakt: {{ detail.author.first_name }} {{ detail.author.last_name }}</a>
         {% if isOwner %}
                 <a style="float: inline-end; color: lightgrey" href="delete">Delete</a>
                 <a style="float: right; color: lightgrey" href="edit">Edit/</a>

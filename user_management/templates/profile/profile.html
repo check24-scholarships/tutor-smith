@@ -82,7 +82,7 @@
                                         </div>
 
                                         <div style="color: lightgray" class="flex text-sm">
-                                                <p>created on: {{ review.created_on }}</p>
+                                                <p>erstellt am: {{ review.created_on }}</p>
                                         </div>
                                 </div>
                         {% endif %}
@@ -107,7 +107,7 @@
         </div>
         {% endblock profile_content %}
         <div class="flex_bottom">
-                <p class="created_on">Created on: {{user.created_on}}</p>
+                <p class="created_on">Erstellt am: {{user.created_on}}</p>
                 <a href="/staff/add_report/{{user.get_hashid}}" class="error">Beinhaltet dieser Account schädliche Inhalte? Report!</a>
         </div>
 {% endblock content %}

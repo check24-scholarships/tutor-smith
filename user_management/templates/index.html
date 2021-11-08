@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Tutor-Smith{% endblock title %}
+{% block title %}Tutor-Matching{% endblock title %}
 {% block content %}
 <body>
 <div class='containerheader'>
@@ -15,23 +15,97 @@ background-color:whitesmoke; margin-top: 10% ">Finde deinen Tutor!</a>
 
 <div class='content'>
   <img class='img-fluid' src="{% static 'staticfiles/styles/stockpicture.jpeg' %}" alt="Location Icon">
-  <h3>Was ist Tutor-Matching?</h3>
+  <h3>Was ist Tutor Matching?</h3>
   <p>
     <br>
-Tutor-Matching bietet dir einen unkomplizierten Weg, Lerntutoren zu finden oder anderen Schülern Nachhilfe zu geben. Ohne aufwendiges Suchen durch Aushänge oder Kontakte, kannst du dir hier mit nur wenigen Klicks deinen Lernerfolg sichern.
+Tutor Matching bietet dir einen unkomplizierten Weg, Lerntutoren zu finden oder anderen Schülern Nachhilfe zu geben. Ohne aufwendiges Suchen durch Aushänge oder Kontakte, kannst du dir hier mit nur wenigen Klicks deinen Lernerfolg sichern.
   </p>
 </div>
-<div class='content1'>
 
- <img class= 'img-fluid' src="{% static 'staticfiles/styles/stockpicture.jpeg' %}" alt="Location Icon">
-  <h3>Lorem ipsum</h3>
-  <p>
-    <br>
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
-  </p>
+
+
+
+<div class='content1' >
+  <div class=" row row-cols-1 row-cols-md-3">
+  <div class="col" style="margin-bottom: 20px">
+
+  <div class="card h-100" style="max-width: 500px">
+    <div class="flex card-title" style="margin-top: 10px; margin-bottom: 0px; margin-left: 10px; text-align: center">
+    <h3>Nur weiterzuempfehlen</h3>
+    <p class="text-muted" style="text-align: center; ">von Mark Zuckerberg</p>
+    </div>
+    <div class="flex" style="text-align: center; margin-top: 10px;">
+      {% for i in '12345' %}
+      <img src="{% static 'staticfiles/svg/star.svg' %}" alt="star"  style="width: 30px; ">
+      {% endfor %}
+      </div>
+    <div class="card-body" style="margin-top: 0px;">
+
+      <p>Ich habe schon lange nach einer Möglichkeit gesucht, mein Wissen weiterzugeben und mir ein wenig Geld dazuzuverdienen. Durch Tutor Matching konnte ich meine Ziele verwirklichen und unkompliziert Nachhilfeschüler finden.</p>
+
+
+    </div>
+<div class="card-footer" style="background-color: white;">
+    <a style="color: black; float:inline-end">Mehr</a>
+    <div style="color: lightgray" class="flex text-sm">
+        <p>erstellt am: 05.06.2021</p>
+    </div>
 </div>
-{% for user in users %}
-<a style="color: #192985" class="nav-link" href="users/{{user.get_hashid}}/profile">{{user}}</a>
-{% endfor %}
-  </body>
+
+</div>
+  </div>
+  <div class="col" style="margin-bottom: 20px">
+
+    <div class="card h-100" style="max-width: 500px">
+      <div class="flex card-title" style="margin-top: 10px; margin-bottom: 0px; margin-left: 10px; text-align: center">
+      <h3>Um zwei Noten verbessert!</h3>
+      <p class="text-muted" style="text-align: center; ">von Peter Parker</p>
+      </div>
+      <div class="flex" style="text-align: center; margin-top: 10px;">
+        {% for i in '12345' %}
+        <img src="{% static 'staticfiles/svg/star.svg' %}" alt="star"  style="width: 30px; ">
+        {% endfor %}
+        </div>
+      <div class="card-body" style="margin-top: 0px;">
+
+      <p> Ich war noch nie so gut im Spanisch Unterricht wie nach meiner Nachhilfestunde. Über Tutor Matching konnte ich mir aus einer Vielzahl von Tutoren den Besten aussuchen. </p>
+
+      </div>
+  <div class="card-footer" style="background-color: white;">
+      <a style="color: black; float:inline-end">Mehr</a>
+      <div style="color: lightgray" class="flex text-sm">
+          <p>erstellt am: 09.10.2021</p>
+      </div>
+  </div>
+
+  </div>
+    </div>
+  <div class="col" style="margin-bottom: 20px">
+<div class="card h-100" style="max-width: 500px">
+  <div class="flex card-title" style="margin-top: 10px; margin-bottom: 0px; margin-left: 10px; text-align: center">
+  <h3>Schnelle und kompetente Hilfe</h3>
+  <p class="text-muted" style="text-align: center; ">von Rachel Green</p>
+  </div>
+  <div class="flex" style="text-align: center; margin-top: 10px;">
+    {% for i in '12345' %}
+    <img src="{% static 'staticfiles/svg/star.svg' %}" alt="star"  style="width: 30px; ">
+    {% endfor %}
+    </div>
+  <div class="card-body" style="margin-top: 0px;">
+  <p> Auf Tutor Matching habe ich schnell und unkompliziert eine sehr nette Tutorin gefunden, die mich vom Anfänger zum Fortgeschrittenen Niveau im Fach Deutsch begleitet hat.</p>
+
+  </div>
+<div class="card-footer" style="background-color: white;">
+  <a style="color: black; float:inline-end">Mehr</a>
+  <div style="color: lightgray" class="flex text-sm">
+      <p>erstellt am: 09.08.2021</p>
+  </div>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+</body>
 {% endblock content %}

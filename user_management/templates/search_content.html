@@ -41,7 +41,7 @@
             </p>
             </div>
                 <div class="card-footer " style="background-color: #192985;">
-                <a style="color: white" href="users/{{offer.author.get_hashid}}/profile"> Kontakt: {{ offer.author }}</a>
+                <a style="color: white" href="users/{{offer.author.get_hashid}}/profile"> Kontakt: {{ offer.author.first_name }} {{ offer.author.last_name }}</a>
                 <a style="float: right; color: lightgrey" href="/detail/info/{{ offer.get_hashid }}">                  Details</a>
 
             </div>
