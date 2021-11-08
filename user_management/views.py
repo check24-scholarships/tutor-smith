@@ -34,8 +34,8 @@ dict_gender = dict(choice_gender)
 
 def index(request):  # wie gebe ich den user hier mit
     __context = {
-        'users': User.objects.all(),
-        # 'user': get_object_or_404(User, id=user_id)
+        #'users': User.objects.all(),
+        'user': is_user_authenticated(request),
     }
     return render(request, 'index.html', __context)
 

@@ -24,18 +24,18 @@
               <li class="nav-item">
                 <a style="color: black" class="nav-link" href="{% url 'view_all' %}" >Angebote</a>
               </li>
-              <!-- {% if user.is_authenticated %} -->
+              {% if user %}
               <li class="nav-item">
-                <a style="color: black" class="nav-link" href="users/{{user.get_hashid}}/profile">{{user.first_name}} {{user.last_name}}</a>
+                <a style="color: black" class="nav-link" href="/users/{{user.get_hashid}}/profile">{{user.first_name}} {{user.last_name}}</a>
               </li>
               <li class="nav-item">
                 <a style="color: black" class="nav-link" href="{% url 'logout' %}">Logout</a>
               </li>
-              <!--{%else%}-->
+              {%else%}
               <li class="nav-item">
                 <a style="color: black" class="nav-link" href="{% url 'login' %}">Login</a>
               </li>
-              <!--{%endif%}-->
+              {%endif%}
 
             </ul>
           </div>
