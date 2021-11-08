@@ -14,6 +14,7 @@
                         <a class="selection" hx-post="/users/{{user.get_hashid}}/reviews" hx-swap="outerHTML" hx-target="#profile-content">Bewertungen</a>
                         {% if isOwner %}
                                 <a class="selection" hx-post="/users/{{user.get_hashid}}/infos" hx-swap="outerHTML" hx-target="#profile-content">Meine Angebote</a>
+                                <a style="color: black" class="nav-link" href="/request/list">Anfragen</a>
                                 <a style="color: #192985" class="nav-link" href="{% url 'logout' %}">Logout</a>
                         {% endif %}
 

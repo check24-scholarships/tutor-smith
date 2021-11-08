@@ -2,13 +2,22 @@
 {% load static %}
 {% block title %}Requests{% endblock title %}
 {% block content %}
-    {% if requests %}
+
+    <div class="wrapper">
+        <h3 style="text-align: center;">Anfragen</h3>
+        <hr>
+        {% if requests %}
+    <p>Du hast neue Anfragen:</p>
         {% for request in requests %}
-            <div>
-                <p>{{request.author}}</p>
+            <div style="border-style: solid; border-width: 1px; width:500px; margin-left:20px; margin-bottom: 10px" >
+                <p>{{request.author.first_name}} {{request.author.last_name}} fragt deine Kontaktdaten an.</p>
+                <a href="{% url 'accept_request' %}" class="btn btn-success">Akzeptieren</a>
+                <a href="{% url 'delete_request' %} "class="btn btn-danger"> Ablehnen</a>
+
             </div>
         {% endfor %}
     {% else %}
         <p>Keine Anfragen</p>
     {% endif %}
+</div>
 {% endblock content %}
