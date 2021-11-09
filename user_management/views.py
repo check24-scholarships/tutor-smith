@@ -408,11 +408,11 @@ def user_edit(request, user_id):
 
 
 def detail_view(request, id, *args, **kwargs):
-    __context = {'isOwner': is_user_authenticated(request)}
+    __context = {'user': is_user_authenticated(request)}
     __context['detail'] = get_object_or_404(kwargs['detail_class'], id=id)
-    if __context['isOwner']:
+    if __context['user']:
         __context['isOwner'] = (
-            __context['detail'].author == __context['isOwner']
+            __context['detail'].author == __context['user']
         )
     return render(request, kwargs['template'], __context)
 
